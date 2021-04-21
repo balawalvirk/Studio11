@@ -6,10 +6,11 @@ import { useIsFocused } from '@react-navigation/native';
 import AppColors from '../../utills/AppColors';
 const ScreenWrapper = ({
   children,
-  statusBarColor = AppColors.green,
+  statusBarColor = AppColors.white,
   transclucent = false,
   scrollEnabled = false,
   backgroundImage,
+  barStyle = "light-content",
   headerUnScrollable = () => null,
   footerUnScrollable = () => null,
 }) => {
@@ -20,7 +21,7 @@ const ScreenWrapper = ({
   const content = () => {
     return (<View style={styles.container}>
       <FocusAwareStatusBar
-        barStyle={'dark-content'}
+        barStyle={barStyle}
         backgroundColor={statusBarColor}
         translucent={transclucent}
       />

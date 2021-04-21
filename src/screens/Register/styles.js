@@ -17,12 +17,22 @@ const styles = StyleSheet.create({
   description: {
     color: Colors.white,
   },
-  RowafterInputField: {
-    justifyContent: 'space-between',
+  NameRow:{
     flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+    width: width(80)
+  },
+  RowafterInputField: {
+    flexDirection: 'row',
+    alignItems:'center',
     width: width(80),
-    alignItems: 'center',
-    marginBottom: height(2)
+    marginBottom:height(2)
+
+  },
+  checkIcon:{
+    fontSize:width(5),
+    paddingRight:width(2)
   },
   highlightedText: {
     color: Colors.primaryGold
@@ -39,12 +49,7 @@ const styles = StyleSheet.create({
     marginVertical: height(2)
   },
   rememberbeSection: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  checkIcon: {
-    fontSize: width(5),
-    paddingRight: width(2)
+    flexDirection: 'row'
   }
 });
 export default styles;
