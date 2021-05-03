@@ -9,9 +9,9 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import Logo from '../../components/Logo';
 import { width } from 'react-native-dimension';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
-import Colors from '../../utills/AppColors';
 import auth from '@react-native-firebase/auth'
-export default function Register({ navigation }) {
+import AppColors from '../../utills/AppColors';
+export default function Register(props) {
     const user = useSelector((state) => state.Auth.user);
     const dispatch = useDispatch();
     const [checkIcon, setCheckIcon] = useState(false);
@@ -47,7 +47,7 @@ export default function Register({ navigation }) {
             });
     }
     return (
-        <ScreenWrapper scrollEnabled transclucent statusBarColor = {'transparent'} 
+        <ScreenWrapper scrollEnabled transclucent statusBarColor ={AppColors.transparent}
             backgroundImage={require('../../assets/images/bg.png')}  >
             <View style={styles.mainViewContainer}>
                <Logo  imagepath={require('../../assets/images/logo.png')} />
@@ -85,20 +85,22 @@ export default function Register({ navigation }) {
                 />
                 <TouchableOpacity style={styles.RowafterInputField} onPress={()=>{setCheckIcon(!checkIcon)}}>
                 {checkIcon ?
-                <Icon name="checkcircle" style={styles.checkIcon} color={Colors.primaryGold}/>
-                : <Icon name="checkcircleo" style={styles.checkIcon} color={Colors.white50} />
+                <Icon name="checkcircle" style={styles.checkIcon} color={AppColors.primaryGold}/>
+                : <Icon name="checkcircle" style={styles.checkIcon} color={AppColors.white50} />
                 } 
                 <HighlightedText
+                onPress={()=>props.navigation.navigate('TermsConditions')}
                         text={'Terms & Conditions'}
                     />
                 </TouchableOpacity>
                 <Button
                     title="Signup"
-                    onPress={() => signUp()}
+                    onPress={()=>props.navigation.navigate('Dashboard')}
+                    // onPress={() => signUp()}
                 />
                 <View style={styles.TextRow}>
                     <Text style={styles.whiteText}>Already have an account? </Text>
-                    <HighlightedText text={'Login'} onPress={() => navigation.navigate('Login')} />
+                    <HighlightedText text={'Login'} onPress={() => props.navigation.navigate('Login')} />
                 </View>
             </View>
         </ScreenWrapper>

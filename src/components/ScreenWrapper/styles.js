@@ -4,6 +4,7 @@ import AppColors from '../../utills/AppColors';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: AppColors.textColor
   },
   scroll: {
     flex: 1,

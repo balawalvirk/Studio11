@@ -1,28 +1,23 @@
 import { StyleSheet } from 'react-native';
-import Colors from '../../utills/AppColors';
+import { height, width } from 'react-native-dimension';
+import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 15,
-    // backgroundColor: Colors.green,
+    borderRadius: width(6),
     width: '80%',
     alignSelf: 'center',
-    paddingVertical: 10,
-    margin: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 2,
+    paddingVertical: height(1),
+    margin: width(2),
+    elevation: 2
   },
   text: {
-    color: Colors.black,
-    fontSize: 20,
-    textShadowRadius: 0.1,
-    textShadowColor: Colors.darkGreen,
-    textShadowOffset: { width: 1.2, height: 1.2 }
+    color: AppColors.black,
+    fontSize: width(4.5),
+    fontWeight:'bold',
+    textAlign:'center',
   }
 });
 export default styles;

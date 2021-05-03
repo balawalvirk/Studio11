@@ -1,6 +1,6 @@
 import { ColorPropType, StyleSheet } from 'react-native';
 import { width, height } from 'react-native-dimension';
-import Colors from '../../utills/AppColors';
+import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -10,12 +10,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.60)'
   },
   heading: {
-    color: Colors.white,
+    color: AppColors.white,
     fontWeight: 'bold',
     fontSize: width(8)
   },
   description: {
-    color: Colors.white,
+    color: AppColors.white,
   },
   RowafterInputField: {
     justifyContent: 'space-between',
@@ -25,13 +25,13 @@ const styles = StyleSheet.create({
     marginBottom: height(2)
   },
   highlightedText: {
-    color: Colors.primaryGold
+    color: AppColors.primaryGold
   },
   blurText: {
-    color: Colors.white50
+    color: AppColors.white50
   },
   whiteText: {
-    color: Colors.white
+    color: AppColors.white
   },
   TextRow: {
     flexDirection: 'row',

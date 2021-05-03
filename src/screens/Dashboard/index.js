@@ -1,27 +1,40 @@
 import React from 'react';
-import {Text, View} from 'react-native';
 import styles from './styles';
-import Button from '../../components/Button';
-import {useDispatch, useSelector} from 'react-redux';
-import {logout} from '../../Redux/Actions/Auth';
-import auth from '@react-native-firebase/auth';
-import BGImage from '../../assets/images/bg.png';
-import ScreenWrapper from '../../components/ScreenWrapper';
-export default function Dashboard() {
-  const user = useSelector((state) => state.Auth.user);
-  const dispatch = useDispatch();
-  const logout = () =>{
-  auth()
-  .signOut()
-  .then(() => console.log('User signed out!'));
-  }
+import Appointments from '../Appointments';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import AppColors from '../../utills/AppColors';
+import PaymentMethods from '../PaymentMethods';
+import Feedback from '../Feedback';
+import Suggestion from '../Suggestion';
+import TermsConditions from '../TermsConditions';
+import HomeScreen from '../HomeScreen';
+import DrawerHeader from '../../components/DrawerHeader';
+import { View, Text, Image } from 'react-native';
+import Settings from '../Settings';
+import { width } from 'react-native-dimension';
+const Drawer = createDrawerNavigator();
+
+export default function Dashboard(props) {
   return (
-    <ScreenWrapper backgroundImage={BGImage}>
-      <View style={styles.mainViewContainer}>
-        <Text style={styles.text}>Dashboard</Text>
-        <Text style={styles.text}>{user.userName}</Text>
-        <Button title="Logout" onPress={logout} />
-      </View>
-    </ScreenWrapper>
+    <Drawer.Navigator initialRouteName="Home" 
+    drawerStyle={styles.drawerStyleMain}
+    drawerContentOptions={{
+      activeTintColor: AppColors.primaryGold,
+      contentContainerStyle: styles.drawerContainerStyle,
+      labelStyle: styles.labelStyle, initialRouteName:{HomeScreen},
+      style: styles.drawerStyle,
+      itemStyle: styles.itemStyle,
+    }}
+      drawerContent={(props) => <DrawerHeader {...props} /> }
+    >
+      <Drawer.Screen name="home" component={HomeScreen} />
+      <Drawer.Screen name="Appointments" component={Appointments} />
+      <Drawer.Screen name="Payment Method" component={PaymentMethods} />
+      <Drawer.Screen name="Settings" component={Settings} />
+      <Drawer.Screen name="Give us a feedback" component={Feedback} />
+      <Drawer.Screen name="Wanna give us a suggestion?" component={Suggestion} />
+      <Drawer.Screen name="Terms & Conditions" component={TermsConditions} />
+      <Drawer.Screen name="Sign out" component={Appointments} />
+    </Drawer.Navigator>
   );
-};
+}

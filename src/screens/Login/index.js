@@ -9,8 +9,9 @@ import { useDispatch } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import Logo from '../../components/Logo';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
-import Colors from '../../utills/AppColors';
-export default function Dashboard({ navigation }) {
+import AppColors from '../../utills/AppColors';
+import { height, width } from 'react-native-dimension';
+export default function Dashboard(props) {
   const [email, setemail] = useState();
   const [emailError, setEmailError] = useState('');
   const [checkIcon, setCheckIcon] = useState(false);
@@ -76,7 +77,7 @@ export default function Dashboard({ navigation }) {
   }
   const dispatch = useDispatch();
   return (
-    <ScreenWrapper scrollEnabled transclucent statusBarColor = {'transparent'} 
+    <ScreenWrapper transclucent statusBarColor = {AppColors.transparent} 
       backgroundImage={require('../../assets/images/bg.png')}
     >
       <View
@@ -104,30 +105,30 @@ export default function Dashboard({ navigation }) {
             <TouchableOpacity style={styles.rememberbeSection}
             onPress={() => { setCheckIcon(!checkIcon) }}>
               {checkIcon ?
-                <Icon name="checkcircle" style={styles.checkIcon} color={Colors.primaryGold}  />
-                : <Icon name="checkcircleo" style={styles.checkIcon} color={Colors.white50} />}
+                <Icon name="checkcircle" style={styles.checkIcon} color={AppColors.primaryGold}  />
+                : <Icon name="checkcircle" style={styles.checkIcon} color={AppColors.white50} />}
               <Text style={styles.whiteText}>Remember me</Text>
             </TouchableOpacity>
-            <HighlightedText onPress={() => navigation.navigate('ResetPassword')}
+            <HighlightedText onPress={() => props.navigation.navigate('ResetPassword')}
               text={'Forgot password?'}
             />
           </View>
-          <Button
+          <Button containerStyle={{paddingVertical:height(2),width:'80%', borderRadius:width(4)}}
             title="Login"
             onPress={() =>
-              //  dispatch(login({ userName: 'John Doe' }))
-              login()
+              // login()
+              props.navigation.navigate('Dashboard')
             }
           />
           <View style={styles.TextRow}>
             <Text style={styles.whiteText}>Don't have any account? </Text>
             <HighlightedText text={'Register'}
-              onPress={() => navigation.navigate('Register')}
+              onPress={() => props.navigation.navigate('Register')}
             />
           </View>
           <View style={styles.TextRow}>
             <Text style={styles.whiteText}>Are you from the staff? </Text>
-            <HighlightedText text={'Login from here'} />
+            <HighlightedText  onPress={() => props.navigation.navigate('StaffLogin')} text={'Login from here'} />
           </View>
       </View>
     </ScreenWrapper>

@@ -1,21 +1,23 @@
 import { ColorPropType, StyleSheet } from 'react-native';
 import { width, height } from 'react-native-dimension';
+import AppColors from '../../utills/AppColors';
 import Colors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
-    flex: 1,
+    // flex: 1,
+    height:height(100),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.60)'
   },
   heading: {
-    color: Colors.white,
+    color: AppColors.white,
     fontWeight: 'bold',
     fontSize: width(8)
   },
   description: {
-    color: Colors.white,
+    color: AppColors.white,
   },
   NameRow:{
     flexDirection: 'row',
@@ -35,13 +37,13 @@ const styles = StyleSheet.create({
     paddingRight:width(2)
   },
   highlightedText: {
-    color: Colors.primaryGold
+    color: AppColors.primaryGold
   },
   blurText: {
-    color: Colors.white50
+    color: AppColors.white50
   },
   whiteText: {
-    color: Colors.white
+    color: AppColors.white
   },
   TextRow: {
     flexDirection: 'row',

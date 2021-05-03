@@ -6,7 +6,7 @@ import { useIsFocused } from '@react-navigation/native';
 import AppColors from '../../utills/AppColors';
 const ScreenWrapper = ({
   children,
-  statusBarColor = AppColors.white,
+  statusBarColor = AppColors.textColor,
   transclucent = false,
   scrollEnabled = false,
   backgroundImage,
@@ -19,31 +19,32 @@ const ScreenWrapper = ({
     return isFocused ? <StatusBar {...props} /> : null;
   }
   const content = () => {
-    return (<View style={styles.container}>
-      <FocusAwareStatusBar
-        barStyle={barStyle}
-        backgroundColor={statusBarColor}
-        translucent={transclucent}
-      />
-      {!transclucent && (
-        <SafeAreaView
-          style={(styles.container, { backgroundColor: statusBarColor })}
+    return (
+      <View style={[styles.container, backgroundImage && { backgroundColor: 'transparent' }]}>
+        <FocusAwareStatusBar
+          barStyle={barStyle}
+          backgroundColor={statusBarColor}
+          translucent={transclucent}
         />
-      )}
-      {headerUnScrollable()}
-      {scrollEnabled ? (
-        <KeyboardAwareScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}>
-          {children}
-        </KeyboardAwareScrollView>
-      ) : (
-        children
-      )}
-      {footerUnScrollable()}
-    </View>)
+        {!transclucent && (
+          <SafeAreaView
+            style={(styles.container, { backgroundColor: statusBarColor })}
+          />
+        )}
+        {headerUnScrollable()}
+        {scrollEnabled ? (
+          <KeyboardAwareScrollView
+            style={[styles.container, backgroundImage && { backgroundColor: 'transparent' }]}
+            contentContainerStyle={styles.contentContainer}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}>
+            {children}
+          </KeyboardAwareScrollView>
+        ) : (
+          children
+        )}
+        {footerUnScrollable()}
+      </View>)
   }
   return (
     backgroundImage ? <ImageBackground source={backgroundImage} style={styles.container} resizeMode={'cover'}>
