@@ -3,7 +3,7 @@ import Icon from 'react-native-vector-icons/dist/Feather';
 import Logo from '../Logo';
 import { Text, View, Image } from 'react-native';
 import styles from './styles';
-const Header = ({ midLogo, headerTitle, leadingIcon, actionIcon, onPressLeadingIcon, onPressActionIcon
+const Header = ({ midLogo, headerTitle, leadingIcon, actionIcon, onPressLeadingIcon, onPressActionIcon, renderIconRight = null
 }) => {
     return (
         <View style={styles.header}>
@@ -15,9 +15,10 @@ const Header = ({ midLogo, headerTitle, leadingIcon, actionIcon, onPressLeadingI
                 :
                 <Text style={styles.heading}>{headerTitle}</Text>
             }
+            {renderIconRight ? renderIconRight() :
             <Icon name={actionIcon} style={styles.leadingIcon}
                 onPress={onPressActionIcon}
-            />
+            />}
         </View>
     );
 };

@@ -20,15 +20,14 @@ const Button = ({
       <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>
     : 
-    
-    <LinearGradient colors={AppColors.gradientColor}
-      style={[styles.container, containerStyle]} >
-    <TouchableOpacity
+
+    <TouchableOpacity style={[styles.container, containerStyle]}
       onPress={onPress}
       activeOpacity={activeOpacity}>
+    <LinearGradient style={styles.gradientContainer} colors={AppColors.gradientColor}>
       <Text style={[styles.text, textStyle]}>{title}</Text>
+    </LinearGradient> 
     </TouchableOpacity>
-    </LinearGradient>
   );
 };
 

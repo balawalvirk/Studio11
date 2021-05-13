@@ -21,7 +21,7 @@ export default function Feedback(props) {
   const dispatch = useDispatch();
 
   return (
-    <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}>
+    <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
       <Header headerTitle={'Give us a feedback'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />
       <View style={styles.mainViewContainer}>
         <Image style={styles.feedbackImage} source={require('../../assets/images/feedback.png')} />
@@ -45,7 +45,8 @@ export default function Feedback(props) {
         <Button title={'Submit'} onPress={() => openModal()} />
       </View>
       <CustomModal isVisible={modalVisible} onClose={() => setModalVisible(false)}
-        iconName={"like1"} description={'Thank you so much for giving us a Feedback!'} />
+        modalImage modalImagePath={require('../../assets/images/like.png')}
+        description={'Thank you so much for giving us a Feedback!'} />
     </ScreenWrapper>
   );
 };

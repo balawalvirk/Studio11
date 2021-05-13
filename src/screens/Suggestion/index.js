@@ -45,7 +45,8 @@ export default function Suggestion(props) {
         <Button title={'Submit'} onPress={() => openModal()} />
       </View>
       <CustomModal isVisible={modalVisible} onClose={() => setModalVisible(false)}
-        iconName={"bulb1"} description={'Thank you so much for giving us a suggestion!'} />
+      modalImage modalImagePath={require('../../assets/images/bulb.png')}
+        description={'Thank you so much for giving us a suggestion!'} />
     </ScreenWrapper>
   );
 };

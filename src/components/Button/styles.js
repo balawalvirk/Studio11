@@ -11,7 +11,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: height(1),
     margin: width(2),
-    elevation: 2
+  },
+  gradientContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: width(6),
+    width: '100%',
+    paddingVertical:height(1),
+    alignSelf: 'center',
+    // margin: width(2)
   },
   text: {
     color: AppColors.black,

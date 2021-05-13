@@ -74,12 +74,13 @@ export default function HairStyles(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
   return (
-    <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}>
+    <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
       <Header leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()}  headerTitle={'Hair Styles'} />
       <View style={styles.mainViewContainer}>
         <FlatList
           columnWrapperStyle={{ justifyContent: 'space-between',paddingVertical:height(2) }}
-          style={{ paddingHorizontal: width(6) }}
+          contentContainerStyle={{ paddingHorizontal: width(6),
+            paddingBottom: height(10) }}
           numColumns={2}
           data={cuttingImages}
           keyExtractor={item => item.id}

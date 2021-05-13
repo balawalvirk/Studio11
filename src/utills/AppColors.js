@@ -13,6 +13,7 @@ const AppColors = {
   iconColor: '#949595',
   cardColor: '#3d3d3e',
   transparent: 'transparent',
-  yellow: '#D8BE15'
+  yellow: '#D8BE15',
+  unActiveTab:"#2e2f31"
 };
 export default AppColors;

@@ -13,14 +13,27 @@ const styles = StyleSheet.create({
         marginLeft:width(4),
         // marginVertical:height(1)
     },
-    InputField:{
+    mainInputView:{
+        flexDirection:'row',
         borderRadius:width(6),
         borderColor:AppColors.primaryGold,
         borderWidth:width(0.15),
+        alignItems:'center'
+    },
+    InputField:{
+        flex:1,
         paddingVertical:height(0.5),
         color:AppColors.white,
         textDecorationLine:'none',
         paddingHorizontal:width(5),
     },
+    iconView:{
+        paddingVertical:height(1.5),
+        paddingHorizontal:width(5),
+    },
+    searchIcon:{
+        color:AppColors.white,
+        fontSize:width(4)
+    }
 });
 export default styles;

@@ -71,12 +71,12 @@ export default function Chat(props) {
         // minComposerHeight={2}
         renderAvatarOnTop
         renderSend={(props) =>
-          <Send
-            {...props}
-          >
-            <Icon style={{ fontSize: width(10), color: AppColors.primaryGold, alignSelf: 'center' }}
-              name='arrow-circle-up' />
-          </Send>
+              <Send
+                {...props}
+              >
+                <Icon style={{ fontSize: width(10), color: AppColors.primaryGold, alignSelf: 'center' }}
+                  name='arrow-circle-up' />
+              </Send>
         }
         isLoadingEarlier={true}
         messages={messages}
@@ -96,25 +96,8 @@ export default function Chat(props) {
           padding: width(1),
           borderColor: AppColors.primaryGold,
         }} {...props} />}
-
-        // *********************************
-
-        // minInputToolbarHeight={70}
-        // renderInputToolbar={(props)=> (
-        //     <View style={{ backgroundColor: AppColors.transparent, height: 200 }}>
-        //         <View style={{backgroundColor:'red'}}>
-        //             <LeftAction {...props} />
-        //             <ChatInput {...props} />
-        //             <SendButton {...props} />
-        //         </View>
-        //         <View></View>
-        //     </View>
-        // )}
-
-        // *******************************
-
         textInputStyle={{ color: 'white' }}
-      // minInputToolbarHeight={80}
+        alwaysShowSend={true}
       />
     </ScreenWrapper>
   );

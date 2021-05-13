@@ -79,7 +79,7 @@ export default function StaffLogin(props) {
           (<Button
             title="Login" onPress={() =>
               // login()
-              console.log('barber login pressed')
+              props.navigation.navigate('BarberDashboard')
             }
           />) :
           (<Button
