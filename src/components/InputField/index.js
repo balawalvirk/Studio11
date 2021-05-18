@@ -7,12 +7,13 @@ import styles from './styles';
 
 const InputField = ({
     label, placeholder, secureTextEntry, containerStyles, onChangeText, value, fielderror, onBlur, maxLength, keyboardType,
-    labelStyle = {}, multiline, numoflines, searchIcon
+    labelStyle = {}, multiline, numoflines, searchIcon,searchIconstyle,
+    inputStyle
 }) => {
     return (
         <View style={[{ width: width(80)}, containerStyles ? containerStyles : {}]}>
             <Text style={[styles.label, labelStyle]}>{label}</Text>
-            <View style={styles.mainInputView}>
+            <View style={[styles.mainInputView,inputStyle]}>
                 <TextInput style={styles.InputField}
                     multiline={multiline} numberOfLines={numoflines}
                     onBlur={onBlur} maxLength={maxLength}
@@ -25,7 +26,7 @@ const InputField = ({
                 />
 
                 {searchIcon ? <View style={styles.iconView}>
-                    <Icon name={'search'} style={styles.searchIcon}/>
+                    <Icon name={'search'} style={[styles.searchIcon,searchIconstyle]}/>
                 </View> : null}
             </View>
             <Text style={styles.Texterror}>{fielderror}</Text>

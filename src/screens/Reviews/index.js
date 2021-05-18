@@ -65,7 +65,7 @@ export default function Reviews(props) {
           onPressLeadingIcon={() => props.navigation.goBack()} /> }>
 
       <View style={styles.mainViewContainer}>
-        <PostReview />
+        <PostReview label={'Write a review:'} />
         <HorizontalLine />
 
         <FlatList showsVerticalScrollIndicator={false}

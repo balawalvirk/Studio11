@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Feather from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { Image, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 // **************************Screens*******************
@@ -25,10 +25,15 @@ import AddPaymentMethod from '../screens/AddPaymentMethod';
 import HairStyles from '../screens/HairStyles';
 import HairStylesBarber from '../screens/HairStylesBarber';
 import BarberProfile from '../screens/BarberProfile';
+import VideoUploads from '../screens/VideoUploads';
+import VideoPlay from '../screens/VideoPlay';
 import Reviews from '../screens/Reviews';
 import GetAppointment from '../screens/GetAppointment';
 import SelectPaymentMethod from '../screens/SelectPaymentMethod';
 import Chat from '../screens/Chat';
+import Shop from '../screens/Shop';
+import ShoppingCart from '../screens/ShoppingCart';
+import SelectPaymentMethodShop from '../screens/SelectPaymentMethodShop';
 // *******************************barber Screens*************************************
 import BarberDashboard from '../screens/BarberDashboard';
 import NoShowAppointments from '../screens/NoShowAppointments';
@@ -54,6 +59,7 @@ function HomeStackScreen() {
   return (
     <HomeStack.Navigator headerMode='none' >
       <HomeStack.Screen name="Dashboard" component={Dashboard} />
+      {/* <HomeStack.Screen name="VideoUploads" component={VideoUploads} /> */}
     </HomeStack.Navigator>
   );
 }
@@ -65,6 +71,14 @@ function MessagessStackScreen() {
       <MessagessStack.Screen name="ChatListBarber" component={ChatListBarber} />
       <MessagessStack.Screen name="Chat" component={Chat} />
     </MessagessStack.Navigator>
+  );
+}
+const ShopStack = createStackNavigator();
+function ShopStackScreen() {
+  return (
+    <ShopStack.Navigator headerMode='none'>
+      <ShopStack.Screen name="Shop" component={Shop} />
+    </ShopStack.Navigator>
   );
 }
 const NotificationsStack = createStackNavigator();
@@ -154,7 +168,12 @@ export default function Routes() {
               iconName = focused
                 ? require('../assets/images/message.png')
                 : require('../assets/images/message.png');
-            } else if (route.name === 'Notifications') {
+            } else if (route.name === 'Shop') {
+              iconName = focused
+                ? require('../assets/images/shop.png')
+                : require('../assets/images/shop.png');
+            }
+             else if (route.name === 'Notifications') {
               iconName = focused
                 ? require('../assets/images/bell.png')
                 : require('../assets/images/bell.png');
@@ -168,10 +187,14 @@ export default function Routes() {
               label = focused
                 ? 'Home'
                 : 'Home';
-            } else if (route.name === 'Messages') {
+            }  else if (route.name === 'Messages') {
               label = focused
                 ? 'Messages'
                 : 'Messages';
+            }  else if (route.name === 'Shop') {
+              label = focused
+                ? 'Shop'
+                : 'Shop';
             } else if (route.name === 'Notifications') {
               label = focused
                 ? 'Notifications'
@@ -193,6 +216,10 @@ export default function Routes() {
             tabBarVisible: navigation?.route?.state?.index > 0 ? false : true,
             // tabBarIcon: ({ color }) => <Ionicons name={'person-outline'} size={width(6)} color={color} />
           })} />
+        <Tab.Screen name="Shop" component={ShopStackScreen}
+        options={navigation => ({
+          tabBarVisible: navigation?.route?.state?.index > 0 ? false : true
+        })} />
         <Tab.Screen name="Messages" component={MessagessStackScreen}
         options={navigation => ({
           tabBarVisible: navigation?.route?.state?.index > 0 ? false : true
@@ -305,6 +332,10 @@ export default function Routes() {
           <Stack.Screen name="HairStyles" component={HairStyles} />
           <Stack.Screen name="HairStylesBarber" component={HairStylesBarber} />
           <Stack.Screen name="BarberProfile" component={BarberProfile} />
+          <Stack.Screen name="VideoUploads" component={VideoUploads} />
+          <Stack.Screen name="VideoPlay" component={VideoPlay} />
+          <Stack.Screen name="ShoppingCart" component={ShoppingCart} />
+          <Stack.Screen name="SelectPaymentMethodShop" component={SelectPaymentMethodShop} />
           <Stack.Screen name="Reviews" component={Reviews} />
           <Stack.Screen name="GetAppointment" component={GetAppointment} />
           <Stack.Screen name="SelectPaymentMethod" component={SelectPaymentMethod} />

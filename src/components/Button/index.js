@@ -10,7 +10,7 @@ const Button = ({
   activeOpacity = 0.7,
   containerStyle = {},
   textStyle = {},
-  planButton
+  planButton, gradientContainerStyle
 }) => {
   return (
     planButton ?
@@ -24,7 +24,7 @@ const Button = ({
     <TouchableOpacity style={[styles.container, containerStyle]}
       onPress={onPress}
       activeOpacity={activeOpacity}>
-    <LinearGradient style={styles.gradientContainer} colors={AppColors.gradientColor}>
+    <LinearGradient style={[styles.gradientContainer,gradientContainerStyle]} colors={AppColors.gradientColor}>
       <Text style={[styles.text, textStyle]}>{title}</Text>
     </LinearGradient> 
     </TouchableOpacity>

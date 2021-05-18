@@ -4,17 +4,15 @@ import { width, height } from 'react-native-dimension'
 
 const styles = StyleSheet.create({
   mainViewContainer: {
-    // height:height(100),
     flex: 1,
     alignItems: 'center',
-    // justifyContent: 'center',
     backgroundColor: AppColors.textColor
   },
   textRow: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     width: width(80),
-    alignSelf:'center',
+    alignSelf: 'center',
     marginBottom: height(2),
     marginVertical: height(3)
   },
@@ -26,7 +24,7 @@ const styles = StyleSheet.create({
   ProfileDetail: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical:height(2),
+    paddingVertical: height(2),
     width: width(80),
   },
   textSection: {
@@ -41,16 +39,16 @@ const styles = StyleSheet.create({
   },
   stylerTitle: {
     color: AppColors.primaryGold,
-    fontWeight:'bold',
-    fontSize:width(4)
+    fontWeight: 'bold',
+    fontSize: width(4)
   },
   ratingText: {
     color: AppColors.white,
-    marginLeft:width(2)
+    marginLeft: width(2)
   },
   white50: {
     color: AppColors.white50,
-    fontSize:width(4)
+    fontSize: width(4)
   },
   stylerRating: {
     flexDirection: 'row'

@@ -7,11 +7,11 @@ import InputField from '../InputField';
 import Button from '../Button';
 
 const PostReview = ({
-  onPress, containerStyle={}
+  onPress, containerStyle={},label
 }) => {
   return (
     <View style={[styles.reviewRow,containerStyle]}>
-      <InputField label={'Write a review:'}
+      <InputField label={label}
         labelStyle={styles.labelStyle}
         containerStyles={styles.inputFieldStyle} />
       <Button onPress={onPress} containerStyle={styles.buttonStyle} title={'Post'} />

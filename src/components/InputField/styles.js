@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
         color:AppColors.white,
         textDecorationLine:'none',
         paddingHorizontal:width(5),
+        // paddingLeft:width(4)
     },
     iconView:{
         paddingVertical:height(1.5),
