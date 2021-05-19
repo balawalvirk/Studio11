@@ -37,5 +37,10 @@ const styles = StyleSheet.create({
     color: AppColors.white50,
     fontSize: width(4)
   },
+  imageIcon:{
+    width: width(10),
+    height: width(10),
+    marginRight:width(2.5)
+  }
 });
 export default styles;

@@ -74,7 +74,7 @@ export default function ShoppingCart(props) {
                   ratingCountValue={item.ratingCountValue}
                   itemPrice={item.itemPrice}
                   itemQuantity={item.itemQuantity}
-                  onPressItem={() => console.log('item clicked')}
+                  onPressItem={() => props.navigation.navigate('ProductDetails')}
                   onPressDecrease={() => console.log('decrease')}
                   onPressIncrease={() => console.log('Increase')}
                 />

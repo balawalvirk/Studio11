@@ -128,7 +128,8 @@ export default function Shop(props) {
           keyExtractor={item => item.id}
           renderItem={({ item }) => {
             return (
-              <ProductCard
+              <ProductCard 
+              onPressProduct={()=>props.navigation.navigate('ProductDetails')}
                 productImage={item.productImage}
                 productTitle={item.productTitle}
                 productRating={item.productRating}

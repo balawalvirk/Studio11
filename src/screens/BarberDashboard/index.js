@@ -7,8 +7,8 @@ import TermsConditions from '../TermsConditions';
 import Settings from '../Settings';
 import BarberNotifications from '../BarberNotifications';
 import BarberHomeScreen from '../BarberHomeScreen';
-import BarberDrawerHeader from '../../components/BarberDrawerHeader';
 import ChatListBarber from '../ChatListBarber';
+import BarberDrawerHeader from '../../components/BarberDrawerHeader';
 const Drawer = createDrawerNavigator();
 
 export default function BarberDashboard(props) {

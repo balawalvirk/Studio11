@@ -5,10 +5,12 @@ import { width, height } from 'react-native-dimension'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import AppColors from '../../utills/AppColors';
 const ProductCard = ({
-  productImage, productTitle, productRating, productRatingCount, productPrice
+  productImage, productTitle, productRating, productRatingCount, productPrice,
+  onPressProduct
 }) => {
   return (
-    <TouchableOpacity style={styles.productCard}>
+    <TouchableOpacity onPress={onPressProduct}
+     style={styles.productCard}>
       <Image resizeMode='cover'
         source={productImage}
         style={styles.productImage} />

@@ -16,16 +16,19 @@ const Drawer = createDrawerNavigator();
 
 export default function Dashboard(props) {
   return (
-    <Drawer.Navigator initialRouteName="Home" 
-    drawerStyle={styles.drawerStyleMain}
-    drawerContentOptions={{
-      activeTintColor: AppColors.primaryGold,
-      contentContainerStyle: styles.drawerContainerStyle,
-      labelStyle: styles.labelStyle, initialRouteName:{HomeScreen},
-      style: styles.drawerStyle,
-      itemStyle: styles.itemStyle,
-    }}
-      drawerContent={(props) => <DrawerHeader {...props} /> }
+    <Drawer.Navigator initialRouteName="Home"
+      drawerStyle={styles.drawerStyleMain}
+      drawerContentOptions={{
+        activeTintColor: AppColors.primaryGold,
+        contentContainerStyle: styles.drawerContainerStyle,
+        labelStyle: styles.labelStyle, initialRouteName: { HomeScreen },
+        style: styles.drawerStyle,
+        itemStyle: styles.itemStyle,
+      }}
+      screenOptions={{
+        tabBarVisible: false
+      }}
+      drawerContent={(props) => <DrawerHeader {...props} />}
     >
       <Drawer.Screen name="home" component={HomeScreen} />
       <Drawer.Screen name="Appointments" component={Appointments} />
