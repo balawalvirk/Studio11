@@ -5,9 +5,11 @@ import Icon from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import AppColors from '../../utills/AppColors';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { width } from 'react-native-dimension';
 
 const Thumbnail = ({
-  onPress, thumbnailImage, videoTitle, views, cardstyle,likes,comments,reactions
+  onPress, thumbnailImage, videoTitle, views, cardstyle,likes,comments,reactions,editable,iconName,checkicon
 }) => {
   return (
     <TouchableOpacity
@@ -16,6 +18,13 @@ const Thumbnail = ({
         style={[styles.videoThumbnail, cardstyle]}
         source={thumbnailImage}
       >
+          {checkicon ?  <MaterialCommunityIcons name={iconName} style={styles.checkIcon} /> : null}
+       {editable && <View style={{flexDirection:'row-reverse',}}>
+          <MaterialCommunityIcons name="pencil" 
+        onPress={onPress}
+          style={styles.editIcon}
+        />
+        </View>}
         <View style={styles.emptyView}></View>
         <Icon name='controller-play'
           style={styles.playButton} />

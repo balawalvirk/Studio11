@@ -1,189 +1,193 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, FlatList, Text,TouchableOpacity } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
 import HorizonLine from '../../components/HorizontalLine';
-import Button from '../../components/Button';
 import { height, width } from 'react-native-dimension';
 import CalendarStrip from 'react-native-calendar-strip';
+import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import moment from 'moment';
 import ScheduledAppointmentCard from '../../components/ScheduledAppointmentCard';
-import { color } from 'react-native-reanimated';
+import ScheduleCard from '../../components/ScheduleCard';
+import { counterEvent } from 'react-native/Libraries/Performance/Systrace';
 export default function Calender(props) {
   const user = useSelector((state) => state.Auth.user);
-  const [CurrentMonth, setCurrentMonth] = useState('');
+  const [items, setItems] = useState({});
   const dispatch = useDispatch();
-  const appointments = [
+  const scheduledAppointments = [
     {
-      id: 1,
-      cardTitle: 'Carter Keebler',
-      isSelected: false,
-      appointmentTime: '8:19 PM',
-      appointmentDetails: 'dolorem dolores ut velit earum esse ab explicabo voluptatum molestias',
-      timeText: '07 PM'
+      id: '1',
+      barberName: 'Michael Fox',
+      cuttingName: 'Crew Cut',
+      scheduledTime: 'Sunday, 07 March, 06:16 AM',
+      Notes: 'Delectus voluptas qui est delectus recusandae eveniet assumenda fuga earum.',
+      appointmentImage: require('../../assets/images/1.png'),
+      timeLeft: '3 days left',
     },
     {
-      id: 2,
-      cardTitle: 'Miguel Beatty',
-      isSelected: false,
-      appointmentTime: '2:01 AM',
-      appointmentDetails: 'ipsam quia autem autem quae numquam quia aut non ex',
-      timeText: '03 AM'
-    },
-    {
-      id: 3,
-      cardTitle: 'Chauncey Weber',
-      appointmentTime: '9:44 AM',
-      isSelected: false,
-      appointmentDetails: 'et cumque voluptas veniam dolorem aliquam magni qui consequatur sed',
-      timeText: '02 AM'
-    },
-    {
-      id: 4,
-      cardTitle: 'Lyla Nienow',
-      appointmentTime: '10:15 PM',
-      appointmentDetails: 'sunt optio qui nam sit nulla accusantium quaerat soluta sunt',
-      timeText:'04 AM'
-    },
-    {
-      id: 5,
-      cardTitle: 'Kaci Klocko',
-      appointmentTime: '7:56 PM',
-      appointmentDetails: 'nemo dolores tenetur architecto omnis voluptas natus laudantium vero voluptatibus',
-      timeText:'05 AM'
-    },
-    {
-      id: 6,
-      cardTitle: 'Oswaldo Ryan',
-      appointmentTime: '3:15 AM',
-      appointmentDetails: 'mollitia nemo esse placeat natus expedita possimus cumque quisquam voluptatem',
-      timeText:'02 PM'
-    },
-    {
-      id: 7,
-      cardTitle: 'Annabelle Okuneva',
-      appointmentTime: '8:19 PM',
-      appointmentDetails: 'dolorem dolores ut velit earum esse ab explicabo voluptatum molestias',
-      timeText:'04 AM'
-    },
-    {
-      id: 8,
-      cardTitle: 'Carter Keebler',
-      appointmentTime: '8:19 PM',
-      appointmentDetails: 'dolorem dolores ut velit earum esse ab explicabo voluptatum molestias',
-      timeText:'12 AM'
-    },
-    {
-      id: 9,
-      cardTitle: 'Carter Keebler',
-      appointmentTime: '8:19 PM',
-      appointmentDetails: 'dolorem dolores ut velit earum esse ab explicabo voluptatum molestias',
-      timeText:'05 PM'
-    },
-    {
-      id: 10,
-      cardTitle: 'Carter Keebler',
-      appointmentTime: '8:19 PM',
-      appointmentDetails: 'dolorem dolores ut velit earum esse ab explicabo voluptatum molestias',
-      timeText:'06 PM'
-    },
-    {
-      id: 11,
-      cardTitle: 'Carter Keebler',
-      appointmentTime: '8:19 PM',
-      appointmentDetails: 'dolorem dolores ut velit earum esse ab explicabo voluptatum molestias',
-      timeText:'04 AM'
-    },
-
+      id: '2',
+      barberName: 'Tomas Ernser',
+      cuttingName: 'Crew Cut',
+      scheduledTime: 'Saturday, 09 January, 10:42 AM',
+      Notes: 'Iste eos dolores.',
+      appointmentImage: require('../../assets/images/2.png'),
+      timeLeft: '3 days left',
+    }
   ];
-  const appointmentsNext = [
-  
-    {
-      id: 1,
-      cardTitle: 'Lyla Nienow',
-      appointmentTime: '10:15 PM',
-      appointmentDetails: 'sunt optio qui nam sit nulla accusantium quaerat soluta sunt',
-      timeText:'04 AM'
-    },
-    {
-      id: 2,
-      cardTitle: 'Kaci Klocko',
-      appointmentTime: '7:56 PM',
-      appointmentDetails: 'nemo dolores tenetur architecto omnis voluptas natus laudantium vero voluptatibus',
-      timeText:'05 AM'
-    },
-    {
-      id: 3,
-      cardTitle: 'Oswaldo Ryan',
-      appointmentTime: '3:15 AM',
-      appointmentDetails: 'mollitia nemo esse placeat natus expedita possimus cumque quisquam voluptatem',
-      timeText:'02 PM'
-    },
-    {
-      id: 4,
-      cardTitle: 'Annabelle Okuneva',
-      appointmentTime: '8:19 PM',
-      appointmentDetails: 'dolorem dolores ut velit earum esse ab explicabo voluptatum molestias',
-      timeText:'04 AM'
-    },
-    {
-      id: 5,
-      cardTitle: 'Carter Keebler',
-      appointmentTime: '8:19 PM',
-      appointmentDetails: 'dolorem dolores ut velit earum esse ab explicabo voluptatum molestias',
-      timeText:'04 AM'
-    },
+  const  loadItems=(day)=> {
+    setTimeout(() => {
+      for (let i = -15; i < 85; i++) {
+        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+        const strTime = timeToString(time);
+        if (!items[strTime]) {
+         items[strTime] = [];
+          const numItems = Math.floor(Math.random() * 3 + 1);
+          for (let j = 0; j < numItems; j++) {
+           items[strTime].push({
+              name: 'Item for ' + strTime + ' #' + j,
+              height: Math.max(50, Math.floor(Math.random() * 150))
+            });
+          }
+        }
+      }
+      const newItems = {};
+      Object.keys(items).forEach(key => {
+        newItems[key] = items[key];
+      });
+     setItems( newItems
+      );
+    }, 1000);
+  }
+ const renderItem=(item) =>{
+    return (
+      <TouchableOpacity
+        testID={'testIDs.agenda.ITEM'}
+        style={[styles.item, {height: item.height}]}
+        onPress={() => Alert.alert(item.name)}
+      >
+        <Text>{item.name}</Text>
+      </TouchableOpacity>
+    );}
+    
+ const renderEmptyDate=() =>{
+    return (
+      <View style={styles.emptyDate}>
+        <Text>This is empty date!</Text>
+      </View>
+    );
+  }
 
-  ];
-  const [record, setrecord] = useState(appointments)
+ const rowHasChanged=(r1, r2)=> {
+    return r1.name !== r2.name;
+  }
 
+ const timeToString = (time) =>{
+    const date = new Date(time);
+    return date.toISOString().split('T')[0];
+  }
   return (
-    <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
-      <Header headerTitle={CurrentMonth} leadingIcon={'menu'}
-        actionIcon={'search'} onPressActionIcon={() => props.navigation.navigate('SearchAppointment')}
-        onPressLeadingIcon={() => props.navigation.openDrawer()} />
+    <ScreenWrapper transclucent statusBarColor={AppColors.transparent}
+      headerUnScrollable={() => <Header headerTitle={'Calender'} leadingIcon={'menu'}
+        onPressLeadingIcon={() => props.navigation.openDrawer()} />}>
       <View style={styles.mainViewContainer}>
-        <CalendarStrip
+        {/* <CalendarStrip
           style={{ height: height(10), width: '90%' }}
-          calendarHeaderStyle={{ color: 'white' }}
+          calendarHeaderStyle={{ color: AppColors.white }}
           calendarColor={AppColors.headerColor}
-          dateNumberStyle={{ color: 'white' }}
-          dateNameStyle={{ color: 'white' }}
+          dateNumberStyle={{ color: AppColors.white }}
+          dateNameStyle={{ color: AppColors.white }}
           highlightDateNumberContainerStyle={styles.highlightedDay}
-          highlightDateNumberStyle={{color:AppColors.white}}
-          highlightDateNameStyle={{ color: 'white' }}
+          highlightDateNumberStyle={{ color: AppColors.white }}
+          highlightDateNameStyle={{ color: AppColors.white }}
           scrollable={'true'}
-          iconStyle={{display:'none'}}
+          iconStyle={{ display: 'none' }}
           minDate={moment()}
-          onDateSelected={(date) => console.log(date)}
-        />
-        <HorizonLine lineColor={{ backgroundColor: AppColors.transparent }} />
-        <FlatList
-        contentContainerStyle={{paddingBottom:height(28)}}
-          data={record}
+          onDateSelected={(date) => console.log(date)} /> */}
+        {/* <Calendar
+          enableSwipeMonths={true}
+          headerStyle={{
+            backgroundColor: AppColors.textColor,
+            alignSelf: 'center',
+            width: width(90)
+          }}
+          markingType={'simple'}
+
+          theme={{
+            calendarBackground: AppColors.cardColor,
+            textSectionTitleColor: AppColors.primaryGold,
+            textSectionTitleDisabledColor: AppColors.white50,
+            selectedDayBackgroundColor: AppColors.primaryGold,
+            selectedDayTextColor: AppColors.black,
+            todayTextColor: AppColors.primaryGold,
+            dayTextColor: AppColors.white,
+            textDisabledColor: AppColors.white50,
+            dotColor: 'red',
+            selectedDotColor: '#ffffff',
+            arrowColor: AppColors.white50,
+            disabledArrowColor: AppColors.white09,
+            monthTextColor: AppColors.white,
+            indicatorColor: AppColors.white50,
+          }}
+          style={{
+            width: width(90)
+          }}
+          onDayPress={(day) => { console.log('selected day', day) }}
+        /> */}
+       <Agenda
+        testID={'testIDs.agenda.CONTAINER'}
+        items={items}
+        loadItemsForMonth={loadItems}
+        selected={'2017-05-16'}
+        renderItem={renderItem}
+        renderEmptyDate={renderEmptyDate}
+        rowHasChanged={rowHasChanged}
+        // markingType={'period'}
+        // markedDates={{
+        //    '2017-05-08': {textColor: '#43515c'},
+        //    '2017-05-09': {textColor: '#43515c'},
+        //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
+        //    '2017-05-21': {startingDay: true, color: 'blue'},
+        //    '2017-05-22': {endingDay: true, color: 'gray'},
+        //    '2017-05-24': {startingDay: true, color: 'gray'},
+        //    '2017-05-25': {color: 'gray'},
+        //    '2017-05-26': {endingDay: true, color: 'gray'}}}
+        // monthFormat={'yyyy'}
+        // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
+        //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
+        // hideExtraDays={false}
+
+        style={{width:'100%'}}
+      />
+    
+        {/* <HorizonLine lineColor={{ width: width(90) }} />
+        <View style={styles.headingContainer}>
+          <Text style={styles.whiteText}>
+            Friday, 30 May, 2021  ({scheduledAppointments.length})
+          </Text>
+        </View> */}
+        {/* <FlatList
+          showsVerticalScrollIndicator={false}
+          data={scheduledAppointments}
           keyExtractor={item => item.id}
-          renderItem={({ item, index }) => {
+          renderItem={({ item }) => {
             return (
-              <ScheduledAppointmentCard
-                timeText={item.timeText}
-                cardTitle={item.cardTitle}
-                appointmentTime={item.appointmentTime}
-                appointmentDetails={item.appointmentDetails}
-                onPress={() => {
-                  let arr = [...record]
-                  let findIndex = arr.findIndex((data) => data.id == item.id)
-                  arr[findIndex].isSelected = !arr[findIndex].isSelected
-                  setrecord(arr)
-                }}
-                iconName={item.isSelected ? 'check-box-outline' : 'checkbox-blank-outline'}
+              <ScheduleCard
+                scheuledCardStyle={{ width: width(90) }}
+                // onpressScheuledCard={() => props.navigation.navigate('CustomerAppoinmentBarber')}
+                barberName={item.barberName}
+                cuttingName={item.cuttingName}
+                scheduledTime={item.scheduledTime}
+                additionalNotes={item.Notes}
+                timeLeft={item.timeLeft}
+                appointmentImage={item.appointmentImage}
+              // onpressMessage={() => props.navigation.navigate('Chat')}
               />
             );
           }}
-        />
-
+        /> */}
       </View>
 
     </ScreenWrapper>

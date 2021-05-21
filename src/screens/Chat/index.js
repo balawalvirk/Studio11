@@ -13,6 +13,8 @@ import ScreenWrapper from '../../components/ScreenWrapper';
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors'
+import { TextInput } from 'react-native-gesture-handler';
+import InputField from '../../components/InputField';
 export default function Chat(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
@@ -68,15 +70,14 @@ export default function Chat(props) {
     <ScreenWrapper headerUnScrollable={() => <Header headerTitle={'Dorris Ortiz'} leadingIcon={'arrow-left'}
       onPressLeadingIcon={() => props.navigation.goBack()} />}>
       <GiftedChat
-        // minComposerHeight={2}
         renderAvatarOnTop
         renderSend={(props) =>
-              <Send
-                {...props}
-              >
-                <Icon style={{ fontSize: width(10), color: AppColors.primaryGold, alignSelf: 'center' }}
-                  name='arrow-circle-up' />
-              </Send>
+          <Send
+            {...props}
+          >
+            <Icon style={{ fontSize: width(10), color: AppColors.primaryGold, alignSelf: 'center' }}
+              name='arrow-circle-up' />
+          </Send>
         }
         isLoadingEarlier={true}
         messages={messages}
@@ -89,15 +90,35 @@ export default function Chat(props) {
           avatar: require('../../assets/images/cuttings/1.png'),
         }}
         renderUsernameOnMessage={false}
-        renderInputToolbar={props => <InputToolbar containerStyle={{
-          backgroundColor: AppColors.transparent,
-          justifyContent: "center",
-          borderWidth: width(0.15),
-          padding: width(1),
-          borderColor: AppColors.primaryGold,
-        }} {...props} />}
-        textInputStyle={{ color: 'white' }}
-        alwaysShowSend={true}
+        renderInputToolbar={props =>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginLeft: width(5),
+            alignItems: 'center',
+            bottom: height(4),
+            width: width(90),
+            marginBottom: height(5),
+          }}>
+            <InputField containerStyles={{}} />
+            <Icon 
+            onPress={()=>console.log('send button pressed')}
+             style={{
+              marginLeft:width(1),marginTop:height(2),
+              fontSize: width(10), color: AppColors.primaryGold
+            }}
+              name='arrow-circle-up' />
+          </View>
+          // <InputToolbar
+          //   containerStyle={{
+          //     borderTopWidth: width(0.25), borderColor: AppColors.primaryGold, borderTopColor: AppColors.primaryGold,
+          //     borderWidth: width(0.25), borderRadius: width(5),
+          //     backgroundColor: AppColors.transparent, marginHorizontal: width(5)
+          //   }}
+          //   {...props} />
+        }
+        textInputStyle={{ color: AppColors.white }}
+      alwaysShowSend={true}
       />
     </ScreenWrapper>
   );

@@ -46,13 +46,20 @@ import DeleteHairStyles from '../screens/DeleteHairStyles';
 import EditProfileBarber from '../screens/EditProfileBarber';
 import TodaysAppointmentBarber from '../screens/TodaysAppointmentBarber';
 import CustomerAppoinmentBarber from '../screens/CustomerAppoinmentBarber';
+import ManageShopItems from '../screens/ManageShopItems';
+import EditUploadedVideo from '../screens/EditUploadedVideo';
+import UploadVideo from '../screens/UploadVideo';
+import EditVideoUploads from '../screens/EditVideoUploads';
+import SelectDelete from '../screens/SelectDelete';
+import PublishNewItem from '../screens/PublishNewItem';
+import EditItem from '../screens/EditItem';
+import Calender_1 from '../screens/Calender_1';
 // ********************firebas auth *************************
 import auth from '@react-native-firebase/auth';
 import AppColors from '../utills/AppColors';
 import UserBottomTab from './UserBottomTab/UserBottomTab';
 
 const Stack = createStackNavigator();
-// ****************************barber tabs************************
 const Drawer = createDrawerNavigator();
 
 export default function Routes() {
@@ -135,9 +142,17 @@ export default function Routes() {
           <Stack.Screen name="ManageHairStyles" component={ManageHairStyles} />
           <Stack.Screen name="DeleteHairStyles" component={DeleteHairStyles} />
           <Stack.Screen name="EditProfileBarber" component={EditProfileBarber} />
+          <Stack.Screen name="ManageShopItems" component={ManageShopItems} />
           <Stack.Screen name="SearchAppointment" component={SearchAppointment} />
           <Stack.Screen name="NoShowAppointments" component={NoShowAppointments} />
           <Stack.Screen name="BarberAppointments" component={BarberAppointments} />
+          <Stack.Screen name="EditUploadedVideo" component={EditUploadedVideo} />
+          <Stack.Screen name="UploadVideo" component={UploadVideo} />
+          <Stack.Screen name="EditVideoUploads" component={EditVideoUploads} />
+          <Stack.Screen name="SelectDelete" component={SelectDelete} />
+          <Stack.Screen name="PublishNewItem" component={PublishNewItem} />
+          <Stack.Screen name="EditItem" component={EditItem} />
+          <Stack.Screen name="Calender_1" component={Calender_1} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator initialRouteName="Dashboard" headerMode="none">

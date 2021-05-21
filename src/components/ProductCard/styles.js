@@ -42,5 +42,13 @@ const styles = StyleSheet.create({
     color: AppColors.white50,
     fontSize: width(4)
   },
+  editIcon: {
+    fontSize: width(5),
+    color: AppColors.primaryGold,
+    backgroundColor: AppColors.headerColor,
+    padding: width(1),
+    margin: width(2.5),
+    borderRadius: width(4)
+  },
 });
 export default styles;

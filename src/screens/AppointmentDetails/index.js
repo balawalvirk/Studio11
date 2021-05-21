@@ -35,7 +35,7 @@ export default function AppointmentDetails(props) {
         <HorizontalLine lineColor={{ marginTop: 0, marginVertical: height(2), width: width(80) }} />
         <View style={styles.buttonRow}>
           <Button onPress={()=>props.navigation.navigate('BarberProfile')}
-           containerStyle={{ width: width(40) }} title={'View Barber Profile'} />
+           containerStyle={{ width: width(45) }} title={'View Barber Profile'} />
           <Button planButton onPress={()=>props.navigation.navigate('Chat')}
             containerStyle={{ backgroundColor: AppColors.cardColor, width: width(30) }} textStyle={{ color: AppColors.white }}
             title={'Message'} />

@@ -124,7 +124,7 @@ export default function VideoPlay(props) {
               <Text style={styles.white50}>Barber Name here</Text>
             </View>
             <View style={styles.rightSection}>
-              <Button title="View Barber Profile" containerStyle={{ width: '100%' }}
+              <Button title="View Barber Profile" containerStyle={{ width: width(45) }}
                 onPress={() => props.navigation.navigate('BarberProfile')} />
             </View>
           </View>

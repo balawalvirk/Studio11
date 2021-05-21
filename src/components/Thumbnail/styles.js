@@ -9,6 +9,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: width(2)
   },
+  editIcon: {
+    fontSize: width(5),
+    color: AppColors.primaryGold,
+    backgroundColor: AppColors.headerColor,
+    padding: width(1),
+    margin: width(2.5),
+    borderRadius: width(4)
+  },
   playButton: {
     fontSize: width(15),
     color: AppColors.white,
@@ -32,7 +40,7 @@ const styles = StyleSheet.create({
   },
   reactIcons: {
     fontSize: width(4),
-    marginRight:width(1)
+    marginRight: width(1)
   },
   whiteText: {
     color: AppColors.white,
@@ -43,5 +51,14 @@ const styles = StyleSheet.create({
     color: AppColors.white50,
     fontSize: width(4)
   },
+  checkIcon: {
+    color: AppColors.primaryGold,
+    backgroundColor: AppColors.textColor,
+    borderRadius: width(1),
+    fontSize: width(6),
+    position: 'absolute',
+    top: width(2),
+    left: width(2)
+  }
 });
 export default styles;

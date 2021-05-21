@@ -162,17 +162,6 @@ export default function BarberProfile(props) {
           onPress={() => props.navigation.navigate('VideoUploads')} 
           />
         </View>
-        {/* <Video
-          resizeMode="contain"
-          controls
-          source={require('../../assets/Videos/1.mp4')}   // Can be a URL or a local file.
-          paused
-          style={{
-            width: width(30), height: width(50),
-            alignSelf: 'center',
-            elevation: 1,
-          }}
-        /> */}
         <FlatList
           horizontal={true}
           contentContainerStyle={{ paddingHorizontal: width(8) }}

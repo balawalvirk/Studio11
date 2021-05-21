@@ -12,6 +12,8 @@ import HorizontalLine from '../../components/HorizontalLine';
 import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Button from '../../components/Button';
+import Thumbnail from '../../components/Thumbnail';
 export default function ProfileBarber(props) {
   const cuttingImages = [
     {
@@ -44,6 +46,33 @@ export default function ProfileBarber(props) {
       title: 'Side Part',
       image: require('../../assets/images/barbers/b6.png'),
     },
+  ];
+  const ThumbnailList = [
+    {
+      id: '1',
+      videoTitle: 'Alias quia nostrum.',
+      views: '412',
+      thumbnailImage: require('../../assets/Videos/1.png')
+    },
+    {
+      id: '2',
+      videoTitle: 'Ipsa ratione accusamus labore',
+      views: '706',
+      thumbnailImage: require('../../assets/Videos/2.png')
+    },
+    {
+      id: '3',
+      videoTitle: 'Sequi explicabo iusto reiciendis',
+      views: '791',
+      thumbnailImage: require('../../assets/Videos/3.png')
+    },
+    {
+      id: '4',
+      videoTitle: 'lusto occaecati omnis culpa nihil',
+      views: '4.9',
+      thumbnailImage: require('../../assets/Videos/4.png')
+    },
+
   ];
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
@@ -78,8 +107,8 @@ export default function ProfileBarber(props) {
   return (
     <ScreenWrapper scrollEnabled headerUnScrollable={() =>
       <Header headerTitle={'Profile'} leadingIcon={'menu'}
-        renderIconRight={() => <MaterialCommunityIcons name="pencil" 
-        onPress={()=>props.navigation.navigate('EditProfileBarber')}
+        renderIconRight={() => <MaterialCommunityIcons name="pencil"
+          onPress={() => props.navigation.navigate('EditProfileBarber')}
           style={{ fontSize: width(5), color: AppColors.primaryGold }}
         />}
         onPressLeadingIcon={() => props.navigation.openDrawer()} />
@@ -94,12 +123,43 @@ export default function ProfileBarber(props) {
               <Text style={styles.whiteText}>Earnings:  <Text style={styles.white50}>$364</Text></Text>
               <Text style={styles.whiteText}>Reviews:  <Text style={styles.white50}>467</Text></Text>
               <Text style={styles.whiteText}>Ratings:  <Text style={styles.white50}>4.5</Text></Text>
-             
+
             </View>
           </View>
           <Image style={styles.imageSection} source={require('../../assets/images/cuttings/1.png')} />
         </View>
         <HorizontalLine />
+        <Button title='Manage Shop Items'
+          onPress={() => props.navigation.navigate('ManageShopItems')}
+          gradientContainerStyle={{ borderRadius: width(2.5), paddingVertical: height(1.5) }} />
+        <HorizontalLine lineColor={{ marginTop: 0 }} />
+        <View style={styles.textRow}>
+          <Text style={styles.whiteText}>Edit Video Uploads</Text>
+          <HighlightedText text={'View all'}
+          onPress={() => props.navigation.navigate('EditVideoUploads')} 
+          />
+        </View>
+        <FlatList
+          horizontal={true}
+          contentContainerStyle={{ paddingHorizontal: width(8) }}
+          data={ThumbnailList}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => {
+            return (
+              <Thumbnail thumbnailImage={item.thumbnailImage}
+                editable
+                // onPressedit={() => console.console.log('EditUploadedVideo')}
+                // onPress={() => props.navigation.navigate('VideoPlay')}
+                onPress={() => props.navigation.navigate('EditUploadedVideo')}
+                videoTitle={item.videoTitle}
+                views={item.views} />
+            );
+          }}
+        />
+        <Button title='Upload a Video'
+          onPress={() => props.navigation.navigate('UploadVideo')}
+          gradientContainerStyle={{ borderRadius: width(2.5), paddingVertical: height(1.5) }} />
+        <HorizontalLine lineColor={{ marginTop: 0 }} />
         <View style={styles.textRow}>
           <Text style={styles.whiteText}>Hair Styles</Text>
           <HighlightedText text={'Manage'} onPress={() => props.navigation.navigate('ManageHairStyles')} />

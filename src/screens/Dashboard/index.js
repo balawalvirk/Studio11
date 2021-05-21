@@ -9,9 +9,7 @@ import Suggestion from '../Suggestion';
 import TermsConditions from '../TermsConditions';
 import HomeScreen from '../HomeScreen';
 import DrawerHeader from '../../components/DrawerHeader';
-import { View, Text, Image } from 'react-native';
 import Settings from '../Settings';
-import { width } from 'react-native-dimension';
 const Drawer = createDrawerNavigator();
 
 export default function Dashboard(props) {
@@ -31,9 +29,9 @@ export default function Dashboard(props) {
       drawerContent={(props) => <DrawerHeader {...props} />}
     >
       <Drawer.Screen name="home" component={HomeScreen} />
-      <Drawer.Screen name="Appointments" component={Appointments} />
+      <Drawer.Screen name="DrawerAppointments" component={Appointments} />
       <Drawer.Screen name="Payment Method" component={PaymentMethods} />
-      <Drawer.Screen name="Settings" component={Settings} />
+      <Drawer.Screen name="DrawerSettings" component={Settings} />
       <Drawer.Screen name="Give us a feedback" component={Feedback} />
       <Drawer.Screen name="Wanna give us a suggestion?" component={Suggestion} />
       <Drawer.Screen name="Terms & Conditions" component={TermsConditions} />
