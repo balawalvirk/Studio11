@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {
   GiftedChat, Send, Bubble, Time, Image, InputToolbar,
-  LeftAction, ChatInput, SendButton
+  LeftAction, ChatInput, SendButton,
 } from 'react-native-gifted-chat';
 import { Text, View, ActivityIndicator } from 'react-native';
 import styles from './styles';
@@ -15,11 +15,12 @@ import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors'
 import { TextInput } from 'react-native-gesture-handler';
 import InputField from '../../components/InputField';
+// onSend({ text: text.trim() }, true);
 export default function Chat(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
   const [messages, setmessages] = useState([]);
-
+  const [text, setText] = useState()
   useEffect(() => {
     setmessages([
       {
@@ -62,7 +63,7 @@ export default function Chat(props) {
       <ActivityIndicator color={AppColors.primaryGold} size={"large"} />
     </View>
   const onSend = message => {
-    console.log(message)
+    setText('')
     setmessages(prev => GiftedChat.append(prev, message))
   }
   return (
@@ -71,14 +72,14 @@ export default function Chat(props) {
       onPressLeadingIcon={() => props.navigation.goBack()} />}>
       <GiftedChat
         renderAvatarOnTop
-        renderSend={(props) =>
-          <Send
-            {...props}
-          >
-            <Icon style={{ fontSize: width(10), color: AppColors.primaryGold, alignSelf: 'center' }}
-              name='arrow-circle-up' />
-          </Send>
-        }
+        // renderSend={(props) =>
+        //   <Send
+        //     {...props}
+        //   >
+        //     <Icon style={{ fontSize: width(10), color: AppColors.primaryGold, alignSelf: 'center' }}
+        //       name='arrow-circle-up' />
+        //   </Send>
+        // }
         isLoadingEarlier={true}
         messages={messages}
         renderBubble={renderBubble}
@@ -90,8 +91,9 @@ export default function Chat(props) {
           avatar: require('../../assets/images/cuttings/1.png'),
         }}
         renderUsernameOnMessage={false}
-        renderInputToolbar={props =>
-          <View style={{
+        renderInputToolbar={props => {
+
+          return <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginLeft: width(5),
@@ -100,15 +102,16 @@ export default function Chat(props) {
             width: width(90),
             marginBottom: height(5),
           }}>
-            <InputField containerStyles={{}} />
-            <Icon 
-            onPress={()=>console.log('send button pressed')}
-             style={{
-              marginLeft:width(1),marginTop:height(2),
-              fontSize: width(10), color: AppColors.primaryGold
-            }}
+            <InputField value={text} onChangeText={setText} containerStyles={{}} />
+            <Icon
+              onPress={() => { if (text.trim()) props.onSend([{ text: text.trim() }], true) }}
+              style={{
+                marginLeft: width(1), marginTop: height(2),
+                fontSize: width(10), color: AppColors.primaryGold
+              }}
               name='arrow-circle-up' />
           </View>
+        }
           // <InputToolbar
           //   containerStyle={{
           //     borderTopWidth: width(0.25), borderColor: AppColors.primaryGold, borderTopColor: AppColors.primaryGold,
@@ -118,7 +121,7 @@ export default function Chat(props) {
           //   {...props} />
         }
         textInputStyle={{ color: AppColors.white }}
-      alwaysShowSend={true}
+        alwaysShowSend={true}
       />
     </ScreenWrapper>
   );

@@ -5,7 +5,7 @@ import AppColors from '../../utills/AppColors';
 const styles = StyleSheet.create({
   mainViewContainer: {
     // flex: 1,
-    height:height(100),
+    height: height(100),
     alignItems: 'center',
     backgroundColor: AppColors.textColor,
   },
@@ -31,17 +31,27 @@ const styles = StyleSheet.create({
     marginHorizontal: width(8)
   },
   item: {
-    backgroundColor: 'white',
+    backgroundColor: AppColors.cardColor,
     flex: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
-    marginTop: 17
+    borderRadius: width(5),
+    padding: width(5),
+    marginRight: width(5),
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    marginTop: height(2),
+  },
+  checkIcon: {
+    color: AppColors.primaryGold,
+    fontSize: width(7),
+    // padding: width(6),
+
   },
   emptyDate: {
-    height: 15,
+    height: height(5),
     flex: 1,
-    paddingTop: 30
-  } 
+    paddingTop: height(5)
+  }
 });
 export default styles;
