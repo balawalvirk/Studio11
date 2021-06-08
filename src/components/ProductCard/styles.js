@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
   productCard: {
     marginHorizontal: width(2),
     backgroundColor: AppColors.headerColor,
-    borderRadius: width(4)
+    borderRadius: width(4),
+    overflow: 'hidden'
   },
   productImage: {
     width: width(40),

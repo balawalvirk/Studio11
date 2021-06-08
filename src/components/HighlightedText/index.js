@@ -3,10 +3,10 @@ import { Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
 
 const highlightedText = ({
-    text, onPress, disabled
+    text, onPress, disabled, containerStyle
 }) => {
     return (
-        <TouchableOpacity style={styles.container} disabled={disabled} onPress={onPress}>
+        <TouchableOpacity style={[styles.container, containerStyle]} disabled={disabled} onPress={onPress}>
             <Text style={styles.highlightedText}>{text}</Text>
         </TouchableOpacity>
     );

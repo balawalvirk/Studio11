@@ -79,7 +79,11 @@ export default function BarberHomeScreen(props) {
         <HorizontalLine lineColor={{ width: width(90) }} />
         <View style={styles.textRow}>
           <Text style={styles.whiteText}>Today's Schedule (9 AM - 10 AM)</Text>
-          <HighlightedText text={'View all for today'} onPress={() => props.navigation.navigate('TodaysAppointmentBarber')} />
+          <HighlightedText
+            text={'View all for today'}
+            containerStyle={styles.yellowText}
+            onPress={() => props.navigation.navigate('TodaysAppointmentBarber')}
+          />
         </View>
 
         <FlatList

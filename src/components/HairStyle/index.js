@@ -5,6 +5,8 @@ import { width } from 'react-native-dimension'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import FastImage from 'react-native-fast-image';
+import LinearGradient from 'react-native-linear-gradient';
+
 const HairStyle = ({
   cuttingImage, cuttingTitle,
   containerStyle = {}, onPress, iconName, checkicon, activeOpacity
@@ -16,9 +18,16 @@ const HairStyle = ({
       />
       <View style={styles.imageContent}>
         {checkicon ? <Icon name={iconName} style={styles.checkIcon} /> : <View></View>}
-        <Text style={styles.cuttingTitle}>{cuttingTitle}</Text>
+        <LinearGradient
+          start={{ x: 1, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          locations={[0.1, 0.9]}
+          colors={['rgba(0,0,0,0.65)', 'rgba(0,0,0,0)']} //rgba(0,0,0,0.85)
+          style={styles.shadowContainerBottom}>
+          <Text style={styles.cuttingTitle}>{cuttingTitle}</Text>
+        </LinearGradient>
       </View>
-    </TouchableOpacity>
+    </TouchableOpacity >
   );
 };
 

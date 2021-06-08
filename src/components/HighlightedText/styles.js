@@ -8,7 +8,9 @@ const styles = StyleSheet.create({
         // padding: width(1)
     },
     highlightedText: {
-        color: AppColors.primaryGold
+        color: AppColors.primaryGold,
+        fontSize: width(3),
+        textAlign: 'center'
     },
 });
 export default styles;

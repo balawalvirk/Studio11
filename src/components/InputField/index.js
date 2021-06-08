@@ -13,7 +13,7 @@ const InputField = ({
 }) => {
     return (
         <View style={[{ width: width(80) }, containerStyles ? containerStyles : {}]}>
-            <Text style={[styles.label, labelStyle]}>{label}</Text>
+            {label && label != '' && <Text style={[styles.label, labelStyle]}>{label}</Text>}
             <View style={[styles.mainInputView, inputStyle]}>
                 <TextInput style={[styles.InputField, { textAlignVertical: multiline ? 'top' : 'auto', paddingVertical: multiline ? height(2) : height(0.5) }]}
                     defaultValue={defaultValue}
@@ -35,7 +35,7 @@ const InputField = ({
                 </View> : null}
             </View>
             <Text style={styles.Texterror}>{fielderror}</Text>
-        </View>
+        </View >
     );
 };
 

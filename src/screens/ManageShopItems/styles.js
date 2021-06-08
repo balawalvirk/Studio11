@@ -13,15 +13,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: width(90),
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: height(1.5)
   },
   filterButton: {
-    width: width(15),
-    height: width(15),
+    width: width(13),
+    height: width(13),
     backgroundColor: AppColors.headerColor,
     borderRadius: width(5),
-    marginLeft: width(2),
-    marginTop: width(2),
+
+  },
+  filterContainer: {
+    width: width(13),
+    height: width(13),
+    borderRadius: width(5),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: height(2.5)
   },
   whiteText: {
     color: AppColors.white,
@@ -30,7 +38,12 @@ const styles = StyleSheet.create({
   },
   white50: {
     color: AppColors.white50,
-    fontSize: width(4)
+    fontSize: width(3.5)
+  },
+  columnWrapper: {
+    width: width(90),
+    justifyContent: 'space-between',
+    paddingVertical: height(2)
   },
   // ****************modal view**************************
   modalView: {
@@ -59,9 +72,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width:width(65),
+    width: width(65),
     marginHorizontal: width(10),
     marginVertical: height(1)
+  },
+  dash: {
+    backgroundColor: AppColors.white50,
+    width: width(90),
+    height: height(0.1),
+    alignSelf: 'center',
+    marginBottom: height(1)
   }
 
 

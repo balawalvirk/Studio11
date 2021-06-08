@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
     },
     heading: {
         color: AppColors.white,
-        fontSize: width(5),
-        textAlign: 'center'
+        fontSize: width(4),
+        fontWeight: 'bold'
     },
     logo: {
         width: width(20),

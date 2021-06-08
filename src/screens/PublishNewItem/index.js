@@ -27,82 +27,142 @@ export default function PublishNewItem(props) {
   const [itemImageName, setitemImageName] = useState('');
   const [itemPrice, setitemPrice] = useState('');
   const [itemDetail, setitemDetail] = useState('');
-  const Adddata = () => {
+  const [imageArray, setImageArray] = useState([]);
+
+  const [itemNameError, setItemNameError] = useState('');
+  const [descrError, setDescError] = useState('');
+  const [priceError, setPriceError] = useState('');
+
+
+  const Adddata = async () => {
+    if (itemName == '') {
+      setItemNameError('Please enter item name!')
+      return
+    }
+    setItemNameError('')
+    if (itemPrice == '') {
+      setPriceError('Please enter item price!')
+      return
+    }
+    setPriceError('')
+    if (itemDetail == '') {
+      setDescError('Please enter item description!')
+      return
+    }
+    setDescError('')
+    if (imageArray.length == 0) {
+      alert('Please select item images!')
+      return
+    }
     setwaiting(true)
-    uploadImage(itemImage, 'SHOPITEMS/' + itemImageName)
-      .then(async (result) => {
-        await addToArray('Users', auth().currentUser.uid, "Items", [
-          {
-            Id: uuid.v4(),
-            ItemTitle: itemName,
-            ItemPrice: itemPrice,
-            ItemDetails: itemDetail,
-            ItemImage: result
-          }
-        ])
-        dispatch(login({
-          ...user,
-          Items: [...user.Items ?? [], {
-            ItemTitle: itemName,
-            ItemPrice: itemPrice,
-            ItemDetails: itemDetail,
-            ItemImage: result
-          }]
-        }))
-        setCameraModelView(false)
+    let urls = []
+    for (let i = 0; i < imageArray.length; i++) {
+      const imageUri = imageArray[i].uri
+      const name = imageArray[i].name
+      const imageRef = 'SHOPITEMS/' + auth().currentUser.uid + '/' + name
+      const result = await uploadImage(imageUri, imageRef)
+      urls.push({
+        imageUri: result,
+        imageRef: imageRef
+      })
+    }
+    const newItem = {
+      id: uuid.v4(),
+      name: itemName,
+      price: itemPrice,
+      images: urls,
+      rating: 0,
+      ratingCount: 0
+    }
+    addToArray('Users', auth().currentUser.uid, 'Items', [newItem])
+      .then(() => {
+        if (user.Items) {
+          dispatch(login({
+            ...user,
+            Items: [...user.Items, newItem]
+          }))
+        } else {
+          dispatch(login({
+            ...user,
+            Items: [newItem]
+          }))
+        }
         setwaiting(false)
-        setimageStatus(false)
-        setitemName('')
-        setitemPrice('')
-        setitemDetail('')
-        props.navigation.goBack()
       })
       .catch(error => {
-        console.error("Error is =============>: ", error);
-      });
+        console.log(error.message)
+        setwaiting(false)
+      })
 
   };
+  const renderImage = ({ item, index }) =>
+    <NewItemImage
+      disabled={true}
+      imageAddress={{ uri: item.uri }}
+      onPress={() => setImageArray(imageArray.filter(obj => obj.uri != item.uri))}
+      containerStyle={{ marginRight: width(2) }}
+    />
   return (
     <ScreenWrapper scrollEnabled headerUnScrollable={() =>
-      <Header headerTitle={'Publish New Item'} leadingIcon={'arrow-left'}
+      <Header
+        headerTitle={'Publish New Item'}
+        leadingIcon={'arrow-left'}
         onPressLeadingIcon={() => props.navigation.goBack()} />}
       footerUnScrollable={() =>
-        <View style={styles.footer}>
+        waiting ? null : <View style={styles.footer}>
           <Button title='Publish New Item'
-            disabled={!imageStatus}
             onPress={() => Adddata()}
-            gradientContainerStyle={{ width: '100%', borderRadius: width(2.5), paddingVertical: height(2) }} />
-        </View>}
+            gradientContainerStyle={{ width: width(75), borderRadius: width(2.5) }} />
+        </View>
+      }
       transclucent statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
-
         <View style={styles.bringCenter}>
-          {waiting ? <ActivityIndicator size="large" color={AppColors.primaryGold} /> :
+          {waiting ?
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size="large" color={AppColors.primaryGold} />
+            </View> :
             <>
-              <InputField label='Item Name' placeholder='esse corporis' value={itemName}
+              <InputField
+                fielderror={itemNameError}
+                label='Item Name'
+                placeholder='esse corporis'
+                value={itemName}
                 onChangeText={(itemName) => setitemName(itemName)}
-                inputStyle={{ borderRadius: width(4) }} />
-              <InputField label='Item Price' placeholder='$130' value={itemPrice}
+                inputStyle={{ borderRadius: width(4) }}
+              />
+              <InputField
+                label='Item Price'
+                placeholder='$130'
+                value={itemPrice}
                 onChangeText={(itemPrice) => setitemPrice(itemPrice)}
-                inputStyle={{ borderRadius: width(4) }} />
+                inputStyle={{ borderRadius: width(4) }}
+              />
               <HorizontalLine lineColor={{ marginTop: 0, }} />
-              {imageStatus ?
-                <View style={styles.capturedImageDiv}>
-                  <NewItemImage
-                    imageAddress={{ uri: itemImage }}
-                    onPress={() => console.log('delete item ?')}
-                  /></View>
-                : null}
+
+              {imageArray.length > 0 &&
+                <FlatList
+                  contentContainerStyle={{ alignItems: 'center' }}
+                  style={styles.flatlist}
+                  horizontal
+                  data={imageArray}
+                  renderItem={renderImage}
+                  keyExtractor={item => item.name}
+                />}
               <Button
                 onPress={() => setCameraModelView(true)}
                 title='Upload images' gradientContainerStyle={{
-                  width: '100%', borderRadius: width(2.5), paddingVertical: height(2)
+                  width: width(75), borderRadius: width(2.5)
                 }} />
-              <HorizontalLine lineColor={{ marginTop: 0, }} />
-              <InputField value={itemDetail}
+              <HorizontalLine
+                lineColor={{ marginTop: 0, }} />
+              <InputField
+                fielderror={descrError}
+                value={itemDetail}
                 onChangeText={(itemDetail) => setitemDetail(itemDetail)}
+                numoflines={15}
+                placeholder='Description...'
                 multiline label='Item Description'
-                placeholder='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam et mauris pharetra, varius augue sed, rhoncus sapien. Duis commodo turpis in erat convallis, non facilisis velit rhoncus. Morbi faucibus ante et ex ullamcorper, et imperdiet leo tincidunt. Nulla facilisi. Fusce tempus malesuada maximus. Nam eu eleifend metus. Nulla ac tincidunt augue, eget iaculis nunc. Fusce mi mi, sodales ac ullamcorper at, molestie eget lectus. Nullam feugiat eget tortor in scelerisque. Phasellus ultrices iaculis facilisis. Proin vel imperdiet lacus. Suspendisse vestibulum scelerisque sem at congue.'
                 inputStyle={{ borderRadius: width(4) }} />
             </>}
         </View>
@@ -113,18 +173,14 @@ export default function PublishNewItem(props) {
         imageFromCamera={
           () => ImagePicker.openCamera({
           }).then(image => {
-            setitemImage(image.path);
-            setitemImageName(image.path.split('/').pop());
+            setImageArray([...imageArray, { name: image.path.split('/').pop(), uri: image.path }])
             setCameraModelView(false);
-            setimageStatus(true)
           })
         }
         imageFromGallery={() => ImagePicker.openPicker({
         }).then((image) => {
-          setitemImage(image.path);
-          setitemImageName(image.path.split('/').pop());
+          setImageArray([...imageArray, { name: image.path.split('/').pop(), uri: image.path }])
           setCameraModelView(false);
-          setimageStatus(true)
         })}
       />
     </ScreenWrapper>

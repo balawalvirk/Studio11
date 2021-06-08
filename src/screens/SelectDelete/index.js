@@ -32,6 +32,7 @@ export default function SelectDelete(props) {
   }, [])
 
   const onDeleteItems = async () => {
+    console.log('Clicked')
     setLoading(true)
     let temp = [...record]
     let newArr = []

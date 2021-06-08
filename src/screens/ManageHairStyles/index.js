@@ -29,9 +29,20 @@ export default function ManageHairStyles(props) {
   const [imageName, setimageName] = useState('');
   const [options, setOptions] = useState(['Long Cut', 'Short Cut'])
   const [selected, setSelected] = useState(options[0])
-
-  ////
   const [detailsError, setDetailsError] = useState('')
+  const [listArray, setListArray] = useState('')
+
+  useEffect(() => {
+    const arr = user?.Cuttings
+    let temp = []
+    arr.map(item => {
+      temp.push({
+        ...item,
+        isSelected: false
+      })
+    })
+    setListArray(temp)
+  }, [])
   const Adddata = () => {
     if (!capturedImage) {
       alert('Please add image.')
@@ -49,17 +60,27 @@ export default function ManageHairStyles(props) {
             Id: uuid.v4(),
             CuttingTitle: cuttingTitle == '' ? selected : cuttingTitle,
             CuttingDetails: cuttingDetails,
-            CuttingImage: result
+            CuttingImage: result,
+            imageRef: 'CUTTINGS/' + imageName
           }
         ])
         dispatch(login({
           ...user,
-          Cuttings: [...user.Cuttings ?? [], {
-            CuttingImage: result,
+          Cuttings: [...user.Cuttings, {
+            Id: uuid.v4(),
             CuttingTitle: cuttingTitle == '' ? selected : cuttingTitle,
             CuttingDetails: cuttingDetails,
+            CuttingImage: result,
+            imageRef: 'CUTTINGS/' + imageName
           }]
         }))
+        setListArray([...user.Cuttings, {
+          Id: uuid.v4(),
+          CuttingTitle: cuttingTitle == '' ? selected : cuttingTitle,
+          CuttingDetails: cuttingDetails,
+          CuttingImage: result,
+          imageRef: 'CUTTINGS/' + imageName
+        }])
         setModalVisible(false)
         setwaiting(false)
         setimageStatus(false)
@@ -79,13 +100,29 @@ export default function ManageHairStyles(props) {
     setcuttingTitle('');
     setcuttingDetails('')
   }
+
+  const renderItem = ({ item, index }) => {
+    return (
+      <HairStyle
+        containerStyle={{ width: width(40), height: width(40) }}
+        cuttingImage={{ uri: item.CuttingImage }}
+        cuttingTitle={item.CuttingTitle}
+      />
+    );
+  }
   return (
     <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
-      <Header leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} headerTitle={'Manage HairStyles'}
-        renderIconRight={() => <View ><TouchableOpacity onPress={() => props.navigation.navigate('DeleteHairStyles')}>
-          <Image source={require('../../assets/images/binIcon.png')}
-            style={{ width: width(5), height: width(5) }} resizeMode='contain' /></TouchableOpacity>
-        </View>}
+      <Header
+        leadingIcon={'arrow-left'}
+        onPressLeadingIcon={() => props.navigation.goBack()}
+        headerTitle={'Manage Hairstyles'}
+        renderIconRight={() =>
+          <View>
+            <TouchableOpacity onPress={() => props.navigation.navigate('DeleteHairStyles')}>
+              <Image source={require('../../assets/images/binIcon.png')}
+                style={styles.icon} resizeMode='contain' />
+            </TouchableOpacity>
+          </View>}
       />
       <View style={styles.mainViewContainer}>
         <Button
@@ -97,14 +134,9 @@ export default function ManageHairStyles(props) {
           columnWrapperStyle={{ justifyContent: 'space-between', paddingVertical: height(2) }}
           contentContainerStyle={{ paddingHorizontal: width(6), paddingBottom: height(10) }}
           numColumns={2}
-          // data={manageCuttingImages}
-          data={user?.Cuttings ?? []}
-          keyExtractor={(item, i) => (item.Id)}
-          renderItem={({ item }) => {
-            return (
-              <HairStyle containerStyle={{ width: width(40), height: width(40) }} cuttingImage={{ uri: item.CuttingImage }} cuttingTitle={item.CuttingTitle}
-              />);
-          }}
+          data={listArray}
+          keyExtractor={item => item.Id}
+          renderItem={renderItem}
         />
       </View>
       <MediaModal

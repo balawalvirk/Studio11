@@ -1,21 +1,23 @@
 import React from 'react';
-import { ImageBackground } from 'react-native';
+import { TouchableOpacity, Image } from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { width } from 'react-native-dimension';
 
 const NewItemImage = ({
-  imageAddress, onPress, activeOpacity
+  imageAddress, onPress, activeOpacity, containerStyle,
+  disabled
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={activeOpacity}>
-      <ImageBackground resizeMode='cover' imageStyle={{ borderRadius: width(5) }}
-        source={imageAddress}
-        style={styles.itemImage}>
-        <Icon name='closecircle' style={styles.closeIcon} />
-      </ImageBackground>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity disabled={disabled} activeOpacity={activeOpacity} style={[styles.container, containerStyle]}>
+        <Image resizeMode='cover'
+          source={imageAddress}
+          style={styles.itemImage} />
+        <TouchableOpacity onPress={onPress} style={styles.iconContainer}>
+          <Icon name='closecircle' style={styles.closeIcon} />
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </>
   );
 };
 

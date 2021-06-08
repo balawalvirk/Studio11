@@ -84,7 +84,7 @@ export default function BarberBottomTab() {
               ? require('../../assets/images/user.png')
               : require('../../assets/images/user.png');
           }
-          return <Image style={{ width: width(6), height: width(6), resizeMode: 'contain', tintColor: color }}
+          return <Image style={{ width: width(4), height: width(4), resizeMode: 'contain', tintColor: color }}
             source={iconName} />;
         },
         tabBarLabel: ({ focused, color, size }) => {
@@ -113,7 +113,7 @@ export default function BarberBottomTab() {
               ? 'Profile'
               : 'Profile';
           }
-          return <Text style={{ fontSize: width(4), color: color, marginBottom: height(0.25) }}
+          return <Text style={{ fontSize: width(3), color: color, marginBottom: height(0.25) }}
           >{label}</Text>;
         },
       })}

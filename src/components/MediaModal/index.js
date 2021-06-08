@@ -36,8 +36,14 @@ const MediaModal = ({ isVisible, onClose, onpressFirstButton, onpressSecondButto
           selected={selected}
           setSelected={setSelected}
         />)}
-      <InputField multiline={multiline} fielderror={detailsError} numoflines={numoflines} onChangeText={onchangesecond}
-        containerStyles={{ width: '100%', }} value={secondValue} label={'Details'}
+      <InputField
+        multiline={multiline}
+        fielderror={detailsError}
+        numoflines={numoflines}
+        onChangeText={onchangesecond}
+        containerStyles={{ width: '100%', }}
+        value={secondValue}
+        label={'Details'}
         placeholder={'Cutting Details'} />
       <View style={styles.buttonLine}>
         <Button title={'Add'} onPress={onpressFirstButton} />

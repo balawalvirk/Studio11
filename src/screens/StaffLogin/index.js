@@ -22,6 +22,7 @@ export default function StaffLogin(props) {
   const [waiting, setwaiting] = useState(false);
   const [password, setPassword] = useState('12345678');
   const [passwordError, setPasswordError] = useState('');
+  const [isLoading, setLoading] = useState(false);
   const checkEmail = () => {
     let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let valid = false;
@@ -146,19 +147,18 @@ export default function StaffLogin(props) {
             </View>
             {activeUser ?
               (<Button
+                isLoading={isLoading}
                 title="Login" onPress={() =>
                   _login()
                 }
               />) :
               (<Button
                 title="Login"
-                onPress={() =>
-                  console.log('Reception login pressed')
-                }
+                onPress={() => console.log('Reception login pressed')}
               />
               )}
             <View style={styles.TextRow}>
-              <Text style={styles.whiteText}>Don't have an user account? </Text>
+              <Text style={styles.whiteText}>Do you have a user account?</Text>
               <HighlightedText text={'Login from here'}
                 onPress={() => props.navigation.navigate('Login')}
               />

@@ -110,8 +110,10 @@ export default function Login(props) {
           onChangeText={email => {
             setemail(email.trim())
             checkEmail()
-          }} fielderror={emailError}
-          label={'Email'} placeholder={'Enter you Email'}
+          }}
+          fielderror={emailError}
+          label={'Email'}
+          placeholder={'Enter you Email'}
         />
         <InputField secureTextEntry value={password}
           onChangeText={password => {

@@ -18,6 +18,19 @@ export default function ManageShopItems(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector(state => state.Auth.user)
+  const renderItem = ({ item }) => {
+    return (
+      <ProductCard
+        editable
+        onPressProduct={() => props.navigation.navigate('EditItem', { item })}
+        productImage={{ uri: item?.images[0]?.imageUri }}
+        productTitle={item.ItemTitle}
+        productRating={item.rating.toFixed(1)}
+        productRatingCount={item.ratingCount}
+        productPrice={item.price}
+      />
+    );
+  }
   return (
     <ScreenWrapper scrollEnabled headerUnScrollable={() =>
       <Header headerTitle={'Manage Shop Items'}
@@ -25,44 +38,32 @@ export default function ManageShopItems(props) {
       />
     } transclucent statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
-        <Button title='Add a item in shop'
+        <Button
+          title='Add an item in shop'
           onPress={() => props.navigation.navigate('PublishNewItem')}
-          gradientContainerStyle={{ width: width(90), borderRadius: width(2.5), paddingVertical: height(2) }} />
-        <HorizontalLine lineColor={{ width: width(90), marginBottom: height(2) }} />
+          gradientContainerStyle={{ width: width(75), borderRadius: width(2.5), }} />
+        <View style={styles.dash} />
         <Text style={styles.white50}>
           Please select the shop item you want to manage.
         </Text>
         <View style={styles.searchView}>
-          <InputField searchIcon inputStyle={{ borderRadius: width(3) }}
+          <InputField
+            searchIcon
+            inputStyle={{ borderRadius: width(3) }}
             labelStyle={{ marginTop: 0 }}
             searchIconstyle={{ color: AppColors.primaryGold, fontSize: width(6) }}
-            placeholder={'Search'} containerStyles={{ width: '80%' }} />
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Image style={styles.filterButton}
-              source={require('../../assets/images/filter.png')} />
+            placeholder={'Search'} containerStyles={{ width: '80%' }}
+          />
+          <TouchableOpacity style={styles.filterContainer} onPress={() => setModalVisible(true)}>
+            <Image style={styles.filterButton} source={require('../../assets/images/filter.png')} />
           </TouchableOpacity>
         </View>
-        <FlatList numColumns={2}
-          columnWrapperStyle={{
-            width: width(90),
-            justifyContent: 'space-between',
-            paddingVertical: height(2)
-          }}
+        <FlatList
+          numColumns={2}
+          columnWrapperStyle={styles.columnWrapper}
           data={user?.Items ?? []}
           keyExtractor={item => item.Id}
-          renderItem={({ item }) => {
-            return (
-              <ProductCard
-                editable
-                onPressProduct={() => props.navigation.navigate('EditItem', { item })}
-                productImage={{ uri: item.ItemImage }}
-                productTitle={item.ItemTitle}
-                productRating={'4.5'}
-                productRatingCount={'345'}
-                productPrice={item.ItemPrice}
-              />
-            );
-          }}
+          renderItem={renderItem}
         />
       </View>
       <Modal

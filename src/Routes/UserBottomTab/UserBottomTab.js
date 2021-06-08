@@ -68,7 +68,7 @@ export default function UserBottomTab() {
               ? require('../../assets/images/bell.png')
               : require('../../assets/images/bell.png');
           }
-          return <Image style={{ width: width(6), height: width(6), resizeMode: 'contain', tintColor: color }}
+          return <Image style={{ width: width(4), height: width(4), resizeMode: 'contain', tintColor: color }}
             source={iconName} />;
         },
         tabBarLabel: ({ focused, color, size }) => {
@@ -90,7 +90,7 @@ export default function UserBottomTab() {
               ? 'Notifications'
               : 'Notifications';
           }
-          return <Text style={{ fontSize: width(4), color: color, marginBottom: height(0.25) }}
+          return <Text style={{ fontSize: width(3), color: color, marginBottom: height(0.25) }}
           >{label}</Text>;
         },
       })}

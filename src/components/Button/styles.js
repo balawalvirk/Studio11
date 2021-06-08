@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: AppColors.black,
-    fontSize: width(4.5),
+    fontSize: width(4),
     fontWeight:'bold',
     textAlign:'center',
   }

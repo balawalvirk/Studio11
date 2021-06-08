@@ -25,6 +25,11 @@ const styles = StyleSheet.create({
   white50: {
     color: AppColors.white50,
   },
+  yellowText: {
+    width: width(20),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   // ***********************drawer styling**************************
   itemStyle: {
     borderBottomColor: AppColors.white,
@@ -36,11 +41,11 @@ const styles = StyleSheet.create({
     fontSize: width(4),
     color: AppColors.white
   },
-  drawerContainerStyle:{
+  drawerContainerStyle: {
     marginHorizontal: width(2)
   },
-  drawerStyle: { 
-    backgroundColor: AppColors.headerColor 
+  drawerStyle: {
+    backgroundColor: AppColors.headerColor
   },
 
 });

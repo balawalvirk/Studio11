@@ -27,7 +27,10 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.cardColor,
     borderTopRightRadius: width(5),
     borderTopLeftRadius: width(5),
-    paddingVertical: height(2)
-  }
+  },
+  flatlist: {
+    alignSelf: 'baseline'
+  },
+  loaderContainer: { flex: 1, justifyContent: 'center' }
 });
 export default styles;

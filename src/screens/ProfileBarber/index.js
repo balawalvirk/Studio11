@@ -30,13 +30,12 @@ export default function ProfileBarber(props) {
         <View style={styles.ProfileDetail}>
           <View style={styles.textSection}>
             <View>
-              <Text style={styles.stylerTitle}>Dorris Ortiz</Text>
-              <Text style={styles.whiteText}>Email:  <Text style={styles.white50}>dorris@gmail.com</Text></Text>
+              <Text style={styles.stylerTitle}>{user.FirstName + ' ' + user.LastName}</Text>
+              <Text style={styles.whiteText}>Email:  <Text style={styles.white50}>{user?.Email}</Text></Text>
               <Text style={styles.whiteText}>Haircuts:  <Text style={styles.white50}>456</Text></Text>
               <Text style={styles.whiteText}>Earnings:  <Text style={styles.white50}>$364</Text></Text>
               <Text style={styles.whiteText}>Reviews:  <Text style={styles.white50}>467</Text></Text>
               <Text style={styles.whiteText}>Ratings:  <Text style={styles.white50}>4.5</Text></Text>
-
             </View>
           </View>
           <Image style={styles.imageSection} source={require('../../assets/images/cuttings/1.png')} />
