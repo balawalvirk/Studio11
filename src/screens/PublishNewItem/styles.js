@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   bringCenter: {
     width: width(90),
     alignItems: 'center',
+    height: height(90)
   },
   footer: {
     backgroundColor: AppColors.cardColor,

@@ -6,7 +6,7 @@ import Colors from '../../utills/AppColors';
 const styles = StyleSheet.create({
   mainViewContainer: {
     // flex: 1,
-    height:height(100),
+    height: height(100),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.60)'
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   description: {
     color: AppColors.white,
   },
-  NameRow:{
+  NameRow: {
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'space-between',
@@ -27,14 +27,14 @@ const styles = StyleSheet.create({
   },
   RowafterInputField: {
     flexDirection: 'row',
-    alignItems:'center',
+    alignItems: 'center',
     width: width(80),
-    marginBottom:height(2)
+    marginBottom: height(2)
 
   },
-  checkIcon:{
-    fontSize:width(5),
-    paddingRight:width(2)
+  checkIcon: {
+    fontSize: width(5),
+    paddingRight: width(2)
   },
   highlightedText: {
     color: AppColors.primaryGold
@@ -45,10 +45,14 @@ const styles = StyleSheet.create({
   whiteText: {
     color: AppColors.white
   },
-  TextRow: {
+  textRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: height(2)
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   rememberbeSection: {
     flexDirection: 'row'

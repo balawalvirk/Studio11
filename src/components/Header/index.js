@@ -3,22 +3,24 @@ import Icon from 'react-native-vector-icons/dist/Feather';
 import Logo from '../Logo';
 import { Text, View, Image } from 'react-native';
 import styles from './styles';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 const Header = ({ midLogo, headerTitle, leadingIcon, actionIcon, onPressLeadingIcon, onPressActionIcon, renderIconRight = null
 }) => {
     return (
         <View style={styles.header}>
-            <Icon name={leadingIcon} style={styles.leadingIcon}
-                onPress={onPressLeadingIcon}
-            />
+            <TouchableOpacity onPress={onPressLeadingIcon}>
+                <Icon name={leadingIcon} style={styles.leadingIcon} />
+            </TouchableOpacity>
             {midLogo ?
-                 <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+                <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
                 :
                 <Text style={styles.heading}>{headerTitle}</Text>
             }
             {renderIconRight ? renderIconRight() :
-            <Icon name={actionIcon} style={styles.leadingIcon}
-                onPress={onPressActionIcon}
-            />}
+                <TouchableOpacity style={styles.leadingIcon} onPress={onPressActionIcon}>
+                    <Icon name={actionIcon} style={styles.leadingIcon} />
+                </TouchableOpacity>
+            }
         </View>
     );
 };

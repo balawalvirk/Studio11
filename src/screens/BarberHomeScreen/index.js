@@ -51,15 +51,10 @@ export default function BarberHomeScreen(props) {
   const [resumeModalVisible, setresumeModalVisible] = useState(false);
   const [workBreak, setworkBreak] = useState(false);
   const takeBreak = () => {
-    setModalVisible(false),setworkBreak(true)
+    setModalVisible(false), setworkBreak(true)
   }
   const resumeWork = () => {
-    setresumeModalVisible(false),setworkBreak(false)
-  }
-  const logout = () => {
-    auth()
-      .signOut()
-      .then(() => console.log('User signed out!'));
+    setresumeModalVisible(false), setworkBreak(false)
   }
   return (
     <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}
@@ -75,7 +70,7 @@ export default function BarberHomeScreen(props) {
             <Button containerStyle={{
               width: width(80), borderRadius: width(3), paddingVertical: height(2),
               marginTop: height(3)
-            }} onPress={()=>setresumeModalVisible(true)} title={'Resume work right now'} />
+            }} onPress={() => setresumeModalVisible(true)} title={'Resume work right now'} />
           </View>
           : <Button containerStyle={{
             width: width(80), borderRadius: width(3), paddingVertical: height(2),
@@ -115,7 +110,7 @@ export default function BarberHomeScreen(props) {
         onpressFirstButton={() => takeBreak()}
         onpressSecondButton={() => setModalVisible(false)}
       />
-        <CustomModal isVisible={resumeModalVisible} onClose={() => setresumeModalVisible(false)}
+      <CustomModal isVisible={resumeModalVisible} onClose={() => setresumeModalVisible(false)}
         buttonLine firstButtonTitle={'Resume'} secondButtonTitle={'No'}
         onpressFirstButton={() => resumeWork()} onpressSecondButton={() => setresumeModalVisible(false)}
         iconName={"closecircle"} description={'Do you really want to resume the work?'} />

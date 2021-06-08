@@ -21,6 +21,21 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: '20%',
     marginTop: height(2)
+  },
+  rateText: {
+    color: AppColors.white,
+    fontSize: width(4)
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: width(4),
+    // marginBottom: height(2)
+  },
+  ratingIcon: {
+    color: AppColors.primaryGold,
+    fontSize: width(8)
   }
 });
 export default styles;

@@ -1,87 +1,88 @@
-import React, { useState } from 'react';
-import { Text, View, FlatList, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
 import HorizontalLine from '../../components/HorizontalLine';
-import { useDispatch, useSelector } from 'react-redux';
 import HairStyle from '../../components/HairStyle';
-import Foundation from 'react-native-vector-icons/Foundation';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
 import { height, width } from 'react-native-dimension';
+import ImagePicker from 'react-native-image-crop-picker';
 import Button from '../../components/Button';
-import InputModal from '../../components/inputModal';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import auth from '@react-native-firebase/auth';
+import CameraModel from '../../components/CameraModal';
+import MediaModal from '../../components/MediaModal';
+import { addToArray, getData, uploadImage } from '../../firebaseConfig';
+import { login } from '../../Redux/Actions/Auth';
+import uuid from 'react-native-uuid';
 export default function ManageHairStyles(props) {
-  const cuttingImages = [
-    {
-      id: '1',
-      title: 'Crew Cut',
-      image: require('../../assets/images/barbers/b1.png'),
-    },
-    {
-      id: '2',
-      title: 'Undercut',
-      image: require('../../assets/images/barbers/b2.png'),
-    },
-    {
-      id: '3',
-      title: 'Crew Cut',
-      image: require('../../assets/images/barbers/b3.png'),
-    },
-    {
-      id: '4',
-      title: 'Undercut',
-      image: require('../../assets/images/barbers/b4.png'),
-    },
-    {
-      id: '5',
-      title: 'Crew Cut',
-      image: require('../../assets/images/barbers/b5.png'),
-    },
-    {
-      id: '6',
-      title: 'Undercut',
-      image: require('../../assets/images/barbers/b6.png'),
-    },
-    {
-      id: '7',
-      title: 'Crew Cut',
-      image: require('../../assets/images/barbers/b1.png'),
-    },
-    {
-      id: '8',
-      title: 'Undercut',
-      image: require('../../assets/images/barbers/b2.png'),
-    },
-    {
-      id: '9',
-      title: 'Crew Cut',
-      image: require('../../assets/images/barbers/b3.png'),
-    },
-    {
-      id: '10',
-      title: 'Undercut',
-      image: require('../../assets/images/barbers/b4.png'),
-    },
-    {
-      id: '11',
-      title: 'Crew Cut',
-      image: require('../../assets/images/barbers/b5.png'),
-    },
-    {
-      id: '12',
-      title: 'Undercut',
-      image: require('../../assets/images/barbers/b6.png'),
-    },
-  ];
-  const user = useSelector((state) => state.Auth.user);
-  const [modalVisible, setModalVisible] = useState(false)
   const dispatch = useDispatch();
+  const user = useSelector(state => state.Auth.user)
+  const [modalVisible, setModalVisible] = useState(false);
+  const [CameraModelView, setCameraModelView] = useState(false);
+  const [imageStatus, setimageStatus] = useState(false);
+  const [waiting, setwaiting] = useState(false);
+  const [capturedImage, setcapturedImage] = useState('');
+  const [cuttingTitle, setcuttingTitle] = useState('');
+  const [cuttingDetails, setcuttingDetails] = useState('');
+  const [imageName, setimageName] = useState('');
+  const [options, setOptions] = useState(['Long Cut', 'Short Cut'])
+  const [selected, setSelected] = useState(options[0])
+
+  ////
+  const [detailsError, setDetailsError] = useState('')
+  const Adddata = () => {
+    if (!capturedImage) {
+      alert('Please add image.')
+      return
+    }
+    if (cuttingDetails == '') {
+      setDetailsError('Please enter details.')
+      return
+    }
+    setwaiting(true)
+    uploadImage(capturedImage, 'CUTTINGS/' + imageName)
+      .then(async (result) => {
+        await addToArray('Users', auth().currentUser.uid, "Cuttings", [
+          {
+            Id: uuid.v4(),
+            CuttingTitle: cuttingTitle == '' ? selected : cuttingTitle,
+            CuttingDetails: cuttingDetails,
+            CuttingImage: result
+          }
+        ])
+        dispatch(login({
+          ...user,
+          Cuttings: [...user.Cuttings ?? [], {
+            CuttingImage: result,
+            CuttingTitle: cuttingTitle == '' ? selected : cuttingTitle,
+            CuttingDetails: cuttingDetails,
+          }]
+        }))
+        setModalVisible(false)
+        setwaiting(false)
+        setimageStatus(false)
+        setcapturedImage('')
+        setcuttingTitle('')
+        setcuttingDetails('')
+      })
+      .catch(error => {
+        console.error("Error is =============>: ", error);
+      });
+
+  };
+  const onCancel = () => {
+    setModalVisible(false);
+    setimageStatus(false);
+    setcapturedImage('');
+    setcuttingTitle('');
+    setcuttingDetails('')
+  }
   return (
     <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
       <Header leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} headerTitle={'Manage HairStyles'}
-        renderIconRight={() => <View ><TouchableOpacity onPress={()=>props.navigation.navigate('DeleteHairStyles')}>
+        renderIconRight={() => <View ><TouchableOpacity onPress={() => props.navigation.navigate('DeleteHairStyles')}>
           <Image source={require('../../assets/images/binIcon.png')}
             style={{ width: width(5), height: width(5) }} resizeMode='contain' /></TouchableOpacity>
         </View>}
@@ -91,25 +92,59 @@ export default function ManageHairStyles(props) {
           onPress={() => setModalVisible(true)}
           containerStyle={{ borderRadius: width(4), paddingVertical: height(2), marginTop: height(3) }}
           title={'Add new'} />
-        <HorizontalLine lineColor={{alignSelf:'center',marginBottom:height(1)}} />
+        <HorizontalLine lineColor={{ alignSelf: 'center', marginBottom: height(1) }} />
         <FlatList
           columnWrapperStyle={{ justifyContent: 'space-between', paddingVertical: height(2) }}
           contentContainerStyle={{ paddingHorizontal: width(6), paddingBottom: height(10) }}
           numColumns={2}
-          data={cuttingImages}
-          keyExtractor={item => item.id}
+          // data={manageCuttingImages}
+          data={user?.Cuttings ?? []}
+          keyExtractor={(item, i) => (item.Id)}
           renderItem={({ item }) => {
             return (
-              <HairStyle containerStyle={{ width: width(40), height: width(40) }} cuttingImage={item.image} cuttingTitle={item.title}
-             />);
+              <HairStyle containerStyle={{ width: width(40), height: width(40) }} cuttingImage={{ uri: item.CuttingImage }} cuttingTitle={item.CuttingTitle}
+              />);
           }}
         />
       </View>
-      <InputModal image isVisible={modalVisible} onClose={() => setModalVisible(false)} multiline numoflines={5}
-        modalTitle={'Add New Hairstyle'} firstLabel={'Name'} secondLabel={'Details'}
-        firstValue={'Undercut'} secondValue={'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.'}
-        buttonLine firstButtonTitle={'Add'} secondButtonTitle={'Cancel'}
-        onpressFirstButton={() => setModalVisible(false)} onpressSecondButton={() => setModalVisible(false)}
+      <MediaModal
+        image={!imageStatus}
+        capturedImage={{ uri: capturedImage }}
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        multiline numoflines={5}
+        onPressUploadImage={() => setCameraModelView(true)}
+        firstValue={cuttingTitle} secondValue={cuttingDetails}
+        waiting={waiting}
+        options={options}
+        buttonLine firstButtonTitle='Add' secondButtonTitle={'Cancel'}
+        onpressFirstButton={() => Adddata()}
+        onpressSecondButton={() => onCancel()}
+        onchangefirst={(cuttingTitle) => { setcuttingTitle(cuttingTitle); }}
+        onchangesecond={(cuttingDetails) => setcuttingDetails(cuttingDetails)}
+        selected={selected}
+        setSelected={setSelected}
+        detailsError={detailsError}
+      />
+      <CameraModel isVisible={CameraModelView} onClose={() => setCameraModelView(false)}
+        iconName={"photo-camera"}
+        labelName={'Take Photo'}
+        imageFromCamera={
+          () => ImagePicker.openCamera({
+          }).then(image => {
+            setcapturedImage(image.path);
+            setimageName(image.path.split('/').pop());
+            setCameraModelView(false);
+            setimageStatus(true)
+          })
+        }
+        imageFromGallery={() => ImagePicker.openPicker({
+        }).then((image) => {
+          setcapturedImage(image.path);
+          setimageName(image.path.split('/').pop());
+          setCameraModelView(false);
+          setimageStatus(true)
+        })}
       />
     </ScreenWrapper>
   );

@@ -3,36 +3,18 @@ import { Text, View, FlatList } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
 import HorizontalLine from '../../components/HorizontalLine';
-import { useDispatch, useSelector } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
+import { notifications } from '../../dummyData';
 export default function Notifications() {
-  const user = useSelector((state) => state.Auth.user);
-  const dispatch = useDispatch();
-  const messages = [
-    {
-      id: '1',
-      notificationText: 'Your appointment with Dorris Ortiz has been accepted.',
-      notificationTime: '3:36 AM',
-    },
-    {
-      id: '2',
-      notificationText: 'Today is your appointment with Dorris Ortiz. Be there on time.',
-      notificationTime: '5:14 AM',
-    },
-    {
-      id: '3',
-      notificationText: 'velit rerum sequi nihil velit rerum sequi nihil velit rerum sequi nihil.',
-      notificationTime: '1:24 PM',
-    },
-  ];
+
   return (
     <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}
-    headerUnScrollable={()=> <Header headerTitle={'Notifications'} />}>
-     
+      headerUnScrollable={() => <Header headerTitle={'Notifications'} />}>
+
       <View style={styles.mainViewContainer}>
         <FlatList
-          data={messages}
+          data={notifications}
           keyExtractor={item => item.id}
           renderItem={({ item }) => {
             return (

@@ -3,28 +3,36 @@ import { width, height } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
-  cuttingImage: {
-    resizeMode: 'contain',
+  imageSection: {
     width: width(30),
     height: width(30),
-    marginHorizontal: width(2),
-    justifyContent: 'flex-end'
+    marginHorizontal: width(2)
+  },
+  image: {
+    width: width(30),
+    height: width(30),
+    borderRadius: width(4),
+  },
+  imageContent: {
+    position: 'absolute',
+    paddingVertical: height(0.8),
+    paddingHorizontal: height(0.8),
+    height: '100%',
+    width: '100%',
+    justifyContent: 'space-between',
   },
   cuttingTitle: {
-    textAlign: 'center',
     color: AppColors.white,
     fontWeight: 'bold',
-    marginBottom: width(2),
-    fontSize: width(4)
+    fontSize: width(4),
+    textAlign: 'center'
   },
   checkIcon: {
     color: AppColors.primaryGold,
     backgroundColor: AppColors.textColor,
     borderRadius: width(1),
     fontSize: width(6),
-    position: 'absolute',
-    top: width(2),
-    left: width(2)
+    alignSelf: 'flex-start'
   }
 });
 export default styles;

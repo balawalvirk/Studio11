@@ -3,20 +3,17 @@ import { View, Image } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
 import HorizontalLine from '../../components/HorizontalLine';
-import { useDispatch, useSelector } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import InputField from '../../components/InputField';
 import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button';
 import { height, width } from 'react-native-dimension';
 export default function AddPaymentMethod(props) {
-  const user = useSelector((state) => state.Auth.user);
-  const dispatch = useDispatch();
 
   return (
     <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}
-    headerUnScrollable={()=>
-      <Header headerTitle={'Add Payment Method'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />}
+      headerUnScrollable={() =>
+        <Header headerTitle={'Add Payment Method'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />}
     >
       <View style={styles.mainViewContainer}>
         <Image style={styles.addPaymentImage} source={require('../../assets/images/addpayment.png')} />

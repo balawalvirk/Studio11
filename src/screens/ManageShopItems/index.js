@@ -1,124 +1,40 @@
 import React, { useState } from 'react';
-import { View, Image, FlatList, Text, ImageBackground } from 'react-native';
+import { View, Image, FlatList, Text } from 'react-native';
 import styles from './styles';
-import { useDispatch, useSelector } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import Header from '../../components/Header';
 import { height, width } from 'react-native-dimension';
 import Modal from 'react-native-modal';
 import AppColors from '../../utills/AppColors';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Thumbnail from '../../components/Thumbnail';
 import InputField from '../../components/InputField';
+import { useDispatch, useSelector } from 'react-redux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Button from '../../components/Button';
+import { manageProductList } from '../../dummyData'
 import HorizontalLine from '../../components/HorizontalLine';
 import HighlightedText from '../../components/HighlightedText';
 import ProductCard from '../../components/ProductCard';
 export default function ManageShopItems(props) {
-  const user = useSelector((state) => state.Auth.user);
-  const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
-  const ProductList = [
-    {
-      id: '1',
-      productTitle: 'esse corporis',
-      productRating: '4.9',
-      productRatingCount: '344',
-      productPrice: '130',
-      productImage: require('../../assets/images/shop/1.png')
-    },
-    {
-      id: '2',
-      productTitle: 'aperiam totam',
-      productRating: '3.8',
-      productRatingCount: '438',
-      productPrice: '181',
-      productImage: require('../../assets/images/shop/2.png')
-    },
-    {
-      id: '3',
-      productTitle: 'voluptas quibusdam',
-      productRating: '4.7',
-      productRatingCount: '133',
-      productPrice: '190',
-      productImage: require('../../assets/images/shop/3.png')
-    },
-    {
-      id: '4',
-      productTitle: 'itaque atque',
-      productRating: '3.5',
-      productRatingCount: '277',
-      productPrice: '100',
-      productImage: require('../../assets/images/shop/4.png')
-    },
-    {
-      id: '5',
-      productTitle: 'veritatis dignissimos',
-      productRating: '5.0',
-      productRatingCount: '285',
-      productPrice: '111',
-      productImage: require('../../assets/images/shop/5.png')
-    },
-    {
-      id: '6',
-      productTitle: 'at reprehenderit',
-      productRating: '3.4',
-      productRatingCount: '462',
-      productPrice: '159',
-      productImage: require('../../assets/images/shop/6.png')
-    },
-    {
-      id: '7',
-      productTitle: 'sed tempora',
-      productRating: '3.4',
-      productRatingCount: '411',
-      productPrice: '152',
-      productImage: require('../../assets/images/shop/7.png')
-    },
-    {
-      id: '8',
-      productTitle: 'velit sed',
-      productRating: '3.5',
-      productRatingCount: '252',
-      productPrice: '147',
-      productImage: require('../../assets/images/shop/8.png')
-    },
-    {
-      id: '9',
-      productTitle: 'blanditiis ut',
-      productRating: '4.6',
-      productRatingCount: '211',
-      productPrice: '181',
-      productImage: require('../../assets/images/shop/9.png')
-    },
-    {
-      id: '10',
-      productTitle: 'labore id',
-      productRating: '3.6',
-      productRatingCount: '154',
-      productPrice: '175',
-      productImage: require('../../assets/images/shop/10.png')
-    },
-  ];
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.Auth.user)
   return (
     <ScreenWrapper scrollEnabled headerUnScrollable={() =>
-      <Header headerTitle={'Manage Shop Items'} 
-      leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()}
+      <Header headerTitle={'Manage Shop Items'}
+        leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()}
       />
     } transclucent statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
-      <Button title='Add a item in shop' 
-        // onPress={()=>console.log('ManageShopItems')}
-        onPress={()=>props.navigation.navigate('PublishNewItem')}
-        gradientContainerStyle={{width:width(90), borderRadius: width(2.5), paddingVertical: height(2) }} />
-        <HorizontalLine lineColor={{ width:width(90),marginBottom:height(2) }} />
+        <Button title='Add a item in shop'
+          onPress={() => props.navigation.navigate('PublishNewItem')}
+          gradientContainerStyle={{ width: width(90), borderRadius: width(2.5), paddingVertical: height(2) }} />
+        <HorizontalLine lineColor={{ width: width(90), marginBottom: height(2) }} />
         <Text style={styles.white50}>
-        Please select the shop item you want to manage.
+          Please select the shop item you want to manage.
         </Text>
         <View style={styles.searchView}>
           <InputField searchIcon inputStyle={{ borderRadius: width(3) }}
-          labelStyle={{marginTop:0}}
+            labelStyle={{ marginTop: 0 }}
             searchIconstyle={{ color: AppColors.primaryGold, fontSize: width(6) }}
             placeholder={'Search'} containerStyles={{ width: '80%' }} />
           <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -128,22 +44,22 @@ export default function ManageShopItems(props) {
         </View>
         <FlatList numColumns={2}
           columnWrapperStyle={{
-            width:width(90),
+            width: width(90),
             justifyContent: 'space-between',
             paddingVertical: height(2)
           }}
-          data={ProductList}
-          keyExtractor={item => item.id}
+          data={user?.Items ?? []}
+          keyExtractor={item => item.Id}
           renderItem={({ item }) => {
             return (
-              <ProductCard 
-              editable
-              onPressProduct={()=>props.navigation.navigate('EditItem')}
-                productImage={item.productImage}
-                productTitle={item.productTitle}
-                productRating={item.productRating}
-                productRatingCount={item.productRatingCount}
-                productPrice={item.productPrice}
+              <ProductCard
+                editable
+                onPressProduct={() => props.navigation.navigate('EditItem', { item })}
+                productImage={{ uri: item.ItemImage }}
+                productTitle={item.ItemTitle}
+                productRating={'4.5'}
+                productRatingCount={'345'}
+                productPrice={item.ItemPrice}
               />
             );
           }}
@@ -155,29 +71,29 @@ export default function ManageShopItems(props) {
         onBackdropPress={() => setModalVisible(false)}>
         <View style={styles.modalView} >
           <Text style={styles.modalTitle}>Filter by Price</Text>
-         
+
           <View style={styles.inputRow}>
-          <InputField 
-          containerStyles={{ width: '48%' }}
-           label={'Minimum'} 
-          placeholder={'$90'} />
-          <InputField 
-          containerStyles={{ width: '48%' }} 
-          label={'Maximum'} 
-          placeholder={'$120'} />
+            <InputField
+              containerStyles={{ width: '48%' }}
+              label={'Minimum'}
+              placeholder={'$90'} />
+            <InputField
+              containerStyles={{ width: '48%' }}
+              label={'Maximum'}
+              placeholder={'$120'} />
           </View>
 
           <HorizontalLine lineColor={{ backgroundColor: AppColors.white09, marginTop: 0, marginVertical: height(2), width: width(60) }} />
           <Text style={styles.modalTitle}>Sort</Text>
           <View style={styles.inputRow}>
-          <InputField 
-          containerStyles={{ width: '48%' }}
-           label={'Price'} 
-          placeholder={'High - Low'} />
-          <InputField 
-          containerStyles={{ width: '48%' }} 
-          label={'Name'} 
-          placeholder={'A - Z'} />
+            <InputField
+              containerStyles={{ width: '48%' }}
+              label={'Price'}
+              placeholder={'High - Low'} />
+            <InputField
+              containerStyles={{ width: '48%' }}
+              label={'Name'}
+              placeholder={'A - Z'} />
           </View>
           <HorizontalLine lineColor={{ backgroundColor: AppColors.white09, marginTop: 0, marginVertical: height(2), width: width(60) }} />
           <HighlightedText text={'Clear All'} />

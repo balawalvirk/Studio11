@@ -15,6 +15,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: width(8)
   },
+  waitingContainer: {
+    height: height(50),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   description: {
     color: AppColors.white,
   },
@@ -33,19 +38,19 @@ const styles = StyleSheet.create({
   },
   whiteText: {
     color: AppColors.white,
-    fontSize:width(4)
+    fontSize: width(4)
   },
   tabTitle: {
     color: AppColors.white,
-    fontSize:width(4),
-    textAlign:'center',
-    padding:width(2),
-    width:width(39)
+    fontSize: width(4),
+    textAlign: 'center',
+    padding: width(2),
+    width: width(39)
   },
-  tab:{
-    borderBottomColor:AppColors.primaryGold,
-    borderBottomWidth:width(1),
-    borderRadius:width(0.5),
+  tab: {
+    borderBottomColor: AppColors.primaryGold,
+    borderBottomWidth: width(1),
+    borderRadius: width(0.5),
   },
   TextRow: {
     flexDirection: 'row',

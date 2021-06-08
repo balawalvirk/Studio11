@@ -6,11 +6,11 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: AppColors.headerColor,
         height: height(10),
-        paddingTop:height(3),
-        flexDirection:'row',
-        paddingHorizontal:width(5),
-        elevation:12,
-        alignItems:'center',
+        paddingTop: height(3),
+        flexDirection: 'row',
+        paddingHorizontal: width(5),
+        elevation: 12,
+        alignItems: 'center',
         justifyContent: 'space-between'
     },
     leadingIcon: {
@@ -22,9 +22,9 @@ const styles = StyleSheet.create({
         fontSize: width(5),
         textAlign: 'center'
     },
-    logo:{
-        width:width(20),
-        resizeMode:'contain'
+    logo: {
+        width: width(20),
+        resizeMode: 'contain'
     }
 
 })

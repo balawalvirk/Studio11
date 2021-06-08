@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     color: AppColors.white50,
     fontSize: width(4)
   },
-
+  loaderContainer: { height: height(80), justifyContent: 'center', alignItems: 'center' },
   // ****************modal view**************************
   modalView: {
     marginHorizontal: width(12),

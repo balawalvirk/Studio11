@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         height: width(30),
         resizeMode: 'contain',
         position: 'absolute',
-        top: height(12),
+        top: height(7),
         left: width(4)
     },
     userName: {
@@ -36,27 +36,27 @@ const styles = StyleSheet.create({
         color: AppColors.white,
         fontSize: width(4),
         borderBottomColor: AppColors.white50,
-        borderBottomWidth:width(0.15),
-        paddingLeft:width(4),
-        borderTopColor:AppColors.white50,
-        borderTopWidth:width(.15),
-        paddingVertical:height(2)
+        borderBottomWidth: width(0.15),
+        paddingLeft: width(4),
+        borderTopColor: AppColors.white50,
+        borderTopWidth: width(.15),
+        paddingVertical: height(2)
     },
     PageTitle: {
         color: AppColors.white,
         fontSize: width(4),
         borderBottomColor: AppColors.white50,
-        borderBottomWidth:width(0.15),
-        paddingLeft:width(4),
-        paddingVertical:height(2)
+        borderBottomWidth: width(0.15),
+        paddingLeft: width(4),
+        paddingVertical: height(2)
     },
     PageTitleLast: {
         color: AppColors.primaryGold,
         fontSize: width(4),
         borderBottomColor: AppColors.white50,
-        borderBottomWidth:width(0.15),
-        paddingLeft:width(4),
-        paddingVertical:height(2)
+        borderBottomWidth: width(0.15),
+        paddingLeft: width(4),
+        paddingVertical: height(2)
     }
 });
 export default styles;

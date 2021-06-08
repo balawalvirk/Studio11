@@ -64,14 +64,12 @@ export default function Calender(props) {
       );
     }, 1000);
   }
-  console.log(isSelected)
   const renderItem = (item) => {
     return (
       <TouchableOpacity
         testID={'testIDs.agenda.ITEM'}
         style={[styles.item]}
         onPress={() => {
-          console.log(item.name);
           setiselected(isSelected => !isSelected);
         }}
       >
@@ -119,21 +117,6 @@ export default function Calender(props) {
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}
       markingType='custom'
-      // dayComponent={({ date, state }) => {
-      //   return (
-      //     <View>
-      //       <Text style={{ textAlign: 'center', color: state === 'disabled' ? 'gray' : 'white' }}>
-      //         {date.day}
-      //       </Text>
-      //       <View style={{
-      //         width: width(5), height: width(5), borderRadius: width(3), backgroundColor: 'red', position: 'absolute', zindex: 1,
-      //         top: -width(4), right: -width(4), alignItems: 'center'
-      //       }}>
-      //         <Text style={{ color: AppColors.white, fontSize: width(4) }}>3</Text>
-      //       </View>
-      //     </View>
-      //   );
-      // }}
       theme={{
         calendarBackground: AppColors.headerColor, //
         agendaKnobColor: AppColors.primaryGold, //agenda knob color where we can drag calender
@@ -160,19 +143,6 @@ export default function Calender(props) {
       headerUnScrollable={() => <Header headerTitle={'Calender'} leadingIcon={'menu'}
         onPressLeadingIcon={() => props.navigation.openDrawer()} />}>
       <View style={styles.mainViewContainer}>
-        {/* <CalendarStrip
-          style={{ height: height(10), width: '90%' }}
-          calendarHeaderStyle={{ color: AppColors.white }}
-          calendarColor={AppColors.headerColor}
-          dateNumberStyle={{ color: AppColors.white }}
-          dateNameStyle={{ color: AppColors.white }}
-          highlightDateNumberContainerStyle={styles.highlightedDay}
-          highlightDateNumberStyle={{ color: AppColors.white }}
-          highlightDateNameStyle={{ color: AppColors.white }}
-          scrollable={'true'}
-          iconStyle={{ display: 'none' }}
-          minDate={moment()}
-          onDateSelected={(date) => console.log(date)} /> */}
         <View style={{ width: '100%', height: '100%' }}>
           {CustomAgenda()}
         </View>

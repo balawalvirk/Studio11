@@ -9,19 +9,33 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.textColor,
     width: width(100)
   },
-  uploadButton:{
+  flexRow: {
+    flexDirection: 'row',
+    width: width(85),
+    justifyContent: 'space-evenly'
+  },
+  uploadButton: {
     backgroundColor: AppColors.headerColor,
     marginTop: height(2),
-    width: width(80),
-    height: height(25),
+    width: width(35),
+    height: width(35),
     borderRadius: width(5),
     borderColor: AppColors.primaryGold,
     borderWidth: width(.20),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom:height(2)
+    marginBottom: height(2)
   },
-  videoIcon:{
+  videoThumbnail: {
+    marginTop: height(2),
+    width: width(80),
+    height: height(25),
+    borderRadius: width(5),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: height(2)
+  },
+  videoIcon: {
     fontSize: width(8),
     color: AppColors.primaryGold
   },
@@ -34,9 +48,11 @@ const styles = StyleSheet.create({
     color: AppColors.white50,
     fontSize: width(4)
   },
-  bringCenter:{
-    width:width(90),
-    alignItems:'center',
+  bringCenter: {
+    width: width(90),
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: height(90)
   },
 
 });

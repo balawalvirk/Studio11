@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import styles from './styles';
-import AppointmentCard from '../../components/AppointmentCard';
 import Header from '../../components/Header';
 import HorizontalLine from '../../components/HorizontalLine';
-import { useDispatch, useSelector } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button';
 import CustomModal from '../../components/customModal';
 export default function AppointmentDetails(props) {
-  const user = useSelector((state) => state.Auth.user);
-  const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
@@ -34,9 +30,9 @@ export default function AppointmentDetails(props) {
         </View>
         <HorizontalLine lineColor={{ marginTop: 0, marginVertical: height(2), width: width(80) }} />
         <View style={styles.buttonRow}>
-          <Button onPress={()=>props.navigation.navigate('BarberProfile')}
-           containerStyle={{ width: width(45) }} title={'View Barber Profile'} />
-          <Button planButton onPress={()=>props.navigation.navigate('Chat')}
+          <Button onPress={() => props.navigation.navigate('BarberProfile')}
+            containerStyle={{ width: width(45) }} title={'View Barber Profile'} />
+          <Button planButton onPress={() => props.navigation.navigate('Chat')}
             containerStyle={{ backgroundColor: AppColors.cardColor, width: width(30) }} textStyle={{ color: AppColors.white }}
             title={'Message'} />
         </View>

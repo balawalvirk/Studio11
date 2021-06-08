@@ -7,7 +7,7 @@ import Button from '../Button';
 import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import InputField from '../InputField';
-const inputModal = ({ modalTitle, isVisible, onClose, onpressFirstButton, onpressSecondButton, image,
+const inputModal = ({ modalTitle, isVisible, onClose, onpressFirstButton, onpressSecondButton, image, onPressUploadImage,
   firstButtonTitle, secondButtonTitle, firstLabel, secondLabel, firstValue, secondValue, multiline, numoflines
 }) => {
   return (
@@ -17,7 +17,7 @@ const inputModal = ({ modalTitle, isVisible, onClose, onpressFirstButton, onpres
       <View style={styles.modalView} >
         <Text style={styles.modalTitle}>{modalTitle}</Text>
         {image ?
-          <TouchableOpacity >
+          <TouchableOpacity onPress={onPressUploadImage}>
             <View style={styles.cameraView}>
               <Icon name='camera' style={styles.cameraIcon} />
             </View>

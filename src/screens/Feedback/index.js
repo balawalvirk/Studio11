@@ -14,12 +14,9 @@ export default function Feedback(props) {
   const openModal = () => {
     setModalVisible(true)
     setTimeout(() => {
-      props.navigation.navigate('Login');
+      props.navigation.navigate('Dashboard');
     }, 5000)
   }
-  const user = useSelector((state) => state.Auth.user);
-  const dispatch = useDispatch();
-
   return (
     <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
       <Header headerTitle={'Give us a feedback'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />

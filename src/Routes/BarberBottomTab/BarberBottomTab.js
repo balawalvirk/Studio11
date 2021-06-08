@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { } from 'react';
 import { Image, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AppColors from '../../utills/AppColors';
@@ -9,16 +9,13 @@ import ChatListBarber from '../../screens/ChatListBarber';
 import Calender from '../../screens/Calender';
 import BarberNotifications from '../../screens/BarberNotifications';
 import ProfileBarber from '../../screens/ProfileBarber';
-import ManageShopItems from '../../screens/ManageShopItems';
 
 const Tab = createBottomTabNavigator();
 const BarberStack = createStackNavigator();
 function BarberHomeStackScreen() {
   return (
     <BarberStack.Navigator headerMode='none' >
-      <BarberStack.Screen name="BarberHomeScreen" component={BarberHomeScreen} />
-      {/* <BarberStack.Screen name="TodaysAppointmentBarber" component={TodaysAppointmentBarber} /> */}
-      {/* <BarberStack.Screen name="CustomerAppoinmentBarber" component={CustomerAppoinmentBarber} /> */}
+      <BarberStack.Screen name="BarberHomeScreenTab" component={BarberHomeScreen} />
     </BarberStack.Navigator>
   );
 }
@@ -26,7 +23,7 @@ const BarberMessagessStack = createStackNavigator();
 function BarberMessagessStackScreen() {
   return (
     <BarberMessagessStack.Navigator headerMode='none'>
-      <BarberMessagessStack.Screen name="ChatListBarber" component={ChatListBarber} />
+      <BarberMessagessStack.Screen name="ChatListBarberTab" component={ChatListBarber} />
     </BarberMessagessStack.Navigator>
   );
 }
@@ -34,8 +31,7 @@ const CalenderStack = createStackNavigator();
 function CalenderStackScreen() {
   return (
     <CalenderStack.Navigator headerMode='none'>
-      <CalenderStack.Screen name="Calender" component={Calender} />
-      {/* <CalenderStack.Screen name="SearchAppointment" component={SearchAppointment} /> */}
+      <CalenderStack.Screen name="CalenderTab" component={Calender} />
     </CalenderStack.Navigator>
   );
 }
@@ -43,7 +39,7 @@ const BarberNotificationsStack = createStackNavigator();
 function BarberNotificationsStackScreen() {
   return (
     <BarberNotificationsStack.Navigator headerMode='none'>
-      <BarberNotificationsStack.Screen name="BarberNotifications" component={BarberNotifications} />
+      <BarberNotificationsStack.Screen name="BarberNotificationsTab" component={BarberNotifications} />
     </BarberNotificationsStack.Navigator>
   );
 }
@@ -51,17 +47,11 @@ const BarberProfileStack = createStackNavigator();
 function BarberProfileStackScreen() {
   return (
     <BarberProfileStack.Navigator headerMode='none' screenOptions={navigation => {
-      console.log("=========>",navigation)
-      return({
+      return ({
         tabBarVisible: navigation?.route?.state?.index > 0 ? false : true,
       })
     }} >
-      <BarberProfileStack.Screen name="ProfileBarber" component={ProfileBarber}
-     
-      />
-      {/* <BarberProfileStack.Screen name="ManageShopItems" component={ManageShopItems} /> */}
-      {/* <BarberProfileStack.Screen name="DeleteHairStyles" component={DeleteHairStyles} /> */}
-      {/* <BarberProfileStack.Screen name="EditProfileBarber" component={EditProfileBarber} /> */}
+      <BarberProfileStack.Screen name="ProfileBarberTab" component={ProfileBarber} />
     </BarberProfileStack.Navigator>
   );
 }
@@ -142,7 +132,7 @@ export default function BarberBottomTab() {
       <Tab.Screen name="Calender" component={CalenderStackScreen} />
       <Tab.Screen name="BarberNotifications" component={BarberNotificationsStackScreen} />
       <Tab.Screen name="BarberProfile" component={BarberProfileStackScreen}
-        />
+      />
     </Tab.Navigator>
   )
 }

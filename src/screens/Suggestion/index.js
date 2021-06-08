@@ -3,7 +3,6 @@ import { Text, View, Image, TextInput } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
 import HorizontalLine from '../../components/HorizontalLine';
-import { useDispatch, useSelector } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomModal from '../../components/customModal';
@@ -14,12 +13,9 @@ export default function Suggestion(props) {
   const openModal = () => {
     setModalVisible(true)
     setTimeout(() => {
-      props.navigation.navigate('Login');
+      props.navigation.navigate('Dashboard');
     }, 5000)
   }
-  const user = useSelector((state) => state.Auth.user);
-  const dispatch = useDispatch();
-
   return (
     <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}>
       <Header headerTitle={'Give a Suggestion'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />
@@ -45,7 +41,7 @@ export default function Suggestion(props) {
         <Button title={'Submit'} onPress={() => openModal()} />
       </View>
       <CustomModal isVisible={modalVisible} onClose={() => setModalVisible(false)}
-      modalImage modalImagePath={require('../../assets/images/bulb.png')}
+        modalImage modalImagePath={require('../../assets/images/bulb.png')}
         description={'Thank you so much for giving us a suggestion!'} />
     </ScreenWrapper>
   );

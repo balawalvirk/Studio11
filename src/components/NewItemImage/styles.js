@@ -7,15 +7,15 @@ const styles = StyleSheet.create({
     width: width(15),
     height: width(15),
     marginVertical: height(2),
-    marginHorizontal: width(2),
+    marginHorizontal: width(2)
   },
   closeIcon: {
     fontSize: width(4),
     color: AppColors.primaryGold,
     position: 'absolute',
-    right: -width(2), 
-    top:-width(2), 
-    backgroundColor:AppColors.black,
+    right: -width(2),
+    top: -width(2),
+    backgroundColor: AppColors.black,
     borderRadius: width(2)
   },
 });

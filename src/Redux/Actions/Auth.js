@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT } from '../Types';
+import { LOGIN, LOGOUT, CUSTOMERTYPE, LOGINSCREENTYPE } from '../Types';
 export const login = payload => {
     return {
         type: LOGIN,
@@ -7,7 +7,18 @@ export const login = payload => {
 };
 export const logout = () => {
     return {
-        type: LOGOUT,
-        payload: { uid: '' }
+        type: LOGOUT
+    }
+};
+export const setCustomerType = payload => {
+    return {
+        type: CUSTOMERTYPE,
+        payload: payload
+    }
+};
+export const setLoginScreenType = payload => {
+    return {
+        type: LOGINSCREENTYPE,
+        payload: payload
     }
 };

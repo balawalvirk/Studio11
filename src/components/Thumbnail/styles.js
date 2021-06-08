@@ -3,11 +3,19 @@ import AppColors from '../../utills/AppColors';
 import { width, height } from 'react-native-dimension'
 
 const styles = StyleSheet.create({
+  container: {
+    marginHorizontal: width(2),
+    borderRadius: width(4),
+    overflow: 'hidden',
+  },
   videoThumbnail: {
     width: width(70),
     height: height(20),
-    justifyContent: 'space-between',
-    marginHorizontal: width(2)
+  },
+  imageContent: {
+    position: 'absolute',
+    width: width(70),
+    height: height(20),
   },
   editIcon: {
     fontSize: width(5),
@@ -21,7 +29,8 @@ const styles = StyleSheet.create({
     fontSize: width(15),
     color: AppColors.white,
     // padding: height(5),
-    alignSelf: 'center'
+    alignSelf: 'center',
+    justifyContent: 'center'
   },
   videoStats: {
     paddingHorizontal: width(2),
@@ -32,6 +41,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: height(2)
   },
   viewIcon: {
     color: AppColors.white50,

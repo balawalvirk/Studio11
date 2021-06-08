@@ -1,22 +1,24 @@
 import React from 'react';
-import { Text, ImageBackground} from 'react-native';
+import { Text, View, Image } from 'react-native';
 import styles from './styles';
-import {width, height} from 'react-native-dimension'
+import { width } from 'react-native-dimension'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import AppColors from '../../utills/AppColors';
+import FastImage from 'react-native-fast-image';
 const HairStyle = ({
   cuttingImage, cuttingTitle,
-  containerStyle={},onPress,iconName, checkicon, activeOpacity
+  containerStyle = {}, onPress, iconName, checkicon, activeOpacity
 }) => {
   return (
-    <TouchableOpacity activeOpacity={activeOpacity} onPress={onPress}>
-   <ImageBackground source={cuttingImage} style={[styles.cuttingImage, containerStyle]}
-    imageStyle={{borderRadius:width(4)}}>
-       {checkicon ?  <Icon name={iconName} style={styles.checkIcon} /> : null}
-    <Text style={styles.cuttingTitle}>{cuttingTitle}</Text>
-  </ImageBackground>
-  </TouchableOpacity>
+    <TouchableOpacity activeOpacity={activeOpacity} onPress={onPress} style={[styles.imageSection, containerStyle]}>
+      <Image
+        style={[styles.image, containerStyle]} source={cuttingImage}
+      />
+      <View style={styles.imageContent}>
+        {checkicon ? <Icon name={iconName} style={styles.checkIcon} /> : <View></View>}
+        <Text style={styles.cuttingTitle}>{cuttingTitle}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 

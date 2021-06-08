@@ -14,7 +14,7 @@ const Drawer = createDrawerNavigator();
 
 export default function Dashboard(props) {
   return (
-    <Drawer.Navigator initialRouteName="Home"
+    <Drawer.Navigator initialRouteName="HomeScreen"
       drawerStyle={styles.drawerStyleMain}
       drawerContentOptions={{
         activeTintColor: AppColors.primaryGold,
@@ -28,14 +28,13 @@ export default function Dashboard(props) {
       }}
       drawerContent={(props) => <DrawerHeader {...props} />}
     >
-      <Drawer.Screen name="home" component={HomeScreen} />
+      <Drawer.Screen name="HomeScreen" component={HomeScreen} />
       <Drawer.Screen name="DrawerAppointments" component={Appointments} />
       <Drawer.Screen name="Payment Method" component={PaymentMethods} />
       <Drawer.Screen name="DrawerSettings" component={Settings} />
       <Drawer.Screen name="Give us a feedback" component={Feedback} />
       <Drawer.Screen name="Wanna give us a suggestion?" component={Suggestion} />
       <Drawer.Screen name="Terms & Conditions" component={TermsConditions} />
-      <Drawer.Screen name="Sign out" component={Appointments} />
     </Drawer.Navigator>
   );
 }
