@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 import AppColors from '../../utills/AppColors';
-import { width, height } from 'react-native-dimension'
+import {width, height} from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -14,14 +14,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: width(90),
     alignItems: 'center',
-    marginTop: height(1.5)
+    marginTop: height(1.5),
   },
   filterButton: {
     width: width(13),
     height: width(13),
     backgroundColor: AppColors.headerColor,
     borderRadius: width(5),
-
   },
   filterContainer: {
     width: width(13),
@@ -29,21 +28,24 @@ const styles = StyleSheet.create({
     borderRadius: width(5),
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: height(2.5)
+    marginBottom: height(2.5),
   },
   whiteText: {
     color: AppColors.white,
     fontWeight: 'bold',
-    fontSize: width(4)
+    fontSize: width(4),
   },
   white50: {
     color: AppColors.white50,
-    fontSize: width(3.5)
+    fontSize: width(3.5),
   },
   columnWrapper: {
     width: width(90),
     justifyContent: 'space-between',
-    paddingVertical: height(2)
+    paddingVertical: height(2),
+  },
+  btn: {
+    marginVertical: height(2),
   },
   // ****************modal view**************************
   modalView: {
@@ -51,22 +53,22 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.modalBg,
     borderRadius: width(5),
     padding: width(5),
-    alignItems: "center",
-    elevation: 5
+    alignItems: 'center',
+    elevation: 5,
   },
 
   modalTitle: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: width(5),
     color: AppColors.white,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: width(12),
-    marginVertical: height(1)
+    marginVertical: height(1),
   },
   inputRow: {
     flexDirection: 'row',
@@ -74,16 +76,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: width(65),
     marginHorizontal: width(10),
-    marginVertical: height(1)
+    marginVertical: height(1),
   },
   dash: {
     backgroundColor: AppColors.white50,
     width: width(90),
     height: height(0.1),
     alignSelf: 'center',
-    marginBottom: height(1)
-  }
-
-
+    marginBottom: height(1),
+  },
 });
 export default styles;

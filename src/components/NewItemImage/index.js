@@ -8,16 +8,16 @@ const NewItemImage = ({
   disabled
 }) => {
   return (
-    <>
-      <TouchableOpacity disabled={disabled} activeOpacity={activeOpacity} style={[styles.container, containerStyle]}>
-        <Image resizeMode='cover'
-          source={imageAddress}
-          style={styles.itemImage} />
-        <TouchableOpacity onPress={onPress} style={styles.iconContainer}>
-          <Icon name='closecircle' style={styles.closeIcon} />
-        </TouchableOpacity>
+    <TouchableOpacity disabled={disabled} activeOpacity={activeOpacity} style={[styles.container, containerStyle]}>
+      <Image
+        resizeMode='cover'
+        source={imageAddress}
+        style={styles.itemImage} />
+      <TouchableOpacity onPress={onPress} style={styles.iconContainer}>
+        <Icon name='closecircle' style={styles.closeIcon} />
       </TouchableOpacity>
-    </>
+    </TouchableOpacity>
+
   );
 };
 

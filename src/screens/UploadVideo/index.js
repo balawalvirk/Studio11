@@ -96,7 +96,8 @@ export default function UploadVideo(props) {
   };
   return (
     <ScreenWrapper scrollEnabled headerUnScrollable={() =>
-      <Header headerTitle={'Edit Uploaded Video'} leadingIcon={'arrow-left'}
+      <Header headerTitle={'Edit Uploaded Video'}
+        leadingIcon={'arrow-left'}
         onPressLeadingIcon={() => props.navigation.goBack()} />
     } transclucent statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
@@ -126,7 +127,7 @@ export default function UploadVideo(props) {
 
               <InputField
                 label='Video Title'
-                placeholder='Alias quia nostrum.'
+                placeholder='Title'
                 value={videoTitle}
                 onChangeText={(videoTitle) => setvideoTitle(videoTitle)}
                 fielderror={titleError}

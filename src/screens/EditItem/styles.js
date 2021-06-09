@@ -27,6 +27,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: width(5),
     borderTopLeftRadius: width(5),
     paddingVertical: height(2)
-  }
+  },
+  flatlist: {
+    alignSelf: 'baseline',
+    marginVertical: height(1)
+  },
 });
 export default styles;

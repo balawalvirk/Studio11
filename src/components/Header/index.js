@@ -1,27 +1,41 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/dist/Feather';
 import Logo from '../Logo';
-import { Text, View, Image } from 'react-native';
+import {Text, View, Image} from 'react-native';
 import styles from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-const Header = ({ midLogo, headerTitle, leadingIcon, actionIcon, onPressLeadingIcon, onPressActionIcon, renderIconRight = null
+import {TouchableOpacity} from 'react-native-gesture-handler';
+const Header = ({
+  midLogo,
+  headerTitle,
+  leadingIcon,
+  actionIcon,
+  onPressLeadingIcon,
+  onPressActionIcon,
+  renderIconRight = null,
 }) => {
-    return (
-        <View style={styles.header}>
-            <TouchableOpacity onPress={onPressLeadingIcon}>
-                <Icon name={leadingIcon} style={styles.leadingIcon} />
-            </TouchableOpacity>
-            {midLogo ?
-                <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
-                :
-                <Text style={styles.heading}>{headerTitle}</Text>
-            }
-            {renderIconRight ? renderIconRight() :
-                <TouchableOpacity style={styles.leadingIcon} onPress={onPressActionIcon}>
-                    <Icon name={actionIcon} style={styles.leadingIcon} />
-                </TouchableOpacity>
-            }
-        </View>
-    );
+  return (
+    <View style={styles.header}>
+      <TouchableOpacity onPress={onPressLeadingIcon}>
+        <Icon name={leadingIcon} style={styles.leadingIcon} />
+      </TouchableOpacity>
+      {midLogo ? (
+        <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.logo}
+        />
+      ) : (
+        <Text style={styles.heading}>{headerTitle}</Text>
+      )}
+      {renderIconRight ? (
+        renderIconRight()
+      ) : (
+        <TouchableOpacity
+          style={styles.leadingIcon}
+          onPress={onPressActionIcon}>
+          <Icon name={actionIcon} style={styles.leadingIcon} />
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 };
 export default Header;
