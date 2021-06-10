@@ -9,12 +9,17 @@ const styles = StyleSheet.create({
     height: height(100),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red',
+    backgroundColor: 'rgba(0,0,0,0.60)',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: height(2),
   },
   heading: {
     color: AppColors.white,
     fontWeight: 'bold',
-    fontSize: width(7),
+    fontSize: width(6.5),
   },
   description: {
     color: AppColors.white,
@@ -22,7 +27,9 @@ const styles = StyleSheet.create({
   NameRow: {
     flexDirection: 'row',
     alignSelf: 'center',
-    width: width(80),
+    width: width(90),
+    justifyContent: 'space-evenly',
+    height: height(11),
   },
   RowafterInputField: {
     flexDirection: 'row',

@@ -22,33 +22,34 @@ export default function Routes() {
   const isLogin = useSelector((state) => state.Auth.isLogin);
 
   // Handle isLogin state changes
-  async function onAuthStateChanged(isLogin) {
-    if (isLogin) {
-      if (loginScreenType === isLogin.displayName) {
-        await _getUserProfile(isLogin.uid);
-      }
-    }
-    if (initializing) setInitializing(false);
-  }
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
-  if (initializing) return null;
+  // async function onAuthStateChanged(isLogin) {
+  //   if (isLogin) {
+  //     if (loginScreenType === isLogin.displayName) {
+  //       await _getUserProfile(isLogin.uid);
+  //     }
+  //   }
+  //   if (initializing) setInitializing(false);
+  // }
+  // useEffect(() => {
+  //   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+  //   return subscriber; // unsubscribe on unmount
+  // }, []);
+  // if (initializing) return null;
 
-  async function _getUserProfile(uid) {
-    const userProfile = await firestore().collection('Users').doc(uid).get();
-    if (!userProfile.exists) {
-      await auth().signOut();
-    } else {
-      const profile = userProfile.data();
-      dispatch(login(profile));
-    }
-    // userProfile.remove();
-  }
+  // async function _getUserProfile(uid) {
+  //   const userProfile = await firestore().collection('Users').doc(uid).get();
+  //   if (!userProfile.exists) {
+  //     await auth().signOut();
+  //   } else {
+  //     const profile = userProfile.data();
+  //     dispatch(login(profile));
+  //   }
+  //   // userProfile.remove();
+  // }
 
   return (
     <NavigationContainer>
+      {console.log(!isLogin, user)}
       {!isLogin ? (
         <Stack.Navigator initialRouteName="AuthStack" headerMode="none">
           <Stack.Screen name="AuthStack" component={AuthStack} />

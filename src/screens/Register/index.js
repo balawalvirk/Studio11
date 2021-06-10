@@ -7,12 +7,13 @@ import InputField from '../../components/InputField';
 import {useDispatch, useSelector} from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import Logo from '../../components/Logo';
-import {width} from 'react-native-dimension';
+import {height, width} from 'react-native-dimension';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import auth from '@react-native-firebase/auth';
 import AppColors from '../../utills/AppColors';
 import {saveData} from '../../firebaseConfig';
 import {login, setLoginScreenType} from '../../Redux/Actions/Auth';
+import {UserTypes} from '../../utills/Enums';
 export default function Register(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export default function Register(props) {
   const [emailerror, setemailerror] = useState('');
   const [password, setpassword] = useState('');
   const [passworderror, setpassworderror] = useState('');
+  const [isLoading, setLoading] = useState(false);
   let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const checkFirstName = (firstName) => {
     if (firstName.length < 3) {
@@ -76,27 +78,24 @@ export default function Register(props) {
           if (checkPassword(password)) {
             // }
             {
+              setLoading(true);
               auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then(async (result) => {
-                  await saveData('Users', result.user.uid, {
+                  let userOBJ = {
                     FirstName: firstName,
                     LastName: lastName,
                     Email: email,
-                    Password: password,
                     Type: userType,
-                  });
+                  };
+                  if (userOBJ.Type == UserTypes.BARBER) {
+                    userOBJ.HairCutCount = 0;
+                    userOBJ.Rating = 0;
+                    userOBJ.RatingCount = 0;
+                  }
+                  await saveData('Users', result.user.uid, userOBJ);
                   console.log('User account created & signed in!');
-                  dispatch(
-                    login({
-                      FirstName: firstName,
-                      LastName: lastName,
-                      Email: email,
-                      Password: password,
-                      Type: userType,
-                    }),
-                  );
-                  // props.navigation.navigate('Login')
+                  dispatch(login(userOBJ));
                   return result.user.updateProfile({
                     displayName: userType,
                   });
@@ -132,9 +131,14 @@ export default function Register(props) {
       statusBarColor={AppColors.transparent}
       backgroundImage={require('../../assets/images/bg.png')}>
       <View style={styles.mainViewContainer}>
-        <Logo imagepath={require('../../assets/images/logo.png')} />
-        <Text style={styles.heading}>Create an Account</Text>
-        <Text style={styles.description}>Register to get started</Text>
+        <Logo
+          imagepath={require('../../assets/images/logo.png')}
+          containerStyle={{marginVertical: 'auto'}}
+        />
+        <View style={styles.titleContainer}>
+          <Text style={styles.heading}>Create an Account</Text>
+          <Text style={styles.description}>Register to get started</Text>
+        </View>
         <View style={styles.NameRow}>
           <InputField
             value={firstName}
@@ -155,7 +159,7 @@ export default function Register(props) {
             }}
             label={'Last Name'}
             placeholder={'Last Name'}
-            containerStyles={{width: width(37.5)}}
+            containerStyles={{width: width(37.5), height: 'auto'}}
             fielderror={lastNameerror}
           />
         </View>
@@ -228,8 +232,8 @@ export default function Register(props) {
         <Button
           title="Signup"
           disabled={checkIcon ? false : true}
-          // onPress={()=>props.navigation.navigate('Dashboard')}
           onPress={() => signUpUser()}
+          isLoading={isLoading}
         />
         <View style={styles.textRow}>
           <Text style={styles.whiteText}>Already have an account? </Text>

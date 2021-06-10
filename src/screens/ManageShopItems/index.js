@@ -18,6 +18,7 @@ export default function ManageShopItems(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
+  const barberItems = useSelector((state) => state.Barber.barberItems);
   const renderItem = ({item, index}) => {
     return (
       <ProductCard
@@ -25,9 +26,13 @@ export default function ManageShopItems(props) {
         onPressProduct={() =>
           props.navigation.navigate('EditItem', {item, index})
         }
-        productImage={{uri: item?.images[0]?.imageUri}}
+        productImage={
+          item?.images?.length > 0
+            ? {uri: item?.images[0]?.imageUri ?? ''}
+            : require('../../assets/images/1.png')
+        }
         productTitle={item.name}
-        productRating={item.rating.toFixed(1)}
+        productRating={item.rating}
         productRatingCount={item.ratingCount}
         productPrice={item.price}
       />
@@ -76,7 +81,7 @@ export default function ManageShopItems(props) {
         <FlatList
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
-          data={user?.Items ?? []}
+          data={barberItems}
           keyExtractor={(item) => item.Id}
           renderItem={renderItem}
         />

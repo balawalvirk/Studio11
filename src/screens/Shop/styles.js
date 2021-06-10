@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 import AppColors from '../../utills/AppColors';
-import { width, height } from 'react-native-dimension'
+import {width, height} from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -11,9 +11,10 @@ const styles = StyleSheet.create({
   },
   searchView: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: width(90),
-    alignItems: 'center'
+    width: width(100),
+    alignItems: 'center',
+    paddingHorizontal: width(4),
+    paddingTop: height(2),
   },
   filterButton: {
     width: width(15),
@@ -21,16 +22,25 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.headerColor,
     borderRadius: width(5),
     marginLeft: width(2),
-    marginTop: width(2),
   },
   whiteText: {
     color: AppColors.white,
     fontWeight: 'bold',
-    fontSize: width(4)
+    fontSize: width(4),
   },
   white50: {
     color: AppColors.white50,
-    fontSize: width(4)
+    fontSize: width(4),
+  },
+  flatlistcolumn: {
+    justifyContent: 'space-between',
+    paddingVertical: height(2),
+  },
+  dash: {
+    backgroundColor: AppColors.white09,
+    marginTop: 0,
+    marginVertical: height(2),
+    width: width(60),
   },
   // ****************modal view**************************
   modalView: {
@@ -38,32 +48,30 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.modalBg,
     borderRadius: width(5),
     padding: width(5),
-    alignItems: "center",
-    elevation: 5
+    alignItems: 'center',
+    elevation: 5,
   },
 
   modalTitle: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: width(5),
     color: AppColors.white,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: width(12),
-    marginVertical: height(1)
+    marginVertical: height(1),
   },
   inputRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width:width(65),
+    width: width(65),
     marginHorizontal: width(10),
-    marginVertical: height(1)
-  }
-
-
+    marginVertical: height(1),
+  },
 });
 export default styles;

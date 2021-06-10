@@ -11,13 +11,20 @@ import Logo from '../../components/Logo';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import AppColors from '../../utills/AppColors';
 import {height, width} from 'react-native-dimension';
-import {getData} from '../../firebaseConfig';
+import {
+  getCuttingsById,
+  getData,
+  getItemsById,
+  getVideosById,
+} from '../../firebaseConfig';
 import {
   login,
   logout,
   setCustomerType,
   setLoginScreenType,
 } from '../../Redux/Actions/Auth';
+import {setCuttings, setItems, setVideos} from '../../Redux/Actions/Barber';
+import {UserTypes} from '../../utills/Enums';
 export default function Login(props) {
   const [email, setemail] = useState('Customer@mail.com');
   const dispatch = useDispatch();
@@ -51,12 +58,24 @@ export default function Login(props) {
     }
     return valid;
   };
+
   async function onAuthStateChanged(user) {
     if (user) {
-      console.log('USER LOGGED IN ', user.uid);
       const userObj = await getData('Users', user.uid);
-      dispatch(setCustomerType('Customer'));
-      setTimeout(() => dispatch(login(userObj)), 600);
+      dispatch(setCustomerType(userObj?.Type));
+      console.log('USER LOGGED IN ', userObj?.Type);
+
+      if (userObj?.Type == UserTypes.BARBER) {
+        const items = await getItemsById();
+        const videos = await getVideosById();
+        const cuttings = await getCuttingsById();
+        dispatch(setItems(items));
+        dispatch(setCuttings(cuttings));
+        dispatch(setVideos(videos));
+        dispatch(login(userObj));
+      } else if (userObj?.Type == UserTypes.CUSTOMER) {
+        dispatch(login(userObj));
+      }
     } else {
       console.log('USER NOT LOGGED IN');
     }
@@ -115,13 +134,6 @@ export default function Login(props) {
     } else null;
   };
 
-  useEffect(() => {
-    props.navigation.addListener('focus', () => {
-      dispatch(setLoginScreenType('Customer'));
-    });
-    dispatch(setLoginScreenType('Customer'));
-    // registration.remove();
-  }, []);
   return (
     <ScreenWrapper
       transclucent

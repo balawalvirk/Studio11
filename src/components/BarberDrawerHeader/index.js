@@ -39,8 +39,8 @@ const BarberDrawerHeader = (props) => {
         <Image
           style={styles.dp}
           source={
-            user.Image.imageUrl
-              ? {uri: user.Image.imageUrl}
+            user?.Image?.imageUrl
+              ? {uri: user?.Image?.imageUrl}
               : require('../../assets/images/drawerdp.png')
           }
         />

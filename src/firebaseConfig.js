@@ -3,6 +3,7 @@ import firebase from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
+import {UserTypes} from './utills/Enums';
 export async function addToArray(collection, doc, array, value) {
   let docRef = await firestore().collection(collection).doc(doc);
   let docData = await docRef.get();
@@ -190,4 +191,65 @@ export async function saveData(collection, doc, jsonObject) {
     });
   //console.log("Document successfully written!");
 }
+export async function getItemsById() {
+  try {
+    let items = [];
+    const snapshot = await firestore()
+      .collection('ShopItems')
+      .where('userId', '==', auth().currentUser.uid)
+      .get();
+    snapshot.forEach((doc) => {
+      items.push(doc.data());
+    });
+    return items;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getVideosById() {
+  try {
+    let items = [];
+    const snapshot = await firestore()
+      .collection('Videos')
+      .where('UserId', '==', auth().currentUser.uid)
+      .get();
+    snapshot.forEach((doc) => {
+      items.push(doc.data());
+    });
+    return items;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getCuttingsById() {
+  try {
+    let items = [];
+    const snapshot = await firestore()
+      .collection('Cuttings')
+      .where('UserId', '==', auth().currentUser.uid)
+      .get();
+    snapshot.forEach((doc) => {
+      items.push(doc.data());
+    });
+    return items;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getBarbers() {
+  try {
+    let barbers = [];
+    const snapshot = await firestore()
+      .collection('Users')
+      .where('Type', '==', UserTypes.BARBER)
+      .get();
+    snapshot.forEach((doc) => {
+      barbers.push(doc.data());
+    });
+    return barbers;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 export default firebase;

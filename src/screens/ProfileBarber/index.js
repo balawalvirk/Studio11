@@ -16,7 +16,8 @@ import Button from '../../components/Button';
 import Thumbnail from '../../components/Thumbnail';
 export default function ProfileBarber(props) {
   const user = useSelector((state) => state.Auth.user);
-
+  const videos = useSelector((state) => state.Barber.videos);
+  const cuttings = useSelector((state) => state.Barber.cuttings);
   return (
     <ScreenWrapper
       scrollEnabled
@@ -87,10 +88,9 @@ export default function ProfileBarber(props) {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{paddingHorizontal: width(8)}}
-          data={user?.Videos ?? []}
+          data={videos}
           keyExtractor={(item) => item.Id}
           renderItem={({item}) => {
-            console.log(item.thumbnailImage);
             return (
               <Thumbnail
                 thumbnailImage={{uri: item.videoThumb}}
@@ -124,7 +124,7 @@ export default function ProfileBarber(props) {
             paddingVertical: height(2),
           }}
           showsHorizontalScrollIndicator={false}
-          data={user?.Cuttings ?? []}
+          data={cuttings}
           keyExtractor={(item) => item.Id}
           renderItem={({item}) => {
             return (

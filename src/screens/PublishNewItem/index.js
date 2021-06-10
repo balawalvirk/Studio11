@@ -1,25 +1,25 @@
-import React, {useState} from 'react';
-import {View, FlatList, ActivityIndicator} from 'react-native';
-import styles from './styles';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import Header from '../../components/Header';
-import {height, width} from 'react-native-dimension';
-import AppColors from '../../utills/AppColors';
-import InputField from '../../components/InputField';
-import Button from '../../components/Button';
-import {ItemImageList} from '../../dummyData';
-import HorizontalLine from '../../components/HorizontalLine';
-import NewItemImage from '../../components/NewItemImage';
-import CameraModel from '../../components/CameraModal';
-import {useDispatch, useSelector} from 'react-redux';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import React, {useState} from 'react';
+import {ActivityIndicator, FlatList, View} from 'react-native';
+import {height, width} from 'react-native-dimension';
 import ImagePicker from 'react-native-image-crop-picker';
-import {addToArray, getData, uploadImage} from '../../firebaseConfig';
-import {login} from '../../Redux/Actions/Auth';
-import uuid from 'react-native-uuid';
+import {useDispatch, useSelector} from 'react-redux';
+import Button from '../../components/Button';
+import CameraModel from '../../components/CameraModal';
+import Header from '../../components/Header';
+import HorizontalLine from '../../components/HorizontalLine';
+import InputField from '../../components/InputField';
+import NewItemImage from '../../components/NewItemImage';
+import ScreenWrapper from '../../components/ScreenWrapper';
+import {saveData, uploadImage} from '../../firebaseConfig';
+import {setItems} from '../../Redux/Actions/Barber';
+import AppColors from '../../utills/AppColors';
+import styles from './styles';
 export default function PublishNewItem(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
+  const barberData = useSelector((state) => state.Barber);
   const [CameraModelView, setCameraModelView] = useState(false);
   const [imageStatus, setimageStatus] = useState(false);
   const [waiting, setwaiting] = useState(false);
@@ -33,7 +33,7 @@ export default function PublishNewItem(props) {
   const [itemNameError, setItemNameError] = useState('');
   const [descrError, setDescError] = useState('');
   const [priceError, setPriceError] = useState('');
-
+  console.log(barberData);
   const Adddata = async () => {
     if (itemName == '') {
       setItemNameError('Please enter item name!');
@@ -66,8 +66,11 @@ export default function PublishNewItem(props) {
         imageRef: imageRef,
       });
     }
+    const barberId = auth().currentUser.uid;
+    const itemId = firestore().collection('rnd').doc().id;
     const newItem = {
-      id: uuid.v4(),
+      id: itemId,
+      userId: barberId,
       name: itemName,
       price: itemPrice,
       description: itemDetail,
@@ -75,30 +78,11 @@ export default function PublishNewItem(props) {
       rating: 0,
       ratingCount: 0,
     };
-    addToArray('Users', auth().currentUser.uid, 'Items', [newItem])
-      .then(() => {
-        if (user.Items) {
-          dispatch(
-            login({
-              ...user,
-              Items: [...user.Items, newItem],
-            }),
-          );
-        } else {
-          dispatch(
-            login({
-              ...user,
-              Items: [newItem],
-            }),
-          );
-        }
-        setwaiting(false);
-        props.navigation.goBack();
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setwaiting(false);
-      });
+    saveData('ShopItems', itemId, newItem).then(() => {
+      dispatch(setItems([...barberData.barberItems, newItem]));
+      setwaiting(false);
+      props.navigation.goBack();
+    });
   };
   const renderImage = ({item, index}) => (
     <NewItemImage

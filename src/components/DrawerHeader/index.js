@@ -9,19 +9,19 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import {logout} from '../../Redux/Actions/Auth';
+import {setCuttings, setItems, setVideos} from '../../Redux/Actions/Barber';
 const DrawerHeader = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
-  useEffect(() => {
-    console.log('USER: ', user);
-  }, []);
-  const Drawer = createDrawerNavigator();
   const _logout = () => {
     auth()
       .signOut()
       .then(() => {
         console.log('User signed out!');
         dispatch(logout());
+        dispatch(setVideos([]));
+        dispatch(setCuttings([]));
+        dispatch(setItems([]));
       });
   };
   return (
@@ -35,14 +35,16 @@ const DrawerHeader = (props) => {
         <Image
           style={styles.dp}
           source={
-            user.Image.imageUrl
-              ? {uri: user.Image.imageUrl}
+            user?.Image?.imageUrl
+              ? {uri: user?.Image?.imageUrl}
               : require('../../assets/images/drawerdp.png')
           }
         />
         <View style={styles.textView}>
-          <Text style={styles.userName}>Michael Fox</Text>
-          <Text style={styles.userEmail}>micheal397@gmail.com</Text>
+          <Text style={styles.userName}>
+            {user?.FirstName} {user?.LastName}
+          </Text>
+          <Text style={styles.userEmail}>{user?.Email}</Text>
         </View>
       </TouchableOpacity>
       <View style={styles.PageTitleView}>

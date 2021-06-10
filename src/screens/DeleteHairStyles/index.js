@@ -12,14 +12,16 @@ import {login} from '../../Redux/Actions/Auth';
 import {removeFromArray} from '../../firebaseConfig';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
-
+import firestore from '@react-native-firebase/firestore';
+import {setCuttings} from '../../Redux/Actions/Barber';
 export default function DeleteHairStyles(props) {
   const user = useSelector((state) => state.Auth.user);
-  const [record, setrecord] = useState(user?.Cuttings ?? []);
+  const cuttings = useSelector((state) => state.Barber.cuttings);
+  const [record, setrecord] = useState(cuttings);
   const [isLoading, setLoading] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
-    const arr = user?.Cuttings;
+    const arr = cuttings;
     let temp = [];
     arr.map((item) => {
       temp.push({
@@ -58,7 +60,8 @@ export default function DeleteHairStyles(props) {
         const picRef = storage().ref(temp[i].imageRef);
         try {
           await picRef.delete();
-          await removeFromArray('Users', auth().currentUser.uid, 'Cuttings', i);
+          // await removeFromArray('Users', auth().currentUser.uid, 'Cuttings', i);
+          await firestore().collection('Cuttings').doc(temp[i].Id).delete();
           setLoading(false);
         } catch (error) {
           console.log(error);
@@ -69,12 +72,7 @@ export default function DeleteHairStyles(props) {
         newArr.push(temp[i]);
       }
     }
-    dispatch(
-      login({
-        ...user,
-        Cuttings: newArr,
-      }),
-    );
+    dispatch(setCuttings(newArr));
     setrecord(newArr);
     setLoading(false);
   };

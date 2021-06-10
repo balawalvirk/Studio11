@@ -1,4 +1,5 @@
 import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
 import React, {useState} from 'react';
 import {FlatList, View} from 'react-native';
 import {height, width} from 'react-native-dimension';
@@ -12,17 +13,22 @@ import InputField from '../../components/InputField';
 import NewItemImage from '../../components/NewItemImage';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import {
+  getItemsById,
   removeFromArray,
   removeFromSubArray,
+  saveData,
   updateArray,
   uploadImage,
 } from '../../firebaseConfig';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
+import {setItems} from '../../Redux/Actions/Barber';
 export default function EditItem(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
+  const barberItems = useSelector((state) => state.Barber.barberItems);
   const {item, index} = props.route.params;
+  console.log(index);
   const [itemName, setItemName] = useState(item?.name);
   const [imageArray, setImageArray] = useState(item?.images ?? []);
   const [moreImgs, setMoreImgs] = useState([]);
@@ -35,7 +41,6 @@ export default function EditItem(props) {
   const [nameError, setNameError] = useState('');
   const [priceError, setPriceError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
-
   const renderImage = ({item, index}) => {
     return (
       <NewItemImage
@@ -82,34 +87,15 @@ export default function EditItem(props) {
       name: name,
       price: price,
       description: description,
-      images:
-        user.Items[index].images.length > 0
-          ? [...user.Items[index].images, ...urls]
-          : [urls],
+      images: [...(item.images ?? []), ...urls],
       rating: 0,
       ratingCount: 0,
     };
-    await updateArray(
-      'Users',
-      auth().currentUser.uid,
-      'Items',
-      updatedItem,
-      index,
-    )
-      .then(() => {
-        dispatch(
-          login({
-            ...user,
-            Items: [...user.Items],
-          }),
-        );
-        setLoading(false);
-        props.navigation.goBack();
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setLoading(false);
-      });
+    await saveData('ShopItems', item.id, updatedItem);
+    const items = await getItemsById();
+    dispatch(setItems(items));
+    setLoading(false);
+    props.navigation.goBack();
   };
   const onDeleteImage = async (imageItem, indexItem) => {
     if (imageArray.length == 1) {
@@ -117,18 +103,14 @@ export default function EditItem(props) {
       return;
     }
     const imageRef = imageItem.imageRef;
-    console.log(imageRef);
-    console.log('Users', auth().currentUser.uid, 'Items', index, indexItem);
+    console.log('ShopItems', item.id, 'images', indexItem);
     try {
       const ref = storage().ref(imageRef);
       await ref.delete();
-      await removeFromSubArray(
-        'Users',
-        auth().currentUser.uid,
-        'Items',
-        index,
-        indexItem,
-      );
+      await removeFromArray('ShopItems', item.id, 'images', indexItem);
+      const items = await getItemsById();
+      dispatch(setItems(items));
+      imageArray.splice(indexItem, 1);
     } catch (error) {
       console.log(error.message);
     }
@@ -227,7 +209,7 @@ export default function EditItem(props) {
             multiline
             numoflines={10}
             placeholder="Description"
-            inputStyle={{borderRadius: width(4)}}
+            inputStyle={{height: 'auto'}}
           />
         </View>
       </View>

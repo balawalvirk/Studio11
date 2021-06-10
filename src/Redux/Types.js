@@ -10,3 +10,8 @@ export const ADDUSER = 'ADDUSER';
 export const DELUSER = 'DELUSER';
 export const UPDATEUSER = 'UPDATEUSER';
 export const READUSER = 'READUSER';
+
+//BARBER
+export const ITEMS = 'ITEMS';
+export const CUTTINGS = 'CUTTINGS';
+export const VIDEOS = 'VIDEOS';

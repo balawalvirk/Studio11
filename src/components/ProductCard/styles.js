@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { width, height } from 'react-native-dimension';
+import {StyleSheet} from 'react-native';
+import {width, height} from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     marginHorizontal: width(2),
     backgroundColor: AppColors.headerColor,
     borderRadius: width(4),
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   productImage: {
     width: width(40),
@@ -20,28 +20,29 @@ const styles = StyleSheet.create({
   productName: {
     color: AppColors.white,
     fontWeight: 'bold',
-    fontSize: width(4)
+    fontSize: width(3.8),
   },
   productDetails: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: height(1.5),
   },
   productRating: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   ratingIcon: {
     color: AppColors.primaryGold,
-    fontSize: width(4),
+    fontSize: width(3.5),
   },
   ratingValue: {
     color: AppColors.white50,
-    fontSize: width(4)
+    fontSize: width(3.5),
   },
   productPrice: {
     color: AppColors.white50,
-    fontSize: width(4)
+    fontSize: width(3.5),
   },
   editIcon: {
     fontSize: width(5),
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.headerColor,
     padding: width(1),
     margin: width(2.5),
-    borderRadius: width(4)
+    borderRadius: width(4),
   },
 });
 export default styles;
