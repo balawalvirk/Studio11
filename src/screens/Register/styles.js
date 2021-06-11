@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: width(80),
-    marginBottom: height(2),
+    marginBottom: height(1),
   },
   checkIcon: {
     fontSize: width(5),
@@ -61,6 +61,15 @@ const styles = StyleSheet.create({
   },
   rememberbeSection: {
     flexDirection: 'row',
+  },
+  errText: {
+    color: AppColors.red,
+    fontSize: width(3),
+    marginBottom: height(1),
+  },
+  btn: {
+    width: width(30),
+    backgroundColor: AppColors.iconColor,
   },
 });
 export default styles;

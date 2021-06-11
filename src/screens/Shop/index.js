@@ -32,7 +32,9 @@ export default function Shop(props) {
   const renderShopItems = ({item}) => {
     return (
       <ProductCard
-        onPressProduct={() => props.navigation.navigate('ProductDetails')}
+        onPressProduct={() =>
+          props.navigation.navigate('ProductDetails', {item})
+        }
         productImage={{uri: item?.images[0]?.imageUri}}
         productTitle={item.name}
         productRating={item.rating}

@@ -8,10 +8,12 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.headerColor,
     borderRadius: width(4),
     overflow: 'hidden',
+    elevation: 4,
   },
   productImage: {
-    width: width(40),
+    width: width(42),
     height: width(40),
+    borderRadius: width(4),
   },
   detailSection: {
     paddingHorizontal: width(2),

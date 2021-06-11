@@ -27,7 +27,6 @@ const InputField = ({
   suffixIconstyle,
   editable,
   inputStyle,
-  autoCapitalize = false,
 }) => {
   return (
     <View style={[{width: width(80)}, containerStyles ? containerStyles : {}]}>
@@ -55,7 +54,6 @@ const InputField = ({
           placeholderTextColor={AppColors.white50}
           secureTextEntry={secureTextEntry}
           editable={editable}
-          autoCapitalize={autoCapitalize}
         />
 
         {searchIcon ? (

@@ -206,13 +206,21 @@ export async function getItemsById() {
     console.log(error.message);
   }
 }
-export async function getVideosById() {
+export async function getVideosById(barberId = null) {
   try {
     let items = [];
-    const snapshot = await firestore()
-      .collection('Videos')
-      .where('UserId', '==', auth().currentUser.uid)
-      .get();
+    let snapshot;
+    if (!barberId) {
+      snapshot = await firestore()
+        .collection('Videos')
+        .where('UserId', '==', auth().currentUser.uid)
+        .get();
+    } else {
+      snapshot = await firestore()
+        .collection('Videos')
+        .where('UserId', '==', barberId)
+        .get();
+    }
     snapshot.forEach((doc) => {
       items.push(doc.data());
     });
@@ -221,13 +229,21 @@ export async function getVideosById() {
     console.log(error.message);
   }
 }
-export async function getCuttingsById() {
+export async function getCuttingsById(barberId = null) {
   try {
     let items = [];
-    const snapshot = await firestore()
-      .collection('Cuttings')
-      .where('UserId', '==', auth().currentUser.uid)
-      .get();
+    let snapshot;
+    if (!barberId) {
+      snapshot = await firestore()
+        .collection('Cuttings')
+        .where('UserId', '==', auth().currentUser.uid)
+        .get();
+    } else {
+      snapshot = await firestore()
+        .collection('Cuttings')
+        .where('UserId', '==', barberId)
+        .get();
+    }
     snapshot.forEach((doc) => {
       items.push(doc.data());
     });
@@ -247,6 +263,52 @@ export async function getBarbers() {
       barbers.push(doc.data());
     });
     return barbers;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function postProductReview(
+  reviewText,
+  starCount,
+  reviewerName,
+  reviewerId,
+  reviewImg,
+  product,
+) {
+  try {
+    const reviewObj = {
+      reviewerName: reviewerName,
+      reviewerName: reviewerName,
+      description: reviewText,
+      rating: starCount,
+      reviewerId: reviewerId,
+    };
+    const imgId = firestore().collection('rnd').doc().id;
+    const reviewId = firestore().collection('rnd').doc().id;
+    const url = await uploadImage(reviewImg, 'PRODUCT_REVIEWS/' + imgId);
+    reviewObj.image = url;
+    reviewObj.id = reviewId;
+    await firestore()
+      .collection('ShopItems')
+      .doc(product.id)
+      .collection('Reviews')
+      .doc(reviewId)
+      .set(reviewObj);
+    const newProduct = await firestore()
+      .collection('ShopItems')
+      .doc(product.id)
+      .get();
+    let rating = newProduct.data().rating;
+    let ratingCount = newProduct.data().ratingCount;
+    const newRating = (rating + reviewObj.rating) / (ratingCount + 1);
+    console.log('rating: ', rating);
+    console.log('ratingCount: ', ratingCount);
+    console.log('newRating: ', newRating);
+    await saveData('ShopItems', product.id, {
+      rating: newRating,
+      ratingCount: firestore.FieldValue.increment(1),
+    });
+    console.log(reviewObj);
   } catch (error) {
     console.log(error.message);
   }

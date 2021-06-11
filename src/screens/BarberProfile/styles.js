@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: width(80),
     alignSelf: 'center',
-    marginBottom: height(2),
+    marginBottom: height(1.5),
     marginVertical: height(3),
   },
   whiteText: {
@@ -43,15 +43,18 @@ const styles = StyleSheet.create({
     fontSize: width(4),
   },
   ratingText: {
+    fontSize: width(3),
     color: AppColors.white,
     marginLeft: width(2),
   },
   white50: {
     color: AppColors.white50,
-    fontSize: width(4),
+    fontSize: width(3.5),
   },
   stylerRating: {
     flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: height(0.5),
   },
   ratingIcon: {
     color: AppColors.primaryGold,
@@ -69,6 +72,21 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.cardColor,
     paddingVertical: height(1),
     elevation: 2,
+  },
+  hairContainer: {
+    width: width(42),
+    height: width(42),
+  },
+  hairList: {
+    width: width(100),
+    paddingLeft: width(2),
+    marginBottom: height(2),
+  },
+  dash: {
+    backgroundColor: AppColors.white09,
+    width: width(85),
+    alignSelf: 'center',
+    height: width(0.3),
   },
 });
 export default styles;

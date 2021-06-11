@@ -77,6 +77,7 @@ export default function PublishNewItem(props) {
       images: urls,
       rating: 0,
       ratingCount: 0,
+      userName: user.FirstName + ' ' + user.LastName,
     };
     saveData('ShopItems', itemId, newItem).then(() => {
       dispatch(setItems([...barberData.barberItems, newItem]));

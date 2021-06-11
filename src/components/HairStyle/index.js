@@ -15,9 +15,11 @@ const HairStyle = ({
   iconName,
   checkicon,
   activeOpacity,
+  disabled,
 }) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       activeOpacity={activeOpacity}
       onPress={onPress}
       style={[styles.imageSection, containerStyle]}>

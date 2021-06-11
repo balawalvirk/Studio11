@@ -27,6 +27,7 @@ export default function Register(props) {
   const [emailerror, setemailerror] = useState('');
   const [password, setpassword] = useState('');
   const [passworderror, setpassworderror] = useState('');
+  const [termsError, setTermsError] = useState('');
   const [isLoading, setLoading] = useState(false);
   let reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const checkFirstName = (firstName) => {
@@ -48,18 +49,16 @@ export default function Register(props) {
     }
   };
   const checkEmail = (email) => {
-    if (reg.test(email)) {
-      setemailerror('');
-      return true;
-    } else {
-      setemailerror('Email address is invalid');
+    if (!reg.test(email)) {
+      setemailerror('Invalid email.');
       return false;
     }
-    elseif(email == '');
-    {
-      setemailerror('Please enter an email address');
+    if (email == '') {
+      setemailerror('Please enter email.');
       return false;
     }
+    setemailerror('');
+    return true;
   };
   const checkPassword = (password) => {
     if (password.length < 7) {
@@ -76,43 +75,44 @@ export default function Register(props) {
       if (checkLastName(lastName)) {
         if (checkEmail(email)) {
           if (checkPassword(password)) {
-            // }
-            {
-              setLoading(true);
-              auth()
-                .createUserWithEmailAndPassword(email, password)
-                .then(async (result) => {
-                  let userOBJ = {
-                    FirstName: firstName,
-                    LastName: lastName,
-                    Email: email,
-                    Type: userType,
-                  };
-                  if (userOBJ.Type == UserTypes.BARBER) {
-                    userOBJ.HairCutCount = 0;
-                    userOBJ.Rating = 0;
-                    userOBJ.RatingCount = 0;
-                  }
-                  await saveData('Users', result.user.uid, userOBJ);
-                  console.log('User account created & signed in!');
-                  dispatch(login(userOBJ));
-                  return result.user.updateProfile({
-                    displayName: userType,
-                  });
-                })
-                .catch((error) => {
-                  if (error.code === 'auth/email-already-in-use') {
-                    setpassworderror('That email address is already in use!');
-                    console.log('That email address is already in use!');
-                  }
-
-                  if (error.code === 'auth/invalid-email') {
-                    console.log('That email address is invalid!');
-                  }
-
-                  console.error(error);
-                });
+            if (!checkIcon) {
+              console.log('sddddffddd');
+              setTermsError('Please accept terms & conditions');
+              return;
             }
+            setTermsError('');
+            setLoading(true);
+            auth()
+              .createUserWithEmailAndPassword(email, password)
+              .then(async (result) => {
+                let userOBJ = {
+                  FirstName: firstName,
+                  LastName: lastName,
+                  Email: email,
+                  Type: userType,
+                };
+                if (userOBJ.Type == UserTypes.BARBER) {
+                  userOBJ.HairCutCount = 0;
+                  userOBJ.Rating = 0;
+                  userOBJ.RatingCount = 0;
+                }
+                await saveData('Users', result.user.uid, userOBJ);
+                console.log('User account created & signed in!');
+                dispatch(login(userOBJ));
+                return result.user.updateProfile({
+                  displayName: userType,
+                });
+              })
+              .catch((error) => {
+                if (error.code === 'auth/email-already-in-use') {
+                  setpassworderror('That email address is already in use!');
+                  console.log('That email address is already in use!');
+                }
+                if (error.code === 'auth/invalid-email') {
+                  console.log('That email address is invalid!');
+                }
+                console.error(error);
+              });
           } // else null
         } //else null
       } //else null
@@ -169,6 +169,7 @@ export default function Register(props) {
             setemail(email.trim());
             checkEmail(email);
           }}
+          // onBlur={()=>}
           label={'Email'}
           placeholder={'Enter your Email'}
           fielderror={emailerror}
@@ -185,53 +186,50 @@ export default function Register(props) {
           placeholder={'Enter your Password'}
           fielderror={passworderror}
         />
-        <TouchableOpacity
-          style={styles.RowafterInputField}
-          onPress={() => {
-            setCheckIcon(!checkIcon);
-          }}>
-          {checkIcon ? (
-            <Icon
-              name="checkcircle"
-              style={styles.checkIcon}
-              color={AppColors.primaryGold}
+        <View>
+          <TouchableOpacity
+            style={styles.RowafterInputField}
+            onPress={() => {
+              setCheckIcon(!checkIcon);
+              setTermsError('');
+            }}>
+            {checkIcon ? (
+              <Icon
+                name="checkcircle"
+                style={styles.checkIcon}
+                color={AppColors.primaryGold}
+              />
+            ) : (
+              <Icon
+                name="checkcircle"
+                style={styles.checkIcon}
+                color={AppColors.white50}
+              />
+            )}
+            <HighlightedText
+              onPress={() => props.navigation.navigate('TermsConditions')}
+              text={'Terms & Conditions'}
             />
-          ) : (
-            <Icon
-              name="checkcircle"
-              style={styles.checkIcon}
-              color={AppColors.white50}
-            />
-          )}
-          <HighlightedText
-            onPress={() => props.navigation.navigate('TermsConditions')}
-            text={'Terms & Conditions'}
-          />
-        </TouchableOpacity>
+          </TouchableOpacity>
+          <Text style={styles.errText}>{termsError}</Text>
+        </View>
         <Text style={styles.whiteText}>Select User Type</Text>
         <View style={styles.buttonRow}>
           <Button
             planButton={userType != 'Customer'}
-            containerStyle={{
-              width: width(30),
-              backgroundColor: AppColors.iconColor,
-            }}
+            containerStyle={styles.btn}
             title="Customer"
             onPress={() => setuserType('Customer')}
           />
           <Button
             planButton={userType != 'Barber'}
-            containerStyle={{
-              width: width(30),
-              backgroundColor: AppColors.iconColor,
-            }}
+            containerStyle={styles.btn}
             title="Barber"
             onPress={() => setuserType('Barber')}
           />
         </View>
         <Button
           title="Signup"
-          disabled={checkIcon ? false : true}
           onPress={() => signUpUser()}
           isLoading={isLoading}
         />

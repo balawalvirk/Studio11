@@ -83,7 +83,7 @@ export default function UploadVideo(props) {
       scrollEnabled
       headerUnScrollable={() => (
         <Header
-          headerTitle={'Edit Uploaded Video'}
+          headerTitle={'Uploaded Video'}
           leadingIcon={'arrow-left'}
           onPressLeadingIcon={() => props.navigation.goBack()}
         />
@@ -204,10 +204,10 @@ export default function UploadVideo(props) {
         }
         imageFromGallery={() =>
           ImagePicker.openPicker({}).then((image) => {
-            setcapturedVideo(image.path);
-            setvideoName(image.path.split('/').pop());
+            setcapturedThumbnail(image.path);
+            setThumbnailName(image.path.split('/').pop());
             setThumbnailModelView(false);
-            setimageStatus(true);
+            setThumnailStatus(true);
           })
         }
       />
