@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
-import {width, height} from 'react-native-dimension';
+import { width, height } from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
   },
   rowFooter: {
     alignItems: 'center',
+    marginTop: height(2)
   },
   reviewImg: {
     height: height(15),
@@ -105,5 +106,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     width: width(65),
   },
+  flatlistContainer: {
+    width: width(100),
+    paddingHorizontal: width(2),
+  }
 });
 export default styles;

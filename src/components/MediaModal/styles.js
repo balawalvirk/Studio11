@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {width, height} from 'react-native-dimension';
+import { StyleSheet } from 'react-native';
+import { width, height } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     textAlign: 'center',
-    fontSize: width(5),
+    fontSize: width(4),
     color: AppColors.white,
     marginBottom: height(2),
     fontWeight: 'bold',
@@ -30,10 +30,11 @@ const styles = StyleSheet.create({
     borderColor: AppColors.primaryGold,
     borderWidth: width(0.25),
     borderRadius: width(5),
+    marginBottom: height(2)
   },
   image: {
-    width: width(40),
-    height: width(40),
+    width: width(30),
+    height: width(30),
     borderRadius: width(20),
   },
   cameraIcon: {
@@ -53,5 +54,14 @@ const styles = StyleSheet.create({
     // elevation: 1,
     backgroundColor: AppColors.iconColor,
   },
+  yellowText: {
+    color: AppColors.primaryGold,
+    alignSelf: 'flex-start',
+    paddingBottom: height(1)
+  },
+  orText: {
+    color: AppColors.primaryGold,
+    paddingBottom: height(2)
+  }
 });
 export default styles;

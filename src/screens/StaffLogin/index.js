@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Text, View, TouchableOpacity, ActivityIndicator} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import Button from '../../components/Button';
 import Logo from '../../components/Logo';
@@ -7,11 +7,11 @@ import InputField from '../../components/InputField';
 import HighlightedText from '../../components/HighlightedText';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import {height, width} from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import auth from '@react-native-firebase/auth';
-import {useDispatch} from 'react-redux';
-import {getData} from '../../firebaseConfig';
+import { useDispatch } from 'react-redux';
+import { getData } from '../../firebaseConfig';
 import {
   login,
   logout,
@@ -20,7 +20,7 @@ import {
 } from '../../Redux/Actions/Auth';
 export default function StaffLogin(props) {
   const dispatch = useDispatch();
-  const [email, setemail] = useState('Barber@mail.com');
+  const [email, setemail] = useState('Barbe@mail.com');
   const [emailError, setEmailError] = useState('');
   const [checkIcon, setCheckIcon] = useState(false);
   const [activeUser, setactiveUser] = useState(true);
@@ -169,7 +169,7 @@ export default function StaffLogin(props) {
             <View style={styles.TextRow}>
               <Text style={styles.whiteText}>Do you have a user account?</Text>
               <HighlightedText
-                containerStyle={{marginStart: width(1)}}
+                containerStyle={{ marginStart: width(1) }}
                 text={'Login from here'}
                 onPress={() => props.navigation.navigate('Login')}
               />

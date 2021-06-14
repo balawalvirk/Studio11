@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
-import {width, height} from 'react-native-dimension';
+import { width, height } from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -41,6 +41,9 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginVertical: height(2),
     width: width(60),
+  },
+  flatlist: {
+    width: width(90),
   },
   // ****************modal view**************************
   modalView: {

@@ -3,3 +3,7 @@ export const UserTypes = {
   CUSTOMER: 'Customer',
   RECEPTIONIST: 'Receptionist',
 };
+export const HairCuts = {
+  LONG_CUT: 'Long cut',
+  SHORT_CUT: 'Short Cut',
+};

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { width } from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
@@ -16,6 +16,6 @@ const styles = StyleSheet.create({
     marginLeft: width(10),
     marginTop: width(4),
     marginBottom: width(4),
-  }
+  },
 });
 export default styles;

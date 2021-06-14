@@ -8,44 +8,44 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: AppColors.cardColor,
     padding: width(4),
-    width: width(80),
+    width: width(85),
     marginVertical: height(2),
     borderRadius: width(4)
   },
   textSection: {
-    justifyContent: 'space-between',
-    width:width(42)
+    width: width(42)
   },
   textRow: {
-    justifyContent: 'space-between',
     flexDirection: 'row',
-    width:width(42),
+    width: width(45),
+    alignItems: 'center'
   },
   imageSection: {
-    width: width(25),
+    width: width(30),
     height: width(30),
     resizeMode: 'cover',
-    alignSelf:'center',
+    alignSelf: 'center',
     borderRadius: width(4)
   },
   ReviewerName: {
     color: AppColors.primaryGold,
-    fontWeight:'bold',
-    fontSize:width(4)
+    fontWeight: 'bold',
+    fontSize: width(4),
+    flex: 0.99
   },
   ratingText: {
     color: AppColors.white,
-    marginLeft:width(2)
+    marginLeft: width(2)
   },
-  reviewLine:{
-    width:'100%', 
-    backgroundColor:AppColors.white09,
-    marginTop:height(1),
-    marginVertical:height(1)
+  reviewLine: {
+    width: '100%',
+    backgroundColor: AppColors.white09,
+    marginTop: height(1),
+    marginVertical: height(1)
   },
   white50: {
     color: AppColors.white50,
-    fontSize:width(4)
+    fontSize: width(3.5)
   },
   ReviewRating: {
     flexDirection: 'row'
@@ -53,6 +53,13 @@ const styles = StyleSheet.create({
   ratingIcon: {
     color: AppColors.primaryGold,
     fontSize: width(4)
-  }
+  },
+  dash: {
+    backgroundColor: AppColors.white50,
+    width: width(45),
+    alignSelf: 'center',
+    height: width(0.1),
+    marginVertical: height(1)
+  },
 });
 export default styles;

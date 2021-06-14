@@ -1,11 +1,12 @@
 import auth from '@react-native-firebase/auth';
-import React, {useState} from 'react';
-import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
-import {height, width} from 'react-native-dimension';
+import firestore from '@react-native-firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { height, width } from 'react-native-dimension';
 import ImagePicker from 'react-native-image-crop-picker';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import CameraModel from '../../components/CameraModal';
 import CartItem from '../../components/CartItem';
@@ -16,13 +17,15 @@ import HorizontalLine from '../../components/HorizontalLine';
 import PostReview from '../../components/PostReview';
 import ReviewCard from '../../components/ReviewCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import {reviewList} from '../../dummyData';
-import {postProductReview} from '../../firebaseConfig';
+import { reviewList } from '../../dummyData';
+import { getItemsById, postProductReview } from '../../firebaseConfig';
+import { login } from '../../Redux/Actions/Auth';
+import { setItems } from '../../Redux/Actions/Barber';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
-import firestore from '@react-native-firebase/firestore';
 export default function ProductDetails(props) {
   const user = useSelector((state) => state.Auth.user);
+  const dispatch = useDispatch()
   const product = props.route.params.item;
   const [modalVisible, setModalVisible] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
@@ -32,7 +35,23 @@ export default function ProductDetails(props) {
   const [reviewText, setReviewText] = useState('');
   const [reviewErr, setReviewErr] = useState('');
   const [reviewImg, setReviewImg] = useState(null);
-
+  const [reviews, setReviews] = useState([]);
+  useEffect(() => {
+    loadData()
+  }, [])
+  const loadData = async () => {
+    let temp = []
+    const snapshot = await firestore()
+      .collection('ShopItems')
+      .doc(product.id)
+      .collection('Reviews')
+      .get()
+    snapshot.forEach(doc => {
+      temp.push(doc.data())
+    })
+    console.log(temp)
+    setReviews(temp)
+  }
   const openCamera = () => {
     ImagePicker.openCamera({}).then((image) => {
       setReviewImg(image.path);
@@ -51,13 +70,13 @@ export default function ProductDetails(props) {
     }
     setQuantity(quantity - 1);
   };
-  const renderReviewCard = ({item}) => (
+  const renderReviewCard = ({ item }) => (
     <ReviewCard
-      containerstyle={{marginHorizontal: width(2)}}
-      ReviewerName={item.ReviewerName}
-      ratings={item.ratings}
-      Review={item.Review}
-      reviewerImage={item.reviewerImage}
+      containerstyle={{ marginHorizontal: width(2) }}
+      ReviewerName={item.reviewerName}
+      ratings={item.rating.toFixed(1)}
+      Review={item.description}
+      reviewerImage={{ uri: item.image }}
     />
   );
   const openModal = () => {
@@ -88,7 +107,7 @@ export default function ProductDetails(props) {
     }
     try {
       setPostLoading(true);
-      await postProductReview(
+      const newRatingObj = await postProductReview(
         reviewText,
         starCount,
         user?.FirstName + ' ' + user?.LastName,
@@ -96,6 +115,7 @@ export default function ProductDetails(props) {
         reviewImg,
         product,
       );
+      console.log(newRatingObj)
       setPostLoading(false);
       setReviewText('');
       setStarCount(3);
@@ -140,7 +160,7 @@ export default function ProductDetails(props) {
               title="Add to cart"
               onPress={() => openModal()}
               containerStyle={styles.addCartBtn}
-              textStyle={{color: 'white'}}
+              textStyle={{ color: 'white' }}
             />
           </View>
         </View>
@@ -152,10 +172,10 @@ export default function ProductDetails(props) {
           <CartItem
             imageIcons
             images={product?.images}
-            imageStyle={{width: width(45), height: width(45)}}
-            itemImage={{uri: product?.images[0]?.imageUri}}
+            imageStyle={{ width: width(45), height: width(45) }}
+            itemImage={{ uri: product?.images[0]?.imageUri }}
             itemName={product?.name}
-            rating={product?.rating}
+            rating={product?.rating?.toFixed(1)}
             ratingCountValue={product?.ratingCount}
             itemPrice={product?.price}
           />
@@ -163,7 +183,7 @@ export default function ProductDetails(props) {
         <View style={styles.textRow}>
           <View>
             <Text style={styles.whiteText}>Published by:</Text>
-            <Text style={{color: AppColors.white50}}>{product?.userName}</Text>
+            <Text style={{ color: AppColors.white50 }}>{product?.userName}</Text>
           </View>
           <Button
             onPress={() =>
@@ -172,37 +192,40 @@ export default function ProductDetails(props) {
               })
             }
             containerStyle={styles.profileBtn}
-            textStyle={{fontSize: width(3.5)}}
+            textStyle={{ fontSize: width(3.5) }}
             title="View Barber Profile"
           />
         </View>
-        <HorizontalLine lineColor={{width: width(90), marginTop: 0}} />
-        <HorizontalLine lineColor={{backgroundColor: AppColors.transparent}} />
+        <HorizontalLine lineColor={{ width: width(90), marginTop: 0 }} />
+        <HorizontalLine lineColor={{ backgroundColor: AppColors.transparent }} />
         <View style={styles.descriptionText}>
           <Text style={styles.whiteText}>Product Description</Text>
-          <Text style={[styles.white50, {paddingBottom: height(1.5)}]}>
+          <Text style={[styles.white50, { paddingBottom: height(1.5) }]}>
             {product?.description}
           </Text>
         </View>
-        <HorizontalLine lineColor={{width: width(90)}} />
-        <View style={styles.textRow}>
-          <Text style={styles.whiteText}>Reviews</Text>
-          <HighlightedText
-            text={'View all'}
-            onPress={() => props.navigation.navigate('Reviews')}
-          />
-        </View>
-        <FlatList
-          horizontal={true}
-          contentContainerStyle={{paddingHorizontal: width(4)}}
-          data={reviewList}
-          keyExtractor={(item) => item.id}
-          renderItem={renderReviewCard}
-        />
+        <HorizontalLine lineColor={{ width: width(90) }} />
+        {reviews.length > 0 &&
+          <>
+            <View style={[styles.textRow, { marginBottom: 0, marginVertical: height(0), marginTop: height(1) }]}>
+              <Text style={styles.whiteText}>Reviews</Text>
+              <HighlightedText
+                text={'View all'}
+                onPress={() => props.navigation.navigate('Reviews')}
+              />
+            </View>
+            <FlatList
+              horizontal={true}
+              contentContainerStyle={styles.flatlistContainer}
+              data={reviews}
+              keyExtractor={(item) => item.id}
+              renderItem={renderReviewCard}
+            />
+          </>}
         <View style={styles.rowFooter}>
           {reviewImg ? (
             <TouchableOpacity onPress={() => setCameraModal(true)}>
-              <Image source={{uri: reviewImg}} style={styles.reviewImg} />
+              <Image source={{ uri: reviewImg }} style={styles.reviewImg} />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -242,6 +265,6 @@ export default function ProductDetails(props) {
         imageFromCamera={() => openCamera()}
         imageFromGallery={() => openPicker()}
       />
-    </ScreenWrapper>
+    </ScreenWrapper >
   );
 }

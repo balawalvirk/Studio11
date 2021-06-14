@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity} from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import HighlightedText from '../HighlightedText';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/dist/Entypo';
@@ -21,7 +21,7 @@ const StylerCard = ({
       <View style={styles.textSection}>
         <View>
           <Text style={styles.stylerTitle}>{stylerName}</Text>
-          <Text style={styles.white50}>{Haircuts}</Text>
+          <Text style={styles.white50}>Haircuts: {Haircuts}</Text>
           <View style={styles.stylerRating}>
             <Icon style={styles.ratingIcon} name="star" />
             <Text style={styles.ratingText}>{ratings}</Text>

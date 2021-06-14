@@ -3,7 +3,7 @@ import firebase from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
-import {UserTypes} from './utills/Enums';
+import { HairCuts, UserTypes } from './utills/Enums';
 export async function addToArray(collection, doc, array, value) {
   let docRef = await firestore().collection(collection).doc(doc);
   let docData = await docRef.get();
@@ -12,16 +12,20 @@ export async function addToArray(collection, doc, array, value) {
       [array]: firebase.firestore.FieldValue.arrayUnion(...value),
     });
   } else {
-    saveData(collection, doc, {[array]: value});
+    saveData(collection, doc, { [array]: value });
   }
 }
 export async function addToArrayUpdate(collection, doc, array, value) {
-  let docRef = await firestore().collection(collection).doc(doc);
+  let docRef = firestore().collection(collection).doc(doc);
   let docData = await docRef.get();
   if (docData.exists && docData.data()[array] != undefined) {
     docRef.set({
       [array]: firebase.firestore.FieldValue.arrayUnion(value),
-    });
+    }, { merge: true });
+  } else {
+    docRef.set({
+      [array]: [value],
+    }, { merge: true });
   }
 }
 export const removeFromArray = async (collection, doc, array, index) => {
@@ -31,6 +35,17 @@ export const removeFromArray = async (collection, doc, array, index) => {
     docRef.update({
       [array]: firebase.firestore.FieldValue.arrayRemove(
         docData.data()[array][index],
+      ),
+    });
+  }
+};
+export const removeUserCut = async (collection, doc, array, string) => {
+  let docRef = firestore().collection(collection).doc(doc);
+  let docData = await docRef.get();
+  if (docData.exists) {
+    docRef.update({
+      [array]: firebase.firestore.FieldValue.arrayRemove(
+        string
       ),
     });
   }
@@ -96,7 +111,7 @@ export async function signUp(userObj, pass) {
     let currentUser = auth().currentUser;
     await currentUser.sendEmailVerification();
     console.log('Email sent');
-    return {user: user, success: true};
+    return { user: user, success: true };
   } catch (error) {
     if (error.code === 'auth/email-already-in-use') {
       console.log('asdasdasd', error.message);
@@ -107,7 +122,7 @@ export async function signUp(userObj, pass) {
       };
     } else if (error.code === 'auth/invalid-email') {
       console.log(error.message);
-      return {success: false, message: 'That email address is invalid!'};
+      return { success: false, message: 'That email address is invalid!' };
     } else {
       console.log('Else Error', error.message);
       return {
@@ -154,7 +169,7 @@ export async function uploadImage(uri, path) {
     return new Promise((resolve, reject) => {
       task.on(
         'state_changed',
-        () => {},
+        () => { },
         (err) => {
           reject(err);
         },
@@ -185,7 +200,7 @@ export async function saveData(collection, doc, jsonObject) {
   await firestore()
     .collection(collection)
     .doc(doc)
-    .set(jsonObject, {merge: true})
+    .set(jsonObject, { merge: true })
     .catch(function (error) {
       console.log('Error writing document: ', error);
     });
@@ -267,6 +282,37 @@ export async function getBarbers() {
     console.log(error.message);
   }
 }
+export async function getPopularCuts() {
+  try {
+    let cuts = [];
+    const snapshot = await firestore()
+      .collection('Cuttings')
+      .where('CuttingTitle', 'in', [HairCuts.LONG_CUT, HairCuts.SHORT_CUT])
+      .get();
+    snapshot.forEach((doc) => {
+      cuts.push(doc.data());
+    });
+    return cuts;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getBarberFromCut(cutType) {
+  try {
+    let barbers = [];
+    const snapshot = await firestore()
+      .collection('Users')
+      .where('Type', '==', UserTypes.BARBER)
+      .where('stylesAvailable', 'array-contains', cutType)
+      .get();
+    snapshot.forEach((doc) => {
+      barbers.push(doc.data());
+    });
+    return barbers;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 export async function postProductReview(
   reviewText,
   starCount,
@@ -300,7 +346,8 @@ export async function postProductReview(
       .get();
     let rating = newProduct.data().rating;
     let ratingCount = newProduct.data().ratingCount;
-    const newRating = (rating + reviewObj.rating) / (ratingCount + 1);
+    // const newRating = (rating + reviewObj.rating) / (ratingCount + 1);
+    const newRating = ((rating * ratingCount) + reviewObj.rating) / (ratingCount + 1);
     console.log('rating: ', rating);
     console.log('ratingCount: ', ratingCount);
     console.log('newRating: ', newRating);
@@ -309,6 +356,10 @@ export async function postProductReview(
       ratingCount: firestore.FieldValue.increment(1),
     });
     console.log(reviewObj);
+    return {
+      rating: newRating,
+      ratingCount: ratingCount + 1,
+    }
   } catch (error) {
     console.log(error.message);
   }

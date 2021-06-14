@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Text, View, FlatList} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, FlatList } from 'react-native';
 import styles from './styles';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import HighlightedText from '../../components/HighlightedText';
@@ -8,47 +8,46 @@ import AppointmentCard from '../../components/AppointmentCard';
 import HairStyle from '../../components/HairStyle';
 import StylerCard from '../../components/StylerCard';
 import HorizontalLine from '../../components/HorizontalLine';
-import {height, width} from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import Appointments from '../Appointments';
 import AppColors from '../../utills/AppColors';
-import {manageCuttingImages, stylersData} from '../../dummyData';
-import {getBarbers} from '../../firebaseConfig';
+import { manageCuttingImages, stylersData } from '../../dummyData';
+import { getAllOfCollection, getBarbers, getPopularCuts } from '../../firebaseConfig';
 export default function HomeScreen(props) {
   const [barbers, setBarbers] = useState([]);
+  const [popularStyles, setPopularStyles] = useState([]);
   useEffect(() => {
     loadData();
   }, []);
   const loadData = async () => {
     const barberList = await getBarbers();
-    console.log(barberList.length);
+    const hairStyles = await getPopularCuts()
+    setPopularStyles(hairStyles)
     setBarbers(barberList);
   };
-  const renderStylers = ({item}) => {
-    return (
-      <StylerCard
-        onPress={() => props.navigation.navigate('BarberProfile')}
-        stylerName={item.FirstName + ' ' + item.LastName}
-        Haircuts={item.HairCutCount + ' Haircuts'}
-        ratings={item.Rating + ' (' + item.RatingCount + ') reviews'}
-        price={'$50'}
-        styleImage={
-          item?.Image?.imageUrl
-            ? {uri: item?.Image?.imageUrl}
-            : require('../../assets/images/1.png')
-        }
-      />
-    );
-  };
-  const renderHairStyle = ({item}) => {
-    return (
-      <HairStyle
-        containerStyle={styles.hairContainer}
-        onPress={() => props.navigation.navigate('HairStylesBarber')}
-        cuttingImage={item.image}
-        cuttingTitle={item.title}
-      />
-    );
-  };
+  const renderStylers = ({ item }) =>
+    <StylerCard
+      onPress={() => props.navigation.navigate('BarberProfile', {
+        barberId: item.id,
+      })}
+      stylerName={item.FirstName + ' ' + item.LastName}
+      Haircuts={item.HairCutCount + ' Haircuts'}
+      ratings={item.Rating + ' (' + item.RatingCount + ') reviews'}
+      price={'$50'}
+      styleImage={
+        item?.Image?.imageUrl
+          ? { uri: item?.Image?.imageUrl }
+          : require('../../assets/images/1.png')
+      }
+    />
+  const renderHairStyle = ({ item }) =>
+    <HairStyle
+      containerStyle={styles.hairContainer}
+      onPress={() => props.navigation.navigate('HairStylesBarber', { cutType: item.CuttingTitle })}
+      cuttingImage={{ uri: item?.CuttingImage }}
+      cuttingTitle={item?.CuttingTitle}
+    />
+
   return (
     <ScreenWrapper
       scrollEnabled
@@ -62,7 +61,7 @@ export default function HomeScreen(props) {
       )}
       statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
-        <View style={[styles.textRow, {marginTop: height(1.5)}]}>
+        <View style={[styles.textRow, { marginTop: height(1.5) }]}>
           <Text style={styles.whiteText}>Appointments</Text>
           <HighlightedText
             text={'View all'}
@@ -89,10 +88,10 @@ export default function HomeScreen(props) {
         </View>
         <FlatList
           horizontal={true}
-          contentContainerStyle={{paddingHorizontal: width(4)}}
+          contentContainerStyle={styles.flatlist}
           showsHorizontalScrollIndicator={false}
-          data={manageCuttingImages}
-          keyExtractor={(item) => item.id}
+          data={popularStyles}
+          keyExtractor={(item) => item.Id}
           renderItem={renderHairStyle}
         />
         <View style={styles.dash} />

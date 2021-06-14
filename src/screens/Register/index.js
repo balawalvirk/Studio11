@@ -1,19 +1,19 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import Button from '../../components/Button';
 import HighlightedText from '../../components/HighlightedText';
 import InputField from '../../components/InputField';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import Logo from '../../components/Logo';
-import {height, width} from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import auth from '@react-native-firebase/auth';
 import AppColors from '../../utills/AppColors';
-import {saveData} from '../../firebaseConfig';
-import {login, setLoginScreenType} from '../../Redux/Actions/Auth';
-import {UserTypes} from '../../utills/Enums';
+import { saveData } from '../../firebaseConfig';
+import { login, setLoginScreenType } from '../../Redux/Actions/Auth';
+import { UserTypes } from '../../utills/Enums';
 export default function Register(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
@@ -86,6 +86,7 @@ export default function Register(props) {
               .createUserWithEmailAndPassword(email, password)
               .then(async (result) => {
                 let userOBJ = {
+                  id: result.user.uid,
                   FirstName: firstName,
                   LastName: lastName,
                   Email: email,
@@ -133,7 +134,7 @@ export default function Register(props) {
       <View style={styles.mainViewContainer}>
         <Logo
           imagepath={require('../../assets/images/logo.png')}
-          containerStyle={{marginVertical: 'auto'}}
+          containerStyle={{ marginVertical: 'auto' }}
         />
         <View style={styles.titleContainer}>
           <Text style={styles.heading}>Create an Account</Text>
@@ -148,7 +149,7 @@ export default function Register(props) {
             }}
             label={'First Name'}
             placeholder={'First Name'}
-            containerStyles={{width: width(37.5)}}
+            containerStyles={{ width: width(37.5) }}
             fielderror={firstNameerror}
           />
           <InputField
@@ -159,7 +160,7 @@ export default function Register(props) {
             }}
             label={'Last Name'}
             placeholder={'Last Name'}
-            containerStyles={{width: width(37.5), height: 'auto'}}
+            containerStyles={{ width: width(37.5), height: 'auto' }}
             fielderror={lastNameerror}
           />
         </View>

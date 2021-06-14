@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
-import {width, height} from 'react-native-dimension';
+import { width, height } from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     height: height(90),
   },
   footer: {
+    width: width(100),
     backgroundColor: AppColors.cardColor,
     borderTopRightRadius: width(5),
     borderTopLeftRadius: width(5),
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
   flatlist: {
     alignSelf: 'baseline',
   },
-  loaderContainer: {flex: 1, justifyContent: 'center'},
+  loaderContainer: { flex: 1, justifyContent: 'center' },
   btn: {
     marginVertical: height(2),
   },

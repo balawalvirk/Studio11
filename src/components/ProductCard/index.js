@@ -26,7 +26,7 @@ const ProductCard = ({
         <View style={styles.productDetails}>
           <View style={styles.productRating}>
             <Icon name='star' style={styles.ratingIcon} />
-            <Text style={styles.ratingValue}> {productRating} ({productRatingCount})</Text>
+            <Text style={styles.ratingValue}> {productRating?.toFixed(1)} ({productRatingCount})</Text>
           </View>
           <Text style={styles.productPrice}>${productPrice}</Text>
         </View>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {
   Text,
@@ -10,7 +10,7 @@ import {
 import styles from './styles';
 import Modal from 'react-native-modal';
 import Button from '../Button';
-import {height, width} from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import Dropdown from '../../components/Dropdown';
 import InputField from '../InputField';
@@ -46,36 +46,41 @@ const MediaModal = ({
               <View style={styles.cameraView}>
                 <Icon name="camera" style={styles.cameraIcon} />
               </View>
-              <Text style={styles.colouredText}>Add a picture</Text>
+              {/* <Text style={styles.colouredText}>Add a picture</Text> */}
             </TouchableOpacity>
           ) : (
             <TouchableOpacity onPress={onPressUploadImage}>
               <Image style={styles.image} source={capturedImage} />
             </TouchableOpacity>
           )}
-          <InputField
-            containerStyles={{width: '100%'}}
-            value={firstValue}
-            label={'Name'}
-            onChangeText={onchangefirst}
-            placeholder={'Cutting Title'}
-          />
+          <Text style={styles.yellowText}>Hair cut type</Text>
           {firstValue == '' && (
-            <Dropdown
-              options={options}
-              disabled={firstValue == '' ? false : true}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            <>
+              <Dropdown
+                options={options}
+                disabled={firstValue == '' ? false : true}
+                selected={selected}
+                setSelected={setSelected}
+              />
+              <Text style={styles.orText}>OR</Text>
+            </>
           )}
+
           <InputField
-            multiline={multiline}
+            containerStyles={{ width: '100%' }}
+            value={firstValue}
+            // label={'Name'}
+            onChangeText={onchangefirst}
+            placeholder={'Custom Title'}
+          />
+
+          <Text style={styles.yellowText}>Hair cut details</Text>
+          <InputField
             fielderror={detailsError}
-            numoflines={numoflines}
             onChangeText={onchangesecond}
-            containerStyles={{width: '100%'}}
+            containerStyles={{ width: '100%' }}
             value={secondValue}
-            label={'Details'}
+            // label={'Details'}
             placeholder={'Cutting Details'}
           />
           <View style={styles.buttonLine}>
@@ -89,7 +94,7 @@ const MediaModal = ({
             />
             <Button
               planButton
-              textStyle={{color: AppColors.black}}
+              textStyle={{ color: AppColors.black }}
               containerStyle={styles.cancel}
               title={'Cancel'}
               onPress={onpressSecondButton}

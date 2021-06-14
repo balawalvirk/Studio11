@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View, Image, FlatList} from 'react-native';
+import { Text, View, Image, FlatList } from 'react-native';
 import styles from './styles';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import HighlightedText from '../../components/HighlightedText';
@@ -9,7 +9,7 @@ import Header from '../../components/Header';
 import HairStyle from '../../components/HairStyle';
 import Icon from 'react-native-vector-icons/dist/Entypo';
 import HorizontalLine from '../../components/HorizontalLine';
-import {height, width} from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../../components/Button';
@@ -29,7 +29,7 @@ export default function ProfileBarber(props) {
             <MaterialCommunityIcons
               name="pencil"
               onPress={() => props.navigation.navigate('EditProfileBarber')}
-              style={{fontSize: width(5), color: AppColors.primaryGold}}
+              style={{ fontSize: width(5), color: AppColors.primaryGold }}
             />
           )}
           onPressLeadingIcon={() => props.navigation.openDrawer()}
@@ -48,16 +48,16 @@ export default function ProfileBarber(props) {
                 Email: <Text style={styles.white50}>{user?.Email}</Text>
               </Text>
               <Text style={styles.whiteText}>
-                Haircuts: <Text style={styles.white50}>456</Text>
+                Haircuts: <Text style={styles.white50}>{user.HairCutCount}</Text>
               </Text>
               <Text style={styles.whiteText}>
                 Earnings: <Text style={styles.white50}>$364</Text>
               </Text>
               <Text style={styles.whiteText}>
-                Reviews: <Text style={styles.white50}>467</Text>
+                Reviews: <Text style={styles.white50}>{user?.RatingCount}</Text>
               </Text>
               <Text style={styles.whiteText}>
-                Ratings: <Text style={styles.white50}>4.5</Text>
+                Ratings: <Text style={styles.white50}>{user?.Rating?.toFixed(1)}</Text>
               </Text>
             </View>
           </View>
@@ -65,7 +65,7 @@ export default function ProfileBarber(props) {
             style={styles.imageSection}
             source={
               user.Image
-                ? {uri: user?.Image?.imageUrl}
+                ? { uri: user?.Image?.imageUrl }
                 : require('../../assets/images/cuttings/1.png')
             }
           />
@@ -76,7 +76,7 @@ export default function ProfileBarber(props) {
           title="Manage Shop Items"
           onPress={() => props.navigation.navigate('ManageShopItems')}
         />
-        <HorizontalLine lineColor={{marginTop: 0}} />
+        <HorizontalLine lineColor={{ marginTop: 0 }} />
         <View style={styles.textRow}>
           <Text style={styles.whiteText}>Edit Video Uploads</Text>
           <HighlightedText
@@ -87,16 +87,16 @@ export default function ProfileBarber(props) {
         <FlatList
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{paddingHorizontal: width(8)}}
+          contentContainerStyle={{ paddingHorizontal: width(8) }}
           data={videos}
           keyExtractor={(item) => item.Id}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             return (
               <Thumbnail
-                thumbnailImage={{uri: item.videoThumb}}
+                thumbnailImage={{ uri: item.videoThumb }}
                 editable
                 onPress={() =>
-                  props.navigation.navigate('EditUploadedVideo', {item})
+                  props.navigation.navigate('EditUploadedVideo', { item })
                 }
                 videoTitle={item.videoTitle}
                 views={'412'}
@@ -109,7 +109,7 @@ export default function ProfileBarber(props) {
           onPress={() => props.navigation.navigate('UploadVideo')}
           containerStyle={styles.btn}
         />
-        <HorizontalLine lineColor={{marginTop: 0}} />
+        <HorizontalLine lineColor={{ marginTop: 0 }} />
         <View style={styles.textRow}>
           <Text style={styles.whiteText}>Hair Styles</Text>
           <HighlightedText
@@ -126,11 +126,11 @@ export default function ProfileBarber(props) {
           showsHorizontalScrollIndicator={false}
           data={cuttings}
           keyExtractor={(item) => item.Id}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             return (
               <HairStyle
-                containerStyle={{width: width(40), height: width(40)}}
-                cuttingImage={{uri: item.CuttingImage}}
+                containerStyle={{ width: width(40), height: width(40) }}
+                cuttingImage={{ uri: item.CuttingImage }}
                 cuttingTitle={item.CuttingTitle}
               />
             );

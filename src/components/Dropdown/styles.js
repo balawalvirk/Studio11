@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         borderRadius: width(1),
         borderColor: AppColors.modalBg,
         width: width(60),
+
     },
     dropDownRow: {
         backgroundColor: AppColors.black,
@@ -51,11 +52,11 @@ const styles = StyleSheet.create({
     },
     textColor: {
         color: AppColors.white,
-        fontSize: width(4),
+        fontSize: width(3.5),
     },
     text: {
         color: AppColors.white,
-        fontSize: width(4),
+        fontSize: width(3.5),
         paddingHorizontal: width(4),
         flex: 0.95
     },

@@ -1,10 +1,10 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import React, {useState} from 'react';
-import {ActivityIndicator, FlatList, View} from 'react-native';
-import {height, width} from 'react-native-dimension';
+import React, { useState } from 'react';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+import { height, width } from 'react-native-dimension';
 import ImagePicker from 'react-native-image-crop-picker';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import CameraModel from '../../components/CameraModal';
 import Header from '../../components/Header';
@@ -12,8 +12,8 @@ import HorizontalLine from '../../components/HorizontalLine';
 import InputField from '../../components/InputField';
 import NewItemImage from '../../components/NewItemImage';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import {saveData, uploadImage} from '../../firebaseConfig';
-import {setItems} from '../../Redux/Actions/Barber';
+import { saveData, uploadImage } from '../../firebaseConfig';
+import { setItems } from '../../Redux/Actions/Barber';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
 export default function PublishNewItem(props) {
@@ -85,14 +85,14 @@ export default function PublishNewItem(props) {
       props.navigation.goBack();
     });
   };
-  const renderImage = ({item, index}) => (
+  const renderImage = ({ item, index }) => (
     <NewItemImage
       disabled={true}
-      imageAddress={{uri: item.uri}}
+      imageAddress={{ uri: item.uri }}
       onPress={() =>
         setImageArray(imageArray.filter((obj) => obj.uri != item.uri))
       }
-      containerStyle={{marginRight: width(2)}}
+      containerStyle={{ marginRight: width(2) }}
     />
   );
   return (
@@ -105,17 +105,9 @@ export default function PublishNewItem(props) {
           onPressLeadingIcon={() => props.navigation.goBack()}
         />
       )}
-      footerUnScrollable={() =>
-        waiting ? null : (
-          <View style={styles.footer}>
-            <Button
-              title="Publish New Item"
-              onPress={() => Adddata()}
-              containerStyle={styles.btn}
-            />
-          </View>
-        )
-      }
+      // footerUnScrollable={() =>
+
+      // }
       transclucent
       statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
@@ -132,20 +124,21 @@ export default function PublishNewItem(props) {
                 placeholder="esse corporis"
                 value={itemName}
                 onChangeText={(itemName) => setitemName(itemName)}
-                inputStyle={{borderRadius: width(4)}}
+                inputStyle={{ borderRadius: width(4) }}
               />
               <InputField
                 label="Item Price"
                 placeholder="$130"
                 value={itemPrice}
                 onChangeText={(itemPrice) => setitemPrice(itemPrice)}
-                inputStyle={{borderRadius: width(4)}}
+                inputStyle={{ borderRadius: width(4) }}
+                keyboardType={'number-pad'}
               />
-              <HorizontalLine lineColor={{marginTop: 0}} />
+              <HorizontalLine lineColor={{ marginTop: 0 }} />
 
               {imageArray.length > 0 && (
                 <FlatList
-                  contentContainerStyle={{alignItems: 'center'}}
+                  contentContainerStyle={{ alignItems: 'center' }}
                   style={styles.flatlist}
                   horizontal
                   data={imageArray}
@@ -159,10 +152,10 @@ export default function PublishNewItem(props) {
                 containerStyle={styles.btn}
               />
               <HorizontalLine
-                lineColor={{marginTop: 0, marginBottom: height(1.5)}}
+                lineColor={{ marginTop: 0, marginBottom: height(1.5) }}
               />
               <InputField
-                inputStyle={{height: 'auto'}}
+                inputStyle={{ height: 'auto' }}
                 fielderror={descrError}
                 value={itemDetail}
                 onChangeText={(itemDetail) => setitemDetail(itemDetail)}
@@ -174,6 +167,15 @@ export default function PublishNewItem(props) {
             </>
           )}
         </View>
+        {waiting ? null : (
+          <View style={styles.footer}>
+            <Button
+              title="Publish New Item"
+              onPress={() => Adddata()}
+              containerStyle={styles.btn}
+            />
+          </View>
+        )}
       </View>
       <CameraModel
         isVisible={CameraModelView}
@@ -184,7 +186,7 @@ export default function PublishNewItem(props) {
           ImagePicker.openCamera({}).then((image) => {
             setImageArray([
               ...imageArray,
-              {name: image.path.split('/').pop(), uri: image.path},
+              { name: image.path.split('/').pop(), uri: image.path },
             ]);
             setCameraModelView(false);
           })
@@ -193,7 +195,7 @@ export default function PublishNewItem(props) {
           ImagePicker.openPicker({}).then((image) => {
             setImageArray([
               ...imageArray,
-              {name: image.path.split('/').pop(), uri: image.path},
+              { name: image.path.split('/').pop(), uri: image.path },
             ]);
             setCameraModelView(false);
           })

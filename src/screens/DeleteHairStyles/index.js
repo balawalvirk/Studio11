@@ -1,19 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import {View, FlatList, Image, ActivityIndicator} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, FlatList, Image, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
 import HairStyle from '../../components/HairStyle';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AppColors from '../../utills/AppColors';
-import {height, width} from 'react-native-dimension';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {login} from '../../Redux/Actions/Auth';
-import {removeFromArray} from '../../firebaseConfig';
+import { height, width } from 'react-native-dimension';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { login } from '../../Redux/Actions/Auth';
+import { removeFromArray, removeUserCut, saveData } from '../../firebaseConfig';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import {setCuttings} from '../../Redux/Actions/Barber';
+import { setCuttings } from '../../Redux/Actions/Barber';
+import { HairCuts } from '../../utills/Enums';
 export default function DeleteHairStyles(props) {
   const user = useSelector((state) => state.Auth.user);
   const cuttings = useSelector((state) => state.Barber.cuttings);
@@ -37,11 +38,11 @@ export default function DeleteHairStyles(props) {
     arr[findIndex].isSelected = !arr[findIndex].isSelected;
     setrecord(arr);
   };
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <HairStyle
         containerStyle={styles.hairContainer}
-        cuttingImage={{uri: item?.CuttingImage}}
+        cuttingImage={{ uri: item?.CuttingImage }}
         cuttingTitle={item?.CuttingTitle}
         onPress={() => onPressHairStyle(item)}
         checkicon
@@ -53,6 +54,7 @@ export default function DeleteHairStyles(props) {
   };
   const onDeleteItem = async () => {
     setLoading(true);
+    let cutTypes = [HairCuts.LONG_CUT, HairCuts.SHORT_CUT]
     let temp = [...record];
     let newArr = [];
     for (let i = 0; i < temp.length; i++) {
@@ -62,6 +64,12 @@ export default function DeleteHairStyles(props) {
           await picRef.delete();
           // await removeFromArray('Users', auth().currentUser.uid, 'Cuttings', i);
           await firestore().collection('Cuttings').doc(temp[i].Id).delete();
+          await saveData('Users', auth().currentUser.uid, { HairCutCount: firestore.FieldValue.increment(-1) })
+          await removeUserCut('Users', auth().currentUser.uid, 'stylesAvailable', temp[i].CuttingTitle)
+          dispatch(login({
+            ...user,
+            stylesAvailable: user.stylesAvailable.filter(item => item != temp[i].CuttingTitle)
+          }))
           setLoading(false);
         } catch (error) {
           console.log(error);
@@ -76,6 +84,7 @@ export default function DeleteHairStyles(props) {
     setrecord(newArr);
     setLoading(false);
   };
+
   return (
     <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
       <Header
@@ -87,7 +96,7 @@ export default function DeleteHairStyles(props) {
             <TouchableOpacity onPress={() => onDeleteItem()}>
               <Image
                 source={require('../../assets/images/binIcon.png')}
-                style={{width: width(5), height: width(5)}}
+                style={{ width: width(5), height: width(5) }}
                 resizeMode="contain"
               />
             </TouchableOpacity>

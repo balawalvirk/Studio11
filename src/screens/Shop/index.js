@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {FlatList, Image, Text, View} from 'react-native';
-import {height, width} from 'react-native-dimension';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import React, { useState, useEffect } from 'react';
+import { FlatList, Image, Text, View } from 'react-native';
+import { height, width } from 'react-native-dimension';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Button from '../../components/Button';
@@ -11,13 +11,14 @@ import HorizontalLine from '../../components/HorizontalLine';
 import InputField from '../../components/InputField';
 import ProductCard from '../../components/ProductCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import {manageProductList} from '../../dummyData';
-import {getAllOfCollection} from '../../firebaseConfig';
+import { manageProductList } from '../../dummyData';
+import { getAllOfCollection } from '../../firebaseConfig';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
 export default function Shop(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [shopItems, setShopItems] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     loadData();
   }, []);
@@ -29,13 +30,13 @@ export default function Shop(props) {
       console.log(error.message);
     }
   };
-  const renderShopItems = ({item}) => {
+  const renderShopItems = ({ item }) => {
     return (
       <ProductCard
         onPressProduct={() =>
-          props.navigation.navigate('ProductDetails', {item})
+          props.navigation.navigate('ProductDetails', { item })
         }
-        productImage={{uri: item?.images[0]?.imageUri}}
+        productImage={{ uri: item?.images[0]?.imageUri }}
         productTitle={item.name}
         productRating={item.rating}
         productRatingCount={item.ratingCount}
@@ -53,7 +54,7 @@ export default function Shop(props) {
             <FontAwesome
               name="shopping-cart"
               onPress={() => props.navigation.navigate('ShoppingCart')}
-              style={{fontSize: width(5), color: AppColors.primaryGold}}
+              style={{ fontSize: width(5), color: AppColors.primaryGold }}
             />
           )}
         />
@@ -64,8 +65,8 @@ export default function Shop(props) {
         <View style={styles.searchView}>
           <InputField
             searchIcon
-            inputStyle={{borderRadius: width(3)}}
-            searchIconstyle={{color: AppColors.primaryGold, fontSize: width(6)}}
+            inputStyle={{ borderRadius: width(3) }}
+            searchIconstyle={{ color: AppColors.primaryGold, fontSize: width(6) }}
             placeholder={'Search'}
             containerStyles={{
               width: width(75),
@@ -80,10 +81,14 @@ export default function Shop(props) {
         </View>
         <FlatList
           numColumns={2}
+          style={styles.flatlist}
+          contentContainerStyle={{ alignSelf: 'center' }}
           columnWrapperStyle={styles.flatlistcolumn}
           data={shopItems}
           keyExtractor={(item) => item.id}
           renderItem={renderShopItems}
+          refreshing={refreshing}
+          onRefresh={() => loadData()}
         />
       </View>
       <Modal
@@ -94,12 +99,12 @@ export default function Shop(props) {
           <Text style={styles.modalTitle}>Filter by Price</Text>
           <View style={styles.inputRow}>
             <InputField
-              containerStyles={{width: '48%'}}
+              containerStyles={{ width: '48%' }}
               label={'Minimum'}
               placeholder={'$90'}
             />
             <InputField
-              containerStyles={{width: '48%'}}
+              containerStyles={{ width: '48%' }}
               label={'Maximum'}
               placeholder={'$120'}
             />
@@ -108,12 +113,12 @@ export default function Shop(props) {
           <Text style={styles.modalTitle}>Sort</Text>
           <View style={styles.inputRow}>
             <InputField
-              containerStyles={{width: '48%'}}
+              containerStyles={{ width: '48%' }}
               label={'Price'}
               placeholder={'High - Low'}
             />
             <InputField
-              containerStyles={{width: '48%'}}
+              containerStyles={{ width: '48%' }}
               label={'Name'}
               placeholder={'A - Z'}
             />
@@ -139,7 +144,7 @@ export default function Shop(props) {
             <Button title={'Apply'} onPress={() => setModalVisible(false)} />
             <Button
               planButton
-              textStyle={{color: AppColors.white}}
+              textStyle={{ color: AppColors.white }}
               containerStyle={{
                 backgroundColor: AppColors.transparent,
                 borderColor: AppColors.primaryGold,

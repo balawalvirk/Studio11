@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useDispatch, useSelector } from 'react-redux';
 // ********************firebas auth *************************
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -9,7 +9,7 @@ import AuthStack from './Stacks/AuthStack';
 import CustomerStack from './Stacks/CustomerStack';
 import BarberStack from './Stacks/BarberStack';
 
-import {login} from '../Redux/Actions/Auth';
+import { login } from '../Redux/Actions/Auth';
 console.disableYellowBox = true;
 const Stack = createStackNavigator();
 
@@ -49,7 +49,6 @@ export default function Routes() {
 
   return (
     <NavigationContainer>
-      {console.log(!isLogin, user)}
       {!isLogin ? (
         <Stack.Navigator initialRouteName="AuthStack" headerMode="none">
           <Stack.Screen name="AuthStack" component={AuthStack} />
