@@ -344,18 +344,14 @@ export async function postProductReview(
       .collection('ShopItems')
       .doc(product.id)
       .get();
+
     let rating = newProduct.data().rating;
     let ratingCount = newProduct.data().ratingCount;
-    // const newRating = (rating + reviewObj.rating) / (ratingCount + 1);
     const newRating = ((rating * ratingCount) + reviewObj.rating) / (ratingCount + 1);
-    console.log('rating: ', rating);
-    console.log('ratingCount: ', ratingCount);
-    console.log('newRating: ', newRating);
     await saveData('ShopItems', product.id, {
       rating: newRating,
       ratingCount: firestore.FieldValue.increment(1),
     });
-    console.log(reviewObj);
     return {
       rating: newRating,
       ratingCount: ratingCount + 1,
@@ -364,5 +360,59 @@ export async function postProductReview(
     console.log(error.message);
   }
 }
-
+export async function postBarberReview(reviewText, starCount, reviewerName, reviewerId, reviewImg, barberId) {
+  try {
+    const imgId = firestore().collection('rnd').doc().id;
+    const url = await uploadImage(reviewImg, 'BARBER_REVIEWS/' + imgId);
+    const reviewId = firestore().collection('rnd').doc().id;
+    const reviewObj = {
+      id: reviewId,
+      reviewerName: reviewerName,
+      reviewerName: reviewerName,
+      description: reviewText,
+      rating: starCount,
+      reviewerId: reviewerId,
+      image: url,
+    };
+    await firestore()
+      .collection('Users')
+      .doc(barberId)
+      .collection('Reviews')
+      .doc(reviewId)
+      .set(reviewObj);
+    const uptoDateBarber = await firestore()
+      .collection('Users')
+      .doc(barberId)
+      .get();
+    let rating = uptoDateBarber.data().Rating;
+    let ratingCount = uptoDateBarber.data().RatingCount;
+    const newRating = ((rating * ratingCount) + reviewObj.rating) / (ratingCount + 1);
+    await saveData('Users', barberId, {
+      Rating: newRating,
+      RatingCount: firestore.FieldValue.increment(1),
+    });
+    return {
+      rating: newRating,
+      ratingCount: ratingCount + 1,
+    }
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+export async function getReviewsBarber(barberId) {
+  try {
+    let reviews = [];
+    const snapshot = await firestore()
+      .collection('Users')
+      .doc(barberId)
+      .collection('Reviews')
+      .get();
+    snapshot.forEach((doc) => {
+      reviews.push(doc.data());
+    });
+    return reviews;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 export default firebase;

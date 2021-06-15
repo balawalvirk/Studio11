@@ -4,6 +4,6 @@ export const UserTypes = {
   RECEPTIONIST: 'Receptionist',
 };
 export const HairCuts = {
-  LONG_CUT: 'Long cut',
+  LONG_CUT: 'Long Cut',
   SHORT_CUT: 'Short Cut',
 };

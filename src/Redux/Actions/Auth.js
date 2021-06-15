@@ -1,6 +1,5 @@
-import {LOGIN, LOGOUT, CUSTOMERTYPE, LOGINSCREENTYPE} from '../Types';
+import { LOGIN, LOGOUT, CUSTOMERTYPE, LOGINSCREENTYPE } from '../Types';
 export const login = (payload) => {
-  console.log('Payload: ', payload);
   return {
     type: LOGIN,
     payload: payload,

@@ -32,7 +32,7 @@ export default function HomeScreen(props) {
       })}
       stylerName={item.FirstName + ' ' + item.LastName}
       Haircuts={item.HairCutCount + ' Haircuts'}
-      ratings={item.Rating + ' (' + item.RatingCount + ') reviews'}
+      ratings={item?.Rating?.toFixed(1) + ' (' + item.RatingCount + ' reviews)'}
       price={'$50'}
       styleImage={
         item?.Image?.imageUrl

@@ -1,19 +1,19 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import React, {useState} from 'react';
-import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
-import {height, width} from 'react-native-dimension';
+import React, { useState } from 'react';
+import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native';
+import { height, width } from 'react-native-dimension';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import CameraModel from '../../components/CameraModal';
 import Header from '../../components/Header';
 import HighlightedText from '../../components/HighlightedText';
 import InputField from '../../components/InputField';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import {saveData, uploadImage} from '../../firebaseConfig';
-import {setVideos} from '../../Redux/Actions/Barber';
+import { saveData, uploadImage } from '../../firebaseConfig';
+import { setVideos } from '../../Redux/Actions/Barber';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
 export default function UploadVideo(props) {
@@ -69,6 +69,7 @@ export default function UploadVideo(props) {
         videoThumb: thumbnailURL,
         videoRef: 'VIDEOS/' + videoName,
         thumbRef: 'VIDEO_THUMBS/' + thumbnailName,
+        views: 0,
       };
       await saveData('Videos', videoId, newVideo);
       dispatch(setVideos([...videos, newVideo]));
@@ -83,7 +84,7 @@ export default function UploadVideo(props) {
       scrollEnabled
       headerUnScrollable={() => (
         <Header
-          headerTitle={'Uploaded Video'}
+          headerTitle={'Upload Video'}
           leadingIcon={'arrow-left'}
           onPressLeadingIcon={() => props.navigation.goBack()}
         />
@@ -101,7 +102,7 @@ export default function UploadVideo(props) {
                   <TouchableOpacity onPress={() => setCameraModelView(true)}>
                     <Image
                       style={styles.uploadButton}
-                      source={{uri: capturedVideo}}
+                      source={{ uri: capturedVideo }}
                     />
                   </TouchableOpacity>
                 ) : (
@@ -120,7 +121,7 @@ export default function UploadVideo(props) {
                       name="camera"
                       style={styles.uploadButton}
                       resizeMode={'cover'}
-                      source={{uri: capturedThumbnail}}
+                      source={{ uri: capturedThumbnail }}
                     />
                   </TouchableOpacity>
                 ) : (
@@ -148,7 +149,7 @@ export default function UploadVideo(props) {
                 value={videoDetails}
                 onChangeText={(videoDetails) => setvideoDetails(videoDetails)}
                 placeholder="Description"
-                inputStyle={{height: 'auto'}}
+                inputStyle={{ height: 'auto' }}
               />
               <Button
                 onPress={() => publishVideo()}

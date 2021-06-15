@@ -4,11 +4,33 @@ import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
-    height: height(100),
     alignItems: 'center',
     backgroundColor: AppColors.textColor,
-    paddingTop: height(4),
   },
-
+  reviewImg: {
+    height: height(15),
+    width: height(15),
+    borderRadius: width(2),
+    backgroundColor: 'white',
+  },
+  cameraBg: {
+    height: height(15),
+    width: height(15),
+    borderRadius: width(2),
+    backgroundColor: AppColors.cardColor,
+    elevation: 4,
+    borderWidth: width(0.25),
+    borderColor: AppColors.primaryGold,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flatlist: {
+    alignItems: 'center',
+    paddingBottom: height(10)
+  },
+  headerContainer: {
+    alignItems: 'center',
+    marginTop: height(2)
+  }
 });
 export default styles;

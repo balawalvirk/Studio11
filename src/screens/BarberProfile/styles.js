@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
-import {width, height} from 'react-native-dimension';
+import { width, height } from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -13,8 +13,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: width(80),
     alignSelf: 'center',
-    marginBottom: height(1.5),
+    marginBottom: height(1),
     marginVertical: height(3),
+    width: width(85)
   },
   whiteText: {
     color: AppColors.white,
@@ -88,5 +89,26 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: width(0.3),
   },
+  reviewImg: {
+    height: height(15),
+    width: height(15),
+    borderRadius: width(2),
+    backgroundColor: 'white',
+  },
+  cameraBg: {
+    height: height(15),
+    width: height(15),
+    borderRadius: width(2),
+    backgroundColor: AppColors.cardColor,
+    elevation: 4,
+    borderWidth: width(0.25),
+    borderColor: AppColors.primaryGold,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: height(2)
+  },
+  cameraBgImg: {
+    marginTop: height(2)
+  }
 });
 export default styles;

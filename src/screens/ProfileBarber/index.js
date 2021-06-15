@@ -18,6 +18,17 @@ export default function ProfileBarber(props) {
   const user = useSelector((state) => state.Auth.user);
   const videos = useSelector((state) => state.Barber.videos);
   const cuttings = useSelector((state) => state.Barber.cuttings);
+  const renderVideoThumbnail = ({ item }) =>
+    <Thumbnail
+      thumbnailImage={{ uri: item.videoThumb }}
+      editable
+      onPress={() =>
+        props.navigation.navigate('EditUploadedVideo', { item })
+      }
+      videoTitle={item.videoTitle}
+      views={item.views}
+    />
+
   return (
     <ScreenWrapper
       scrollEnabled
@@ -90,19 +101,7 @@ export default function ProfileBarber(props) {
           contentContainerStyle={{ paddingHorizontal: width(8) }}
           data={videos}
           keyExtractor={(item) => item.Id}
-          renderItem={({ item }) => {
-            return (
-              <Thumbnail
-                thumbnailImage={{ uri: item.videoThumb }}
-                editable
-                onPress={() =>
-                  props.navigation.navigate('EditUploadedVideo', { item })
-                }
-                videoTitle={item.videoTitle}
-                views={'412'}
-              />
-            );
-          }}
+          renderItem={renderVideoThumbnail}
         />
         <Button
           title="Upload a Video"

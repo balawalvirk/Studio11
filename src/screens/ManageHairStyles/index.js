@@ -74,6 +74,8 @@ export default function ManageHairStyles(props) {
       await saveData('Cuttings', hairStyleId, hairStyle);
       if (cuttingTitle == '') {
         saveStyleUser(selected)
+      } else {
+        saveStyleUser(cuttingTitle)
       }
       dispatch(setCuttings([...cuttings, hairStyle]));
       setListArray([...cuttings, hairStyle]);
@@ -197,7 +199,10 @@ export default function ManageHairStyles(props) {
         iconName={'photo-camera'}
         labelName={'Take Photo'}
         imageFromCamera={() =>
-          ImagePicker.openCamera({}).then((image) => {
+          ImagePicker.openCamera({
+            compressImageQuality: 0.5,
+            mediaType: 'photo'
+          }).then((image) => {
             setcapturedImage(image.path);
             setimageName(image.path.split('/').pop());
             setCameraModelView(false);
@@ -205,7 +210,10 @@ export default function ManageHairStyles(props) {
           })
         }
         imageFromGallery={() =>
-          ImagePicker.openPicker({}).then((image) => {
+          ImagePicker.openPicker({
+            compressImageQuality: 0.5,
+            mediaType: 'photo'
+          }).then((image) => {
             setcapturedImage(image.path);
             setimageName(image.path.split('/').pop());
             setCameraModelView(false);

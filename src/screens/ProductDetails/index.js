@@ -53,13 +53,19 @@ export default function ProductDetails(props) {
     setReviews(temp)
   }
   const openCamera = () => {
-    ImagePicker.openCamera({}).then((image) => {
+    ImagePicker.openCamera({
+      mediaType: 'photo',
+      compressImageQuality: 0.5,
+    }).then((image) => {
       setReviewImg(image.path);
       setCameraModal(false);
     });
   };
   const openPicker = () => {
-    ImagePicker.openPicker({}).then((image) => {
+    ImagePicker.openPicker({
+      mediaType: 'photo',
+      compressImageQuality: 0.5,
+    }).then((image) => {
       setReviewImg(image.path);
       setCameraModal(false);
     });

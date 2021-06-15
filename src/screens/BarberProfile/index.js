@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, View } from 'react-native';
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import Icon from 'react-native-vector-icons/dist/Entypo';
 import Button from '../../components/Button';
@@ -11,22 +11,45 @@ import PostReview from '../../components/PostReview';
 import ReviewCard from '../../components/ReviewCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import Thumbnail from '../../components/Thumbnail';
-import { manageCuttingImages, reviewList, ThumbnailList } from '../../dummyData';
+import { getCuttingsById, getData, getReviewsBarber, getVideosById, postBarberReview } from '../../firebaseConfig';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
-import { getCuttingsById, getData, getVideosById } from '../../firebaseConfig';
-import firestore from '@react-native-firebase/firestore';
+import Entypo from 'react-native-vector-icons/Entypo'
+import CameraModel from '../../components/CameraModal';
+import ImagePicker from 'react-native-image-crop-picker';
+import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
+import { useSelector } from 'react-redux';
+import { reviewList } from '../../dummyData';
 export default function BarberProfile(props) {
   const barberId = props.route.params.barberId;
-  console.log(barberId)
+  const user = useSelector(state => state.Auth.user)
+
   const [barberDetails, setBaberDetails] = useState({});
   const [cuttings, setCuttings] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [barberReviews, setBarberReviews] = useState([]);
+  const [cameraModal, setCameraModal] = useState(false);
+  const [postLoading, setPostLoading] = useState(false);
+  const [reviewText, setReviewText] = useState('');
+  const [reviewErr, setReviewErr] = useState('');
+  const [starCount, setStarCount] = useState('');
+  const [reviewImg, setReviewImg] = useState('');
+
   useEffect(() => {
-    getBarberProfile();
-    getBarberCuttings();
-    getBarberVideos();
+    getBarberProfile()
+    getBarberCuttings()
+    getBarberVideos()
+    getBarberReviews()
   }, []);
+  const getBarberReviews = async () => {
+    try {
+      const reviews = await getReviewsBarber(barberId)
+      setBarberReviews(reviews)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
   const getBarberProfile = async () => {
     try {
       const info = await getData('Users', barberId);
@@ -51,13 +74,74 @@ export default function BarberProfile(props) {
       console.log(error.message);
     }
   };
+  const openCamera = () => {
+    ImagePicker.openCamera({
+      mediaType: 'photo',
+      compressImageQuality: 0.5,
+    }).then((image) => {
+      setReviewImg(image.path);
+      setCameraModal(false);
+    });
+  };
+  const openPicker = () => {
+    ImagePicker.openPicker({
+      mediaType: 'photo',
+      compressImageQuality: 0.5,
+    }).then((image) => {
+      setReviewImg(image.path);
+      setCameraModal(false);
+    });
+  };
+  const postRating = async () => {
+    const snapshot = await firestore()
+      .collection('Users')
+      .doc(barberId)
+      .collection('Reviews')
+      .where('reviewerId', '==', auth().currentUser.uid)
+      .get();
+    if (snapshot.size > 0) {
+      alert('You have already left a review on this product.');
+      setReviewText('');
+      setStarCount(3);
+      setReviewImg(null);
+      return;
+    }
+    if (reviewText == '') {
+      setReviewErr('Please enter review text.');
+      return;
+    }
+    setReviewErr('');
+    if (!reviewImg) {
+      alert('Please select review image.');
+      return;
+    }
+    try {
+      setPostLoading(true);
+      await postBarberReview(
+        reviewText,
+        starCount,
+        user?.FirstName + ' ' + user?.LastName,
+        auth().currentUser.uid,
+        reviewImg,
+        barberId,
+      );
+      setPostLoading(false);
+      setReviewText('');
+      setStarCount(3);
+      setReviewImg(null);
+    } catch (error) {
+      console.log(error.message);
+      setPostLoading(false);
+    }
+
+  }
   const renderReview = ({ item }) => (
     <ReviewCard
-      containerstyle={{ marginHorizontal: width(2) }}
-      ReviewerName={item.ReviewerName}
-      ratings={item.ratings}
-      Review={item.Review}
-      reviewerImage={item.reviewerImage}
+      containerstyle={{ marginHorizontal: width(2), marginBottom: height(3) }}
+      ReviewerName={item.reviewerName}
+      ratings={item?.rating}
+      Review={item?.description}
+      reviewerImage={{ uri: item.image }}
     />
   );
   const renderCuttings = ({ item }) => (
@@ -73,7 +157,7 @@ export default function BarberProfile(props) {
       thumbnailImage={{ uri: item?.videoThumb }}
       onPress={() => props.navigation.navigate('VideoPlay')}
       videoTitle={item?.VideoTitle}
-      views={item?.Views ?? 500}
+      views={item?.views ?? 0}
       cardstyle={{ width: width(90) }}
       containerStyle={{ marginVertical: width(2) }}
     />
@@ -135,54 +219,99 @@ export default function BarberProfile(props) {
           />
         </View>
         <HorizontalLine />
-        <View style={styles.textRow}>
-          <Text style={styles.whiteText}>Hair Styles</Text>
-          <HighlightedText
-            text={'View all'}
-            onPress={() => props.navigation.navigate('HairStyles')}
-          />
-        </View>
-        <FlatList
-          contentContainerStyle={styles.hairList}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          data={cuttings}
-          keyExtractor={(item) => item.id}
-          renderItem={renderCuttings}
-        />
+        {cuttings.length > 0 &&
+          <>
+            <View style={styles.textRow}>
+              <Text style={styles.whiteText}>Hair Styles</Text>
+              <HighlightedText
+                text={'View all'}
+                onPress={() => props.navigation.navigate('HairStyles')}
+              />
+            </View>
+            <FlatList
+              contentContainerStyle={styles.hairList}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              data={cuttings}
+              keyExtractor={(item) => item.id}
+              renderItem={renderCuttings}
+            />
+          </>}
         <View style={styles.dash} />
-        <View style={styles.textRow}>
-          <Text style={styles.whiteText}>Video Uploads</Text>
-          <HighlightedText
-            text={'View all'}
-            onPress={() => props.navigation.navigate('VideoUploads')}
-          />
-        </View>
-        <FlatList
-          horizontal={true}
-          contentContainerStyle={{ paddingLeft: width(4) }}
-          data={videos}
-          keyExtractor={(item) => item.Id}
-          renderItem={renderVideo}
-          showsHorizontalScrollIndicator={false}
+        {videos.length > 0 &&
+          <>
+            <View style={styles.textRow}>
+              <Text style={styles.whiteText}>Video Uploads</Text>
+              <HighlightedText
+                text={'View all'}
+                onPress={() => props.navigation.navigate('VideoUploads')}
+              />
+            </View>
+            <FlatList
+              horizontal={true}
+              contentContainerStyle={{ paddingLeft: width(4) }}
+              data={videos}
+              keyExtractor={(item) => item.Id}
+              renderItem={renderVideo}
+              showsHorizontalScrollIndicator={false}
+            />
+          </>}
+        {barberReviews.length > 0 &&
+          <>
+            <View style={styles.textRow}>
+              <Text style={styles.whiteText}>Reviews</Text>
+              <HighlightedText
+                text={'View all'}
+                onPress={() => props.navigation.navigate('Reviews', { barberId: barberId })}
+              />
+            </View>
+            <FlatList
+              horizontal={true}
+              contentContainerStyle={{ paddingHorizontal: width(4), }}
+              data={barberReviews}
+              keyExtractor={(item) => item.id}
+              renderItem={renderReview}
+              showsHorizontalScrollIndicator={false}
+            />
+          </>}
+        {reviewImg ? (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.cameraBgImg}
+            onPress={() => setCameraModal(true)}>
+            <Image source={{ uri: reviewImg }} style={styles.reviewImg} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setCameraModal(true)}
+            style={styles.cameraBg}>
+            <Entypo
+              name={'camera'}
+              size={height(3.5)}
+              color={AppColors.primaryGold}
+            />
+          </TouchableOpacity>
+        )}
+        <PostReview
+          reviewErr={reviewErr}
+          label={'Write a review:'}
+          onRatingPress={(rating) => setStarCount(rating)}
+          starCount={starCount}
+          onPostPress={() => postRating()}
+          reviewText={reviewText}
+          setReviewText={setReviewText}
+          postLoading={postLoading}
         />
-
-        <View style={styles.textRow}>
-          <Text style={styles.whiteText}>Reviews</Text>
-          <HighlightedText
-            text={'View all'}
-            onPress={() => props.navigation.navigate('Reviews')}
-          />
-        </View>
-        <FlatList
-          horizontal={true}
-          contentContainerStyle={{ paddingHorizontal: width(5) }}
-          data={reviewList}
-          keyExtractor={(item) => item.id}
-          renderItem={renderReview}
-        />
-        <PostReview label={'Write a review:'} />
       </View>
+      <CameraModel
+        isVisible={cameraModal}
+        onClose={() => setCameraModal(false)}
+        iconName={'photo-camera'}
+        labelName={'Take Photo'}
+        imageFromCamera={() => openCamera()}
+        imageFromGallery={() => openPicker()}
+      />
     </ScreenWrapper>
   );
 }

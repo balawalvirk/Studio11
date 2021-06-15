@@ -8,5 +8,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: AppColors.textColor
   },
+  column: {
+    justifyContent: 'space-between',
+    paddingVertical: height(2)
+  },
+  listContainer: {
+    paddingHorizontal: width(6)
+  },
+  hairStyle: { width: width(40), height: width(40) }
 });
 export default styles;
