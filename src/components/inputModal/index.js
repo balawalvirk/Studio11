@@ -7,9 +7,26 @@ import Button from '../Button';
 import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import InputField from '../InputField';
-const inputModal = ({ modalTitle, isVisible, onClose, onpressFirstButton, onpressSecondButton, image, onPressUploadImage,
-  firstButtonTitle, secondButtonTitle, firstLabel, secondLabel, firstValue, secondValue, multiline, numoflines
+const inputModal = ({ modalTitle,
+  isVisible,
+  onClose,
+  onpressFirstButton,
+  onpressSecondButton,
+  image,
+  onPressUploadImage,
+  firstButtonTitle,
+  secondButtonTitle,
+  firstLabel,
+  secondLabel,
+  firstValue,
+  secondValue,
+  multiline,
+  numoflines,
+  onToPress,
+  onFromPress,
+  breakLoading
 }) => {
+
   return (
     <Modal
       onBackButtonPress={onClose}
@@ -24,16 +41,40 @@ const inputModal = ({ modalTitle, isVisible, onClose, onpressFirstButton, onpres
             <Text style={styles.colouredText}>Add a picture</Text>
           </TouchableOpacity>
           : null}
-        <InputField containerStyles={{ width: '100%' }} value={firstValue} label={firstLabel} />
-        <InputField multiline={multiline} numoflines={numoflines}
-          containerStyles={{ width: '100%' }} value={secondValue} label={secondLabel} />
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={onFromPress}
+          style={{ width: '100%' }}>
+          <InputField
+            containerStyles={{ width: '100%' }}
+            value={firstValue}
+            label={firstLabel}
+            editable={false}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={onToPress}
+          activeOpacity={0.5}
+          style={{ width: '100%' }}>
+          <InputField
+            multiline={multiline}
+            numoflines={numoflines}
+            containerStyles={{ width: '100%' }}
+            value={secondValue}
+            label={secondLabel}
+            editable={false}
+          />
+        </TouchableOpacity>
         <View style={styles.buttonLine}>
-          <Button title={firstButtonTitle} onPress={onpressFirstButton} />
-          <Button planButton textStyle={{ color: AppColors.white }}
-            containerStyle={{
-              backgroundColor: AppColors.transparent,
-              borderColor: AppColors.primaryGold, borderWidth: width(0.15)
-            }}
+          <Button
+            isLoading={breakLoading}
+            containerStyle={{ width: width(30) }}
+            title={firstButtonTitle}
+            onPress={onpressFirstButton} />
+          <Button
+            planButton
+            textStyle={{ color: AppColors.white }}
+            containerStyle={styles.cancelBtn}
             title={secondButtonTitle} onPress={onpressSecondButton} />
         </View>
 

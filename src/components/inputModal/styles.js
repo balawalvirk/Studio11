@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
   },
   colouredText: {
     textAlign: "center",
-    marginVertical:height(1),
+    marginVertical: height(1),
     fontSize: width(4),
     color: AppColors.primaryGold,
   },
   cameraView: {
-    marginTop:height(2),
+    marginTop: height(2),
     backgroundColor: AppColors.textColor,
     padding: width(10),
     borderColor: AppColors.primaryGold,
@@ -41,6 +41,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: width(12),
     marginVertical: height(1)
+  },
+  cancelBtn: {
+    backgroundColor: AppColors.transparent,
+    borderColor: AppColors.primaryGold,
+    borderWidth: width(0.15),
+    width: width(30)
   }
 });
 export default styles;

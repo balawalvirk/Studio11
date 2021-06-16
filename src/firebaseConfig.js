@@ -29,7 +29,7 @@ export async function addToArrayUpdate(collection, doc, array, value) {
   }
 }
 export const removeFromArray = async (collection, doc, array, index) => {
-  let docRef = await firestore().collection(collection).doc(doc);
+  let docRef = firestore().collection(collection).doc(doc);
   let docData = await docRef.get();
   if (docData.exists && docData.data()[array][index] != undefined) {
     docRef.update({
@@ -37,6 +37,21 @@ export const removeFromArray = async (collection, doc, array, index) => {
         docData.data()[array][index],
       ),
     });
+  }
+};
+export const removeValueFromArray = async (collection, doc, array, value) => {
+  try {
+    let docRef = firestore().collection(collection).doc(doc);
+    let docData = await docRef.get();
+    if (docData.exists) {
+      docRef.update({
+        [array]: firebase.firestore.FieldValue.arrayRemove(
+          value
+        ),
+      });
+    }
+  } catch (error) {
+    console.log(error.message)
   }
 };
 export const removeUserCut = async (collection, doc, array, string) => {
@@ -415,4 +430,84 @@ export async function getReviewsBarber(barberId) {
     console.log(error.message);
   }
 }
+export async function unlikeVideo(videoInfo, userId) {
+  const videoRef = firestore()
+    .collection('Videos')
+    .doc(videoInfo.Id)
+  try {
+    await removeValueFromArray('Videos', videoInfo.Id, 'likedBy', userId)
+    await videoRef.set({ likeCount: firestore.FieldValue.increment(-1) }, { merge: true })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function likeVideo(videoInfo, userId) {
+  const videoRef = firestore()
+    .collection('Videos')
+    .doc(videoInfo.Id)
+  try {
+    await addToArrayUpdate('Videos', videoInfo.Id, 'likedBy', userId)
+    await videoRef.set({ likeCount: firestore.FieldValue.increment(1) }, { merge: true })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+export async function saveComment(videoInfo, comment, username, uid) {
+  const commentId = firestore().collection('rnd').doc().id
+  const commentObj = {
+    id: commentId,
+    comment: comment,
+    time: firestore.FieldValue.serverTimestamp(),
+    commenterName: username,
+    commenterId: uid
+  }
+  try {
+    await firestore()
+      .collection('Videos')
+      .doc(videoInfo.Id)
+      .collection('Comments')
+      .doc(commentId)
+      .set(commentObj)
+    await firestore()
+      .collection('Videos')
+      .doc(videoInfo.Id)
+      .set({
+        commentCount: firestore.FieldValue.increment(1)
+      }, { merge: true })
+    return commentObj
+  } catch (error) {
+    console.log(error.message);
+    return false
+  }
+}
+export async function getVideoComments(videoInfo) {
+  try {
+    let comments = [];
+    const snapshot = await firestore()
+      .collection('Videos')
+      .doc(videoInfo.Id)
+      .collection('Comments')
+      .get();
+    snapshot.forEach((doc) => {
+      comments.push(doc.data());
+    });
+    return comments;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function addVideoView(videoInfo) {
+  try {
+    await firestore()
+      .collection('Videos')
+      .doc(videoInfo.Id)
+      .set({
+        views: firestore.FieldValue.increment(1)
+      }, { merge: true })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 export default firebase;

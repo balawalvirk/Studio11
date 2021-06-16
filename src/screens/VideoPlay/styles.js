@@ -16,29 +16,32 @@ const styles = StyleSheet.create({
   },
   white50: {
     color: AppColors.white50,
-    fontSize: width(4)
+    fontSize: width(3.5)
   },
-  bgImage:{
-    width:width(100),
-    height:height(25)
+  bgImage: {
+    width: width(100),
+    height: height(25)
   },
   playButton: {
     fontSize: width(15),
     color: AppColors.white,
     alignSelf: 'center',
-    padding:width(15)
+    padding: width(15)
   },
-  row:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    marginVertical:height(1),
-    alignItems:'center',
-    alignSelf:'center',
-    width:width(90)
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: width(90)
+  },
+  viewContainer: {
+    flexDirection: 'row',
+    marginTop: height(1)
   },
   viewIcon: {
     color: AppColors.white50,
-    fontSize: width(5),
+    fontSize: width(4.5),
     marginRight: width(2)
   },
   commentIcon: {
@@ -50,25 +53,58 @@ const styles = StyleSheet.create({
     color: AppColors.primaryGold,
     fontSize: width(5),
   },
-  ScrollView:{
+  ScrollView: {
     // width:width(90),
+    marginTop: height(2)
   },
-  bringCenter:{
-    width:width(90),
-    alignSelf:'center'
+  bringCenter: {
+    width: width(90),
+    alignSelf: 'center'
   },
-  Centerline:{
-    width:width(90),
-    alignSelf:'center',
-    marginTop:height(2),
-    marginBottom:height(2)
+  Centerline: {
+    width: width(90),
+    alignSelf: 'center',
+    marginTop: height(2),
+    marginBottom: height(1)
   },
-  comment:{
-    width:width(90),
+  comment: {
+    width: width(90),
     color: AppColors.white50,
     fontSize: width(4),
     marginLeft: width(5)
+  },
+  btnContainer: {
+    width: width(40),
+    borderRadius: height(3)
+  },
+  font35: {
+    fontSize: width(3.5)
+  },
+  likeContainer: {
+    alignItems: 'center'
+  },
+  flexRow: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  postBtn: {
+    width: width(25),
+    borderRadius: height(3),
+    // marginTop: height(1)
+  },
+  commentText: {
+    color: AppColors.white,
+    fontSize: width(3.8),
+    fontWeight: 'bold',
+    marginStart: width(4)
+  },
+  commentContainer: {
+    paddingVertical: height(1.5)
+  },
+  commentCountContainer: {
+    flexDirection: 'row',
+    paddingVertical: height(1.5),
+    paddingHorizontal: width(5)
   }
-
 });
 export default styles;

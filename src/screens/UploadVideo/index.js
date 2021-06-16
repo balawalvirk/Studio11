@@ -70,6 +70,9 @@ export default function UploadVideo(props) {
         videoRef: 'VIDEOS/' + videoName,
         thumbRef: 'VIDEO_THUMBS/' + thumbnailName,
         views: 0,
+        likeCount: 0,
+        likedBy: [],
+        commentCount: 0,
       };
       await saveData('Videos', videoId, newVideo);
       dispatch(setVideos([...videos, newVideo]));

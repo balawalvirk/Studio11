@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     height: width(42),
   },
   hairList: {
-    width: width(100),
     paddingLeft: width(2),
     marginBottom: height(2),
   },

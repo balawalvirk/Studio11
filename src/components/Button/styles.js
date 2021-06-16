@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {height, width} from 'react-native-dimension';
+import { StyleSheet } from 'react-native';
+import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: AppColors.black,
-    fontSize: width(4),
+    fontSize: width(3.5),
     fontWeight: 'bold',
     textAlign: 'center',
   },

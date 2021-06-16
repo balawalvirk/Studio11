@@ -26,11 +26,17 @@ const styles = StyleSheet.create({
     width: width(12),
     height: width(12),
   },
-  imageIconBg:{
-    backgroundColor:AppColors.primaryGold,
-    padding:width(5),
-    borderRadius:width(15),
-    marginBottom:height(2)
+  imageIconBg: {
+    backgroundColor: AppColors.primaryGold,
+    padding: width(5),
+    borderRadius: width(15),
+    marginBottom: height(2)
+  },
+  cancelBtn: {
+    backgroundColor: AppColors.transparent,
+    borderColor: AppColors.primaryGold,
+    borderWidth: width(0.15),
+    width: width(15),
   }
 });
 export default styles;

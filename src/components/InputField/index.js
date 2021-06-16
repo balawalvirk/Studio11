@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text, TouchableOpacity, View, TextInput} from 'react-native';
-import {height, width} from 'react-native-dimension';
+import { Text, TouchableOpacity, View, TextInput } from 'react-native';
+import { height, width } from 'react-native-dimension';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
@@ -12,7 +12,7 @@ const InputField = ({
   containerStyles,
   onChangeText,
   value,
-  fielderror,
+  fielderror = null,
   onBlur,
   maxLength,
   keyboardType,
@@ -29,7 +29,7 @@ const InputField = ({
   inputStyle,
 }) => {
   return (
-    <View style={[{width: width(80)}, containerStyles ? containerStyles : {}]}>
+    <View style={[{ width: width(80) }, containerStyles ? containerStyles : {}]}>
       {label && label != '' && (
         <Text style={[styles.label, labelStyle]}>{label}</Text>
       )}

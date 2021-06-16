@@ -1,16 +1,16 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import Button from '../../components/Button';
 import HighlightedText from '../../components/HighlightedText';
 import InputField from '../../components/InputField';
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import Logo from '../../components/Logo';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import AppColors from '../../utills/AppColors';
-import {height, width} from 'react-native-dimension';
+import { height, width } from 'react-native-dimension';
 import {
   getCuttingsById,
   getData,
@@ -23,8 +23,8 @@ import {
   setCustomerType,
   setLoginScreenType,
 } from '../../Redux/Actions/Auth';
-import {setCuttings, setItems, setVideos} from '../../Redux/Actions/Barber';
-import {UserTypes} from '../../utills/Enums';
+import { setCuttings, setItems, setVideos } from '../../Redux/Actions/Barber';
+import { UserTypes } from '../../utills/Enums';
 export default function Login(props) {
   const [email, setemail] = useState('Customer@mail.com');
   const dispatch = useDispatch();
@@ -69,10 +69,19 @@ export default function Login(props) {
         const items = await getItemsById();
         const videos = await getVideosById();
         const cuttings = await getCuttingsById();
+        const { breakTime } = userObj
         dispatch(setItems(items));
         dispatch(setCuttings(cuttings));
         dispatch(setVideos(videos));
-        dispatch(login(userObj));
+        dispatch(login({
+          ...userObj,
+          breakTime: {
+            fromMoment: breakTime.fromMoment.toDate(),
+            toMoment: breakTime.toMoment.toDate(),
+            to: breakTime.to,
+            from: breakTime.from
+          }
+        }));
       } else if (userObj?.Type == UserTypes.CUSTOMER) {
         dispatch(login(userObj));
       }

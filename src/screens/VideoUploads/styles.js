@@ -32,7 +32,10 @@ const styles = StyleSheet.create({
     color: AppColors.white50,
     fontSize: width(4)
   },
-
+  icon: {
+    color: AppColors.primaryGold,
+    fontSize: width(6)
+  },
   // ****************modal view**************************
   modalView: {
     marginHorizontal: width(12),

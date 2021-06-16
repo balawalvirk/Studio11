@@ -15,17 +15,33 @@ import HighlightedText from '../../components/HighlightedText';
 import { ThumbnailList } from '../../dummyData';
 export default function VideoUploads(props) {
   const [modalVisible, setModalVisible] = useState(false);
+  const renderVideoThumb = ({ item }) =>
+    <Thumbnail reactions
+      cardstyle={{ marginVertical: width(2), width: width(90) }}
+      thumbnailImage={item.thumbnailImage}
+      onPress={() => props.navigation.navigate('VideoPlay')}
+      videoTitle={item.videoTitle}
+      views={item.views}
+      likes={item.likes}
+      comments={item.comments} />
 
   return (
-    <ScreenWrapper scrollEnabled headerUnScrollable={() =>
-      <Header headerTitle={'Video Uploads'} leadingIcon={'arrow-left'}
-        onPressLeadingIcon={() => props.navigation.goBack()} />
-    } transclucent statusBarColor={AppColors.transparent}>
+    <ScreenWrapper
+      scrollEnabled
+      transclucent
+      statusBarColor={AppColors.transparent}
+      headerUnScrollable={() =>
+        <Header headerTitle={'Video Uploads'} leadingIcon={'arrow-left'}
+          onPressLeadingIcon={() => props.navigation.goBack()} />
+      }>
       <View style={styles.mainViewContainer}>
         <View style={styles.searchView}>
-          <InputField searchIcon inputStyle={{ borderRadius: width(3) }}
-            searchIconstyle={{ color: AppColors.primaryGold, fontSize: width(6) }}
-            placeholder={'Search'} containerStyles={{ width: '80%' }} />
+          <InputField
+            searchIcon
+            inputStyle={{ borderRadius: width(3) }}
+            searchIconstyle={styles.icon}
+            placeholder={'Search'}
+            containerStyles={{ width: '80%' }} />
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Image style={styles.filterButton}
               source={require('../../assets/images/filter.png')} />
@@ -36,18 +52,7 @@ export default function VideoUploads(props) {
           contentContainerStyle={{ paddingVertical: width(8) }}
           data={ThumbnailList}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => {
-            return (
-              <Thumbnail reactions
-                cardstyle={{ marginVertical: width(2), width: width(90) }}
-                thumbnailImage={item.thumbnailImage}
-                onPress={() => props.navigation.navigate('VideoPlay')}
-                videoTitle={item.videoTitle}
-                views={item.views}
-                likes={item.likes}
-                comments={item.comments} />
-            );
-          }}
+          renderItem={renderVideoThumb}
         />
       </View>
       <Modal

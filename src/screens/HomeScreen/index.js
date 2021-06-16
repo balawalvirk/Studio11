@@ -78,22 +78,25 @@ export default function HomeScreen(props) {
           timeLeft={'3 days left'}
           appointmentImage={require('../../assets/images/cuttings/1.png')}
         />
-        <View style={styles.dash} />
-        <View style={styles.textRow}>
-          <Text style={styles.whiteText}>Popular Hair Styles</Text>
-          <HighlightedText
-            text={'View all'}
-            onPress={() => props.navigation.navigate('HairStyles')}
-          />
-        </View>
-        <FlatList
-          horizontal={true}
-          contentContainerStyle={styles.flatlist}
-          showsHorizontalScrollIndicator={false}
-          data={popularStyles}
-          keyExtractor={(item) => item.Id}
-          renderItem={renderHairStyle}
-        />
+        {popularStyles.length > 0 &&
+          <>
+            <View style={styles.dash} />
+            <View style={styles.textRow}>
+              <Text style={styles.whiteText}>Popular Hair Styles</Text>
+              <HighlightedText
+                text={'View all'}
+                onPress={() => props.navigation.navigate('HairStyles')}
+              />
+            </View>
+            <FlatList
+              horizontal={true}
+              contentContainerStyle={styles.flatlist}
+              showsHorizontalScrollIndicator={false}
+              data={popularStyles}
+              keyExtractor={(item) => item.Id}
+              renderItem={renderHairStyle}
+            />
+          </>}
         <View style={styles.dash} />
         <View style={styles.textRow}>
           <Text style={styles.whiteText}>Our Stylers</Text>

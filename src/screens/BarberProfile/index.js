@@ -155,7 +155,7 @@ export default function BarberProfile(props) {
   const renderVideo = ({ item }) => (
     <Thumbnail
       thumbnailImage={{ uri: item?.videoThumb }}
-      onPress={() => props.navigation.navigate('VideoPlay')}
+      onPress={() => props.navigation.navigate('VideoPlay', { videoInfo: item, barberDetails: barberDetails })}
       videoTitle={item?.VideoTitle}
       views={item?.views ?? 0}
       cardstyle={{ width: width(90) }}
