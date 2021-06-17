@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {width, height} from 'react-native-dimension';
+import { StyleSheet } from 'react-native';
+import { width, height } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
@@ -54,5 +54,9 @@ const styles = StyleSheet.create({
     margin: width(2.5),
     borderRadius: width(4),
   },
+  editContainer: {
+    flexDirection: 'row-reverse',
+    alignSelf: 'baseline'
+  }
 });
 export default styles;

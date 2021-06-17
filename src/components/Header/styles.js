@@ -6,12 +6,12 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: AppColors.headerColor,
         height: height(10),
+        width: width(100),
         paddingTop: height(3),
         flexDirection: 'row',
         paddingHorizontal: width(5),
         elevation: 12,
         alignItems: 'center',
-        justifyContent: 'space-between'
     },
     leadingIcon: {
         fontSize: width(5),
@@ -20,11 +20,14 @@ const styles = StyleSheet.create({
     heading: {
         color: AppColors.white,
         fontSize: width(4),
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        width: width(70),
+        textAlign: 'center'
     },
     logo: {
         width: width(20),
-        resizeMode: 'contain'
+        resizeMode: 'contain',
+        marginStart: width(30)
     }
 
 })

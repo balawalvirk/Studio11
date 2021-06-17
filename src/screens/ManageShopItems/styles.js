@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
-import {width, height} from 'react-native-dimension';
+import { width, height } from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -47,6 +47,12 @@ const styles = StyleSheet.create({
   btn: {
     marginVertical: height(2),
   },
+  cancelBtn: {
+    backgroundColor: AppColors.transparent,
+    borderColor: AppColors.primaryGold,
+    borderWidth: width(0.15),
+    width: width(25)
+  },
   // ****************modal view**************************
   modalView: {
     marginHorizontal: width(8),
@@ -59,7 +65,7 @@ const styles = StyleSheet.create({
 
   modalTitle: {
     textAlign: 'center',
-    fontSize: width(5),
+    fontSize: width(4),
     color: AppColors.white,
     fontWeight: 'bold',
   },
@@ -85,5 +91,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: height(1),
   },
+  labelStyle: { fontSize: width(3) }
 });
 export default styles;

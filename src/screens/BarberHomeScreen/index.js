@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { set } from 'react-native-reanimated';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import CustomModal from '../../components/customModal';
@@ -14,7 +15,7 @@ import InputModal from '../../components/inputModal';
 import ScheduleCard from '../../components/ScheduleCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import WelcomeBarberText from '../../components/WelcomeBarberText';
-import { saveData } from '../../firebaseConfig';
+import { endBreak, saveData } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
@@ -56,48 +57,68 @@ export default function BarberHomeScreen(props) {
   const [resumeModalVisible, setresumeModalVisible] = useState(false);
   const [workBreak, setworkBreak] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
-  const [from, setFrom] = useState(moment().format('hh:mm a'));
-  const [to, setTo] = useState(moment().format('hh:mm a'));
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [fromError, setFromError] = useState('');
+  const [toError, setToError] = useState('');
   const [fromMoment, setFromMoment] = useState('');
   const [toMoment, setToMoment] = useState('');
+  const [dateTimeString, setDateTimeString] = useState(moment().format('dddd, DD MMMM, hh:mm a'));
+
   const [pickerMode, setPickerMode] = useState(0); //0 => from   1=> To
   useEffect(() => {
-    setInterval(() => checkBreakStatus(), 5000)
+    clearInterval(window.checkStatus)
+    window.checkStatus = setInterval(() => checkBreakStatus(), 5000)
   }, []);
   const checkBreakStatus = async () => {
     try {
+      setDateTimeString(moment().format('dddd, DD MMMM, hh:mm a'))
       if (user.breakTime) {
         const fromTime = user?.breakTime?.fromMoment
         const toTime = user?.breakTime?.toMoment
-        console.log(fromTime, toTime)
         const duration = moment.duration(moment(toTime).diff(fromTime)).asSeconds()
-        if (moment().isSameOrAfter(fromTime) && moment().isSameOrBefore(toTime)) {
+        // if (moment().isSameOrAfter(fromTime) && moment().isSameOrBefore(toTime)) {
+        if (moment().valueOf() > fromTime && moment().valueOf() < toTime) {
           setworkBreak(true)
         } else {
           setworkBreak(false)
         }
       } else {
-        console.log('NO BREAK OBJ')
       }
     } catch (error) {
       console.log(error.message)
     }
   };
   const takeBreak = async () => {
+    if (from == '') {
+      setFromError('Please enter start time')
+      return
+    }
+    setFromError('')
+    if (to == '') {
+      setToError('Please enter start time')
+      return
+    }
+    setToError('')
+    // clearInterval(window.checkStatus)
     try {
       setBreakLoading(true);
       const breakObj = {
         from,
         to,
-        toMoment: moment(toMoment).valueOf(),
-        fromMoment
+        toMoment: toMoment,
+        fromMoment: fromMoment
       };
       await saveData('Users', auth().currentUser.uid, { breakTime: breakObj });
       dispatch(login({
         ...user,
-        breakTime: breakObj
+        breakTime: {
+          fromMoment: breakObj?.fromMoment,
+          toMoment: breakObj?.toMoment
+        }
       }))
       setBreakLoading(false);
+
     } catch (error) {
       console.log(error.message);
       setBreakLoading(false);
@@ -105,8 +126,19 @@ export default function BarberHomeScreen(props) {
     setModalVisible(false);
     setworkBreak(true);
   };
-  const resumeWork = () => {
-    setresumeModalVisible(false), setworkBreak(false);
+  const resumeWork = async () => {
+    try {
+      await endBreak(auth().currentUser.uid)
+      setworkBreak(false)
+      dispatch(login({
+        ...user,
+        breakTime: null
+      }))
+      setresumeModalVisible(false)
+    } catch (error) {
+      console.log(error.message)
+    }
+    // setresumeModalVisible(false), setworkBreak(false);
   };
   const renderAppointments = ({ item }) => (
     <ScheduleCard
@@ -156,7 +188,7 @@ export default function BarberHomeScreen(props) {
       )}>
       <View style={styles.mainViewContainer}>
         <WelcomeBarberText
-          date={moment().format('dddd, DD MMMM, hh:mm a')}
+          date={dateTimeString}
           appointments={'6'}
         />
         <HorizontalLine lineColor={{ width: width(90), marginTop: height(2) }} />
@@ -168,7 +200,7 @@ export default function BarberHomeScreen(props) {
             }}>
             <Text style={styles.whiteText}>
               You are on break
-              <Text style={styles.white50}> ({moment(user.breakTime.fromMoment).format('h:mm a')} - {moment(user.breakTime.toMoment).format('h:mm a')})</Text>
+              {user.breakTime && <Text style={styles.white50}> ({moment(user.breakTime.fromMoment).format('h:mm a')} - {moment(user.breakTime.toMoment).format('h:mm a')})</Text>}
             </Text>
             <Text style={styles.whiteText}>Time left: 00:18:34</Text>
             <Button
@@ -215,6 +247,8 @@ export default function BarberHomeScreen(props) {
         onpressSecondButton={() => setModalVisible(false)}
         onFromPress={onFromPress}
         onToPress={onToPress}
+        fromError={fromError}
+        toError={toError}
       />
       <CustomModal
         isVisible={resumeModalVisible}

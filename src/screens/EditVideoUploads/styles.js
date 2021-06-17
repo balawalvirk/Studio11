@@ -32,6 +32,15 @@ const styles = StyleSheet.create({
     color: AppColors.white50,
     fontSize: width(4)
   },
+  cancelBtn: {
+    backgroundColor: AppColors.transparent,
+    borderColor: AppColors.primaryGold,
+    borderWidth: width(0.15),
+    width: width(25)
+  },
+  applyBtn: {
+    width: width(25)
+  },
 
   // ****************modal view**************************
   modalView: {

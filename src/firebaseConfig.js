@@ -175,6 +175,7 @@ export function getData(collection, doc, objectKey) {
       });
   }
 }
+
 export async function uploadImage(uri, path) {
   try {
     const response = await fetch(uri);
@@ -509,5 +510,32 @@ export async function addVideoView(videoInfo) {
     console.log(error.message);
   }
 }
-
+export async function getNotifications(userId) {
+  try {
+    let notifs = [];
+    const snapshot = await firestore()
+      .collection('Users')
+      .doc(userId)
+      .collection('Notifications')
+      .get();
+    snapshot.forEach((doc) => {
+      notifs.push(doc.data());
+    });
+    return notifs;
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function endBreak(userId) {
+  try {
+    await firestore()
+      .collection('Users')
+      .doc(userId)
+      .set({
+        breakTime: null
+      }, { merge: true })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 export default firebase;

@@ -10,16 +10,17 @@ const ProductCard = ({
   onPressProduct
 }) => {
   return (
-    <TouchableOpacity onPress={onPressProduct}
+    <TouchableOpacity disabled={editable} onPress={onPressProduct}
       style={styles.productCard}>
       <ImageBackground resizeMode='cover'
         source={productImage}
         style={styles.productImage} >
-        {editable && <View style={{ flexDirection: 'row-reverse', }}>
-          <MaterialCommunityIcons name="pencil"
-            style={styles.editIcon}
-          />
-        </View>}
+        {editable &&
+          <View style={styles.editContainer}>
+            <TouchableOpacity onPress={onPressProduct}>
+              <MaterialCommunityIcons name="pencil" style={styles.editIcon} />
+            </TouchableOpacity>
+          </View>}
       </ImageBackground>
       <View style={styles.detailSection}>
         <Text style={styles.productName}>{productTitle}</Text>

@@ -4,6 +4,7 @@ import { height, width } from 'react-native-dimension';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
 import Button from '../../components/Button';
 import Header from '../../components/Header';
 import HighlightedText from '../../components/HighlightedText';
@@ -44,19 +45,31 @@ export default function Shop(props) {
       />
     );
   };
+  const renderCart = () =>
+    <View style={styles.icon}>
+      <FontAwesome
+        name="shopping-cart"
+        onPress={() => props.navigation.navigate('ShoppingCart')}
+        style={{ fontSize: width(5), color: AppColors.primaryGold }}
+      />
+    </View>
+  const renderOrderIcon = () =>
+    <View style={styles.icon}>
+      <Feather
+        name="box"
+        onPress={() => props.navigation.navigate('TrackOrder')}
+        style={{ fontSize: width(5), color: AppColors.primaryGold }}
+      />
+    </View>
+
   return (
     <ScreenWrapper
       scrollEnabled
       headerUnScrollable={() => (
         <Header
           headerTitle={'Shop'}
-          renderIconRight={() => (
-            <FontAwesome
-              name="shopping-cart"
-              onPress={() => props.navigation.navigate('ShoppingCart')}
-              style={{ fontSize: width(5), color: AppColors.primaryGold }}
-            />
-          )}
+          renderIconRight={renderCart}
+          renderTrackOrder={renderOrderIcon}
         />
       )}
       transclucent

@@ -73,15 +73,22 @@ export default function Login(props) {
         dispatch(setItems(items));
         dispatch(setCuttings(cuttings));
         dispatch(setVideos(videos));
-        dispatch(login({
-          ...userObj,
-          breakTime: {
-            fromMoment: breakTime.fromMoment.toDate(),
-            toMoment: breakTime.toMoment.toDate(),
-            to: breakTime.to,
-            from: breakTime.from
-          }
-        }));
+        if (breakTime) {
+          console.log(breakTime)
+          dispatch(login({
+            ...userObj,
+            breakTime: {
+              fromMoment: breakTime?.fromMoment?.toDate(),
+              toMoment: breakTime?.toMoment?.toDate(),
+              to: breakTime.to,
+              from: breakTime.from
+            }
+          }));
+        } else {
+          dispatch(login({
+            ...userObj,
+          }));
+        }
       } else if (userObj?.Type == UserTypes.CUSTOMER) {
         dispatch(login(userObj));
       }

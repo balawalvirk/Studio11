@@ -12,9 +12,9 @@ const styles = StyleSheet.create({
     color: AppColors.white,
   },
   rightArrow: {
-    width:width(5),
-    height:width(5),
-    resizeMode:'contain'
+    width: width(5),
+    height: width(5),
+    resizeMode: 'contain'
   },
   settingsRow: {
     flexDirection: 'row',
@@ -22,8 +22,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomColor: AppColors.cardColor,
     borderBottomWidth: width(0.25),
-    alignItems:'center',
-    paddingVertical: width(4)
-  }
+    alignItems: 'center',
+    paddingVertical: width(2)
+  },
+  arrowContainer: { padding: width(1) }
 });
 export default styles;

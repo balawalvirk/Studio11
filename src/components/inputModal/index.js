@@ -24,7 +24,9 @@ const inputModal = ({ modalTitle,
   numoflines,
   onToPress,
   onFromPress,
-  breakLoading
+  breakLoading,
+  fromError,
+  toError
 }) => {
 
   return (
@@ -50,6 +52,7 @@ const inputModal = ({ modalTitle,
             value={firstValue}
             label={firstLabel}
             editable={false}
+            fielderror={fromError}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -57,6 +60,7 @@ const inputModal = ({ modalTitle,
           activeOpacity={0.5}
           style={{ width: '100%' }}>
           <InputField
+            fielderror={toError}
             multiline={multiline}
             numoflines={numoflines}
             containerStyles={{ width: '100%' }}

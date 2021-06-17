@@ -28,6 +28,13 @@ export default function ProfileBarber(props) {
       videoTitle={item.videoTitle}
       views={item.views}
     />
+  const renderCuttings = ({ item }) =>
+    <HairStyle
+      disabled
+      containerStyle={{ width: width(40), height: width(40) }}
+      cuttingImage={{ uri: item.CuttingImage }}
+      cuttingTitle={item.CuttingTitle}
+    />
 
   return (
     <ScreenWrapper
@@ -125,15 +132,7 @@ export default function ProfileBarber(props) {
           showsHorizontalScrollIndicator={false}
           data={cuttings}
           keyExtractor={(item) => item.Id}
-          renderItem={({ item }) => {
-            return (
-              <HairStyle
-                containerStyle={{ width: width(40), height: width(40) }}
-                cuttingImage={{ uri: item.CuttingImage }}
-                cuttingTitle={item.CuttingTitle}
-              />
-            );
-          }}
+          renderItem={renderCuttings}
         />
       </View>
     </ScreenWrapper>

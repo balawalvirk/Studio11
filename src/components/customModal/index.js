@@ -17,13 +17,9 @@ const customModal = ({ iconName, description, isVisible, onClose, navigateTo, bu
         {modalImage ? <View style={styles.imageIconBg}><Image style={styles.imageIcon} source={modalImagePath} /></View> : <Icon name={iconName} style={styles.modalIcon} />}
         <Text style={styles.modalText}>{description}</Text>
         {buttonLine ?
-          <View style={{
-            flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-            marginHorizontal: width(10), marginVertical: height(1),
-            backgroundColor: 'red'
-          }}>
+          <View style={styles.btnContainer}>
             <Button
-              containerStyle={{ width: width(15) }}
+              containerStyle={{ width: width(25) }}
               title={firstButtonTitle}
               onPress={onpressFirstButton} />
             <Button

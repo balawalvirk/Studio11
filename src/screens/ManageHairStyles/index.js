@@ -117,15 +117,14 @@ export default function ManageHairStyles(props) {
     setcuttingDetails('');
   };
 
-  const renderItem = ({ item, index }) => {
-    return (
-      <HairStyle
-        containerStyle={{ width: width(40), height: width(40) }}
-        cuttingImage={{ uri: item.CuttingImage }}
-        cuttingTitle={item.CuttingTitle}
-      />
-    );
-  };
+  const renderItem = ({ item, index }) =>
+    <HairStyle
+      disabled
+      containerStyle={{ width: width(40), height: width(40) }}
+      cuttingImage={{ uri: item.CuttingImage }}
+      cuttingTitle={item.CuttingTitle}
+    />
+
   return (
     <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
       <Header
@@ -146,10 +145,12 @@ export default function ManageHairStyles(props) {
         )}
       />
       <View style={styles.mainViewContainer}>
-        <Button onPress={() => {
-          console.log(user.stylesAvailable)
-          setModalVisible(true)
-        }} title={'Add new'} />
+        <Button
+          onPress={() => {
+            console.log(user.stylesAvailable)
+            setModalVisible(true)
+          }}
+          title={'Add new'} />
         <HorizontalLine
           lineColor={{ alignSelf: 'center', marginBottom: height(1) }}
         />

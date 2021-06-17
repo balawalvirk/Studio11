@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
   },
-
+  icon: { width: width(10), alignItems: 'center', height: height(5), justifyContent: 'center' },
   modalTitle: {
     textAlign: 'center',
     fontSize: width(5),

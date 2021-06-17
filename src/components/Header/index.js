@@ -1,17 +1,19 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/dist/Feather';
 import Logo from '../Logo';
-import {Text, View, Image} from 'react-native';
+import { Text, View, Image } from 'react-native';
 import styles from './styles';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { width } from 'react-native-dimension';
 const Header = ({
   midLogo,
   headerTitle,
-  leadingIcon,
+  leadingIcon = null,
   actionIcon,
   onPressLeadingIcon,
   onPressActionIcon,
   renderIconRight = null,
+  renderTrackOrder = null
 }) => {
   return (
     <View style={styles.header}>
@@ -24,8 +26,11 @@ const Header = ({
           style={styles.logo}
         />
       ) : (
-        <Text style={styles.heading}>{headerTitle}</Text>
+        <Text style={[styles.heading, { width: renderTrackOrder ? width(70) : leadingIcon ? width(80) : width(90) }]}>{headerTitle}</Text>
       )}
+      {renderIconRight &&
+        renderTrackOrder()
+      }
       {renderIconRight ? (
         renderIconRight()
       ) : (

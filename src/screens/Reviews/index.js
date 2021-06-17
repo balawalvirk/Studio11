@@ -23,7 +23,7 @@ export default function Reviews(props) {
   const [postLoading, setPostLoading] = useState(false);
   const [reviewText, setReviewText] = useState('');
   const [reviewErr, setReviewErr] = useState('');
-  const [starCount, setStarCount] = useState('');
+  const [starCount, setStarCount] = useState(3);
   const [reviewImg, setReviewImg] = useState('');
   useEffect(() => {
     loadData()
@@ -55,19 +55,19 @@ export default function Reviews(props) {
     });
   };
   const postRating = async () => {
-    // const snapshot = await firestore()
-    //   .collection('Users')
-    //   .doc(barberId)
-    //   .collection('Reviews')
-    //   .where('reviewerId', '==', auth().currentUser.uid)
-    //   .get();
-    // if (snapshot.size > 0) {
-    //   alert('You have already left a review on this product.');
-    //   setReviewText('');
-    //   setStarCount(3);
-    //   setReviewImg(null);
-    //   return;
-    // }
+    const snapshot = await firestore()
+      .collection('Users')
+      .doc(barberId)
+      .collection('Reviews')
+      .where('reviewerId', '==', auth().currentUser.uid)
+      .get();
+    if (snapshot.size > 0) {
+      alert('You have already left a review on this product.');
+      setReviewText('');
+      setStarCount(3);
+      setReviewImg(null);
+      return;
+    }
     if (reviewText == '') {
       setReviewErr('Please enter review text.');
       return;
@@ -142,6 +142,35 @@ export default function Reviews(props) {
       headerUnScrollable={() => <Header headerTitle={'Reviews'} leadingIcon={'arrow-left'}
         onPressLeadingIcon={() => props.navigation.goBack()} />}>
       <View style={styles.mainViewContainer}>
+        {reviewImg ? (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.cameraBgImg}
+            onPress={() => setCameraModal(true)}>
+            <Image source={{ uri: reviewImg }} style={styles.reviewImg} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setCameraModal(true)}
+            style={styles.cameraBg}>
+            <Entypo
+              name={'camera'}
+              size={height(3.5)}
+              color={AppColors.primaryGold}
+            />
+          </TouchableOpacity>
+        )}
+        <PostReview
+          reviewErr={reviewErr}
+          label={'Write a review:'}
+          onRatingPress={(rating) => setStarCount(rating)}
+          starCount={starCount}
+          onPostPress={() => postRating()}
+          reviewText={reviewText}
+          setReviewText={setReviewText}
+          postLoading={postLoading}
+        />
         <HorizontalLine />
         <FlatList
           contentContainerStyle={styles.flatlist}
@@ -149,8 +178,8 @@ export default function Reviews(props) {
           keyExtractor={item => item.id}
           renderItem={renderReview}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={renderHeader}
-          ListHeaderComponentStyle={styles.headerContainer}
+        // ListHeaderComponent={renderHeader}
+        // ListHeaderComponentStyle={styles.headerContainer}
         />
       </View>
       <CameraModel

@@ -36,7 +36,11 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.transparent,
     borderColor: AppColors.primaryGold,
     borderWidth: width(0.15),
-    width: width(15),
+    width: width(25),
+  },
+  btnContainer: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    marginHorizontal: width(10), marginVertical: height(1),
   }
 });
 export default styles;

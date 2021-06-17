@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
+import { width } from 'react-native-dimension';
 export default function Settings(props) {
 
   return (
@@ -12,19 +13,28 @@ export default function Settings(props) {
       <View style={styles.mainViewContainer}>
         <View style={styles.settingsRow}>
           <Text style={styles.labels}>Privacy</Text>
-          <Image style={styles.rightArrow} source={require('../../assets/images/arrowRight.png')} />
+          <TouchableOpacity style={styles.arrowContainer}>
+            <Image style={styles.rightArrow} source={require('../../assets/images/arrowRight.png')} />
+          </TouchableOpacity>
         </View>
         <View style={styles.settingsRow}>
           <Text style={styles.labels}>Notification</Text>
-          <Image style={styles.rightArrow} source={require('../../assets/images/arrowRight.png')} />
+          <TouchableOpacity style={styles.arrowContainer}
+            onPress={() => props.navigation.navigate('BarberNotifications')}>
+            <Image style={styles.rightArrow} source={require('../../assets/images/arrowRight.png')} />
+          </TouchableOpacity>
         </View>
         <View style={styles.settingsRow}>
           <Text style={styles.labels}>Account</Text>
-          <Image style={styles.rightArrow} source={require('../../assets/images/arrowRight.png')} />
+          <TouchableOpacity style={styles.arrowContainer} onPress={() => props.navigation.navigate('ProfileBarber')}>
+            <Image style={styles.rightArrow} source={require('../../assets/images/arrowRight.png')} />
+          </TouchableOpacity>
         </View>
         <View style={styles.settingsRow}>
           <Text style={styles.labels}>About</Text>
-          <Image style={styles.rightArrow} source={require('../../assets/images/arrowRight.png')} />
+          <TouchableOpacity style={styles.arrowContainer}>
+            <Image style={styles.rightArrow} source={require('../../assets/images/arrowRight.png')} />
+          </TouchableOpacity>
         </View>
       </View>
     </ScreenWrapper>
