@@ -19,7 +19,9 @@ import styles from './styles';
 export default function Shop(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [shopItems, setShopItems] = useState([]);
+  const [searchedItems, setSearchedItems] = useState([])
   const [refreshing, setRefreshing] = useState(false);
+  const [searchText, setSearchText] = useState('');
   useEffect(() => {
     loadData();
   }, []);
@@ -31,26 +33,31 @@ export default function Shop(props) {
       console.log(error.message);
     }
   };
-  const renderShopItems = ({ item }) => {
-    return (
-      <ProductCard
-        onPressProduct={() =>
-          props.navigation.navigate('ProductDetails', { item })
-        }
-        productImage={{ uri: item?.images[0]?.imageUri }}
-        productTitle={item.name}
-        productRating={item.rating}
-        productRatingCount={item.ratingCount}
-        productPrice={item.price}
-      />
-    );
-  };
+  const search = (val) => {
+    const newData = shopItems.filter(item => {
+      const itemData = `${item.name.toUpperCase()} ${item.name.toUpperCase()} ${item.name.toUpperCase()} `;
+      const textData = val.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    console.log(newData)
+    setSearchedItems(newData)
+  }
+  const renderShopItems = ({ item }) =>
+    <ProductCard
+      onPressProduct={() => props.navigation.navigate('ProductDetails', { item })}
+      productImage={{ uri: item?.images[0]?.imageUri }}
+      productTitle={item.name}
+      productRating={item.rating}
+      productRatingCount={item.ratingCount}
+      productPrice={item.price}
+    />
+
   const renderCart = () =>
     <View style={styles.icon}>
       <FontAwesome
         name="shopping-cart"
         onPress={() => props.navigation.navigate('ShoppingCart')}
-        style={{ fontSize: width(5), color: AppColors.primaryGold }}
+        style={styles.renderedIcons}
       />
     </View>
   const renderOrderIcon = () =>
@@ -58,31 +65,33 @@ export default function Shop(props) {
       <Feather
         name="box"
         onPress={() => props.navigation.navigate('TrackOrder')}
-        style={{ fontSize: width(5), color: AppColors.primaryGold }}
+        style={styles.renderedIcons}
       />
     </View>
 
   return (
     <ScreenWrapper
       scrollEnabled
-      headerUnScrollable={() => (
+      headerUnScrollable={() =>
         <Header
           headerTitle={'Shop'}
           renderIconRight={renderCart}
           renderTrackOrder={renderOrderIcon}
-        />
-      )}
+        />}
       transclucent
       statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
         <View style={styles.searchView}>
           <InputField
+            value={searchText}
             searchIcon
             inputStyle={{ borderRadius: width(3) }}
-            searchIconstyle={{ color: AppColors.primaryGold, fontSize: width(6) }}
+            searchIconstyle={styles.searchIcon}
             placeholder={'Search'}
-            containerStyles={{
-              width: width(75),
+            containerStyles={{ width: width(75) }}
+            onChangeText={text => {
+              setSearchText(text)
+              search(text)
             }}
           />
           <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -97,7 +106,7 @@ export default function Shop(props) {
           style={styles.flatlist}
           contentContainerStyle={{ alignSelf: 'center' }}
           columnWrapperStyle={styles.flatlistcolumn}
-          data={shopItems}
+          data={searchText.length != 0 ? searchedItems : shopItems}
           keyExtractor={(item) => item.id}
           renderItem={renderShopItems}
           refreshing={refreshing}
@@ -136,14 +145,6 @@ export default function Shop(props) {
               placeholder={'A - Z'}
             />
           </View>
-          <HorizontalLine
-            lineColor={{
-              backgroundColor: AppColors.white09,
-              marginTop: 0,
-              marginVertical: height(2),
-              width: width(60),
-            }}
-          />
           <HighlightedText text={'Clear All'} />
           <HorizontalLine
             lineColor={{
@@ -154,15 +155,13 @@ export default function Shop(props) {
             }}
           />
           <View style={styles.buttonRow}>
-            <Button title={'Apply'} onPress={() => setModalVisible(false)} />
+            <Button title={'Apply'}
+              onPress={() => setModalVisible(false)}
+              containerStyle={{ width: width(25) }} />
             <Button
               planButton
               textStyle={{ color: AppColors.white }}
-              containerStyle={{
-                backgroundColor: AppColors.transparent,
-                borderColor: AppColors.primaryGold,
-                borderWidth: width(0.15),
-              }}
+              containerStyle={styles.btnContainer}
               title={'Cancel'}
               onPress={() => setModalVisible(false)}
             />

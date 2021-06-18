@@ -73,6 +73,7 @@ export default function UploadVideo(props) {
         likeCount: 0,
         likedBy: [],
         commentCount: 0,
+        timestamp: firestore.FieldValue.serverTimestamp()
       };
       await saveData('Videos', videoId, newVideo);
       dispatch(setVideos([...videos, newVideo]));

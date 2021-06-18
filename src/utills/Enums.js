@@ -14,3 +14,11 @@ export const OrderStatus = {
   SHIP_READY: 3,
   DELIVERY: 4,
 };
+export const SortTypes = {
+  HIGH_TO_LOW: 'High - Low',
+  LOW_TO_HIGH: 'Low - High',
+};
+export const AlphaSortTypes = {
+  A_Z: 'A - Z',
+  Z_A: 'Z - A'
+};

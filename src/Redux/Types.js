@@ -15,3 +15,7 @@ export const READUSER = 'READUSER';
 export const ITEMS = 'ITEMS';
 export const CUTTINGS = 'CUTTINGS';
 export const VIDEOS = 'VIDEOS';
+
+//CUSTOMER
+export const CART = 'CART';
+

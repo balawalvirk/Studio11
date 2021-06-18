@@ -72,7 +72,7 @@ export default function PublishNewItem(props) {
       id: itemId,
       userId: barberId,
       name: itemName,
-      price: itemPrice,
+      price: Number(itemPrice),
       description: itemDetail,
       images: urls,
       rating: 0,

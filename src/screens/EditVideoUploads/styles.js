@@ -41,20 +41,64 @@ const styles = StyleSheet.create({
   applyBtn: {
     width: width(25)
   },
-
+  label: {
+    color: AppColors.white50,
+    fontSize: width(3),
+    marginStart: width(2),
+    marginBottom: height(0.5)
+  },
+  dropContainer: {
+    width: width(32),
+    paddingHorizontal: width(4),
+    paddingVertical: height(1),
+    borderWidth: width(0.15),
+    borderColor: AppColors.primaryGold,
+    borderRadius: height(3),
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  selectedText: {
+    color: AppColors.white50,
+    flex: 1
+  },
+  label: {
+    color: AppColors.white50,
+    fontSize: width(3),
+    marginStart: width(2),
+    marginBottom: height(0.5)
+  },
+  dash: {
+    backgroundColor: AppColors.white09,
+    marginTop: 0,
+    marginVertical: height(2),
+    width: width(60),
+  },
+  priceContainer: {
+    backgroundColor: AppColors.black,
+    width: width(30),
+    paddingVertical: height(1),
+    paddingHorizontal: width(2),
+    borderRadius: width(1.5)
+  },
+  rowText: {
+    color: AppColors.white
+  },
+  dropDown: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+  },
   // ****************modal view**************************
   modalView: {
-    marginHorizontal: width(12),
+    marginHorizontal: width(10),
     backgroundColor: AppColors.modalBg,
     borderRadius: width(5),
     padding: width(5),
     alignItems: "center",
     elevation: 5
   },
-
   modalTitle: {
     textAlign: "center",
-    fontSize: width(5),
+    fontSize: width(4),
     color: AppColors.white,
     fontWeight: "bold",
   },
@@ -64,8 +108,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: width(10),
     marginVertical: height(1)
+  },
+  width60: { width: width(60) },
+  labelStyle: {
+    fontSize: width(3)
   }
-
-
 });
 export default styles;

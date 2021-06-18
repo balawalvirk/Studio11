@@ -28,7 +28,7 @@ const Header = ({
       ) : (
         <Text style={[styles.heading, { width: renderTrackOrder ? width(70) : leadingIcon ? width(80) : width(90) }]}>{headerTitle}</Text>
       )}
-      {renderIconRight &&
+      {renderTrackOrder &&
         renderTrackOrder()
       }
       {renderIconRight ? (

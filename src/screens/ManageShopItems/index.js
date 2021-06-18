@@ -11,46 +11,80 @@ import HorizontalLine from '../../components/HorizontalLine';
 import InputField from '../../components/InputField';
 import ProductCard from '../../components/ProductCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
+import ModalDropdown from 'react-native-modal-dropdown';
+import Entypo from 'react-native-vector-icons/Entypo'
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
+import { AlphaSortTypes, OrderStatus, SortTypes } from '../../utills/Enums';
 export default function ManageShopItems(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
   const barberItems = useSelector((state) => state.Barber.barberItems);
-  const [searchedItems, setSearchedItems] = useState([])
+  const [searchedItems, setSearchedItems] = useState(barberItems)
+  const [searchText, setSearchText] = useState('');
   const [min, setMin] = useState('')
   const [max, setMax] = useState('')
-  // let priceFiltered = barberItems.filter(item => item.price > min && item.price < max)
-  // console.log(priceFiltered)
-  // useEffect(() => {
-  //   console.log(min, max)
-  //   if (min != 0 && max != 0) {
-  //     console.log('both')
-  //   } else if (min != 0) {
-  //     console.log('min')
-  //   } else if (max != 0) {
-  //     console.log('max')
-  //   }
-  // }, [])
-  const search = (val) => {
+  const [selectedPrice, setSelectedPrice] = useState(SortTypes.LOW_TO_HIGH)
+  const [selectedAlpha, setSelectedAlpha] = useState('A - Z')
+  const [filter, setFilter] = useState(null)
+  const priceSort = [SortTypes.LOW_TO_HIGH, SortTypes.HIGH_TO_LOW]
+  const alphaSort = [AlphaSortTypes.A_Z, AlphaSortTypes.Z_A]
+  useEffect(() => {
+    // search()
+  }, [])
+  const search = (val = null) => {
     let items = [...barberItems]
-    // if (min != 0 && max != 0) {
-    //   console.log('both')
-    //   items = items.filter(item => item.price > min && item.price < max)
-    // } else if (min != 0) {
-    //   console.log('min')
-    //   items = items.filter(item => item.price > min)
-    // } else if (max != 0) {
-    //   console.log('max')
-    //   items = items.filter(item => item.price < max)
-    // }
-    const newData = items.filter(item => {
-      const itemData = `${item.name.toUpperCase()} ${item.name.toUpperCase()} ${item.name.toUpperCase()} `;
-      const textData = val.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    setSearchedItems(newData)
+    if (min != 0 && max != 0) {
+      console.log('both')
+      items = items.filter(item => item.price >= min && item.price <= max)
+    } else if (min != 0) {
+      console.log('min')
+      items = items.filter(item => item.price > min)
+    } else if (max != 0) {
+      console.log('max')
+      items = items.filter(item => item.price < max)
+    }
+    if (val) {
+      items = items.filter(item => {
+        const itemData = `${item.name.toUpperCase()} ${item.name.toUpperCase()} ${item.name.toUpperCase()} `;
+        const textData = val.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+    }
+    if (selectedPrice == SortTypes.LOW_TO_HIGH) {
+      items = items.sort((a, b) => a.price - b.price)
+    }
+    if (selectedPrice == SortTypes.HIGH_TO_LOW) {
+      items = items.sort((a, b) => b.price - a.price)
+    }
+    if (selectedAlpha == AlphaSortTypes.A_Z) {
+      items.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if (selectedAlpha == AlphaSortTypes.Z_A) {
+      items.sort((a, b) => b.name.localeCompare(a.name));
+    }
+    setSearchedItems(items)
+  }
+  const onChangeMin = text => {
+    if (text == '') {
+      setMin('')
+      return
+    }
+    setMin(Number(text))
+  }
+  const onChangeMax = text => {
+    if (text == '') {
+      setMax('')
+      return
+    }
+    setMax(Number(text))
+  }
+  const clearAllFilters = () => {
+    setMin('')
+    setMax('')
+    setModalVisible(false)
+    search(searchText)
   }
   const renderItem = ({ item, index }) =>
     <ProductCard
@@ -66,7 +100,12 @@ export default function ManageShopItems(props) {
       productRatingCount={item.ratingCount}
       productPrice={item.price}
     />
-
+  const renderPriceRow = (data) =>
+    <TouchableOpacity
+      onPress={() => console.log(data)}
+      style={styles.priceContainer}>
+      <Text style={styles.rowText}>{data}</Text>
+    </TouchableOpacity>
   return (
     <ScreenWrapper
       scrollEnabled
@@ -97,7 +136,11 @@ export default function ManageShopItems(props) {
             searchIconstyle={{ color: AppColors.primaryGold, fontSize: width(6) }}
             placeholder={'Search'}
             containerStyles={{ width: '80%' }}
-            onChangeText={text => search(text)}
+            value={searchText}
+            onChangeText={text => {
+              setSearchText(text)
+              search(text)
+            }}
           />
           <TouchableOpacity
             style={styles.filterContainer}
@@ -111,7 +154,7 @@ export default function ManageShopItems(props) {
         <FlatList
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
-          data={searchedItems.length > 0 ? searchedItems : barberItems}
+          data={searchedItems}
           keyExtractor={(item) => item.Id}
           renderItem={renderItem}
         />
@@ -119,31 +162,29 @@ export default function ManageShopItems(props) {
       <Modal
         onBackButtonPress={() => setModalVisible(false)}
         isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}>
+        onBackdropPress={() => { }}>
         <View style={styles.modalView}>
           <Text style={styles.modalTitle}>Filter by Price</Text>
           <View style={styles.inputRow}>
             <InputField
-              containerStyles={{ width: '48%' }}
+              containerStyles={{ width: width(32), }}
+              inputStyle={{ height: 'auto' }}
               label={'Minimum'}
               placeholder={'$90'}
               labelStyle={styles.labelStyle}
               keyboardType={'number-pad'}
-              value={min}
-              onChangeText={text => {
-                setMin(Number(text))
-              }}
+              value={min + ''}
+              onChangeText={text => onChangeMin(text)}
             />
             <InputField
-              containerStyles={{ width: '48%' }}
+              containerStyles={{ width: width(32) }}
+              inputStyle={{ height: 'auto' }}
               label={'Maximum'}
               placeholder={'$120'}
               labelStyle={styles.labelStyle}
               keyboardType={'number-pad'}
-              value={max}
-              onChangeText={text => {
-                setMax(Number(text))
-              }}
+              value={max + ''}
+              onChangeText={text => onChangeMax(text)}
             />
           </View>
 
@@ -156,19 +197,41 @@ export default function ManageShopItems(props) {
             }}
           />
           <Text style={styles.modalTitle}>Sort</Text>
-          <View style={styles.inputRow}>
-            <InputField
-              containerStyles={{ width: '48%' }}
-              label={'Price'}
-              placeholder={'High - Low'}
-              labelStyle={styles.labelStyle}
-            />
-            <InputField
-              labelStyle={styles.labelStyle}
-              containerStyles={{ width: '48%' }}
-              label={'Name'}
-              placeholder={'A - Z'}
-            />
+          <View style={[styles.inputRow, { width: width(70) }]}>
+            <ModalDropdown
+              renderRow={renderPriceRow}
+              onSelect={(value) => setSelectedPrice(priceSort[value])}
+              dropdownStyle={styles.dropDown}
+              options={priceSort}>
+              <>
+                <Text style={styles.label}>Price</Text>
+                <View style={styles.dropContainer}>
+                  <Text style={styles.selectedText}>{selectedPrice}</Text>
+                  <Entypo
+                    name={'chevron-down'}
+                    size={width(4)}
+                    color={AppColors.primaryGold}
+                  />
+                </View>
+              </>
+            </ModalDropdown>
+            <ModalDropdown
+              renderRow={renderPriceRow}
+              onSelect={(value) => setSelectedAlpha(alphaSort[value])}
+              dropdownStyle={styles.dropDown}
+              options={alphaSort}>
+              <>
+                <Text style={styles.label}>Price</Text>
+                <View style={styles.dropContainer}>
+                  <Text style={styles.selectedText}>{selectedAlpha}</Text>
+                  <Entypo
+                    name={'chevron-down'}
+                    size={width(4)}
+                    color={AppColors.primaryGold}
+                  />
+                </View>
+              </>
+            </ModalDropdown>
           </View>
           <HorizontalLine
             lineColor={{
@@ -178,7 +241,8 @@ export default function ManageShopItems(props) {
               width: width(60),
             }}
           />
-          <HighlightedText text={'Clear All'} />
+
+          <HighlightedText onPress={() => clearAllFilters()} text={'Clear All'} />
           <HorizontalLine
             lineColor={{
               backgroundColor: AppColors.white09,
@@ -189,17 +253,20 @@ export default function ManageShopItems(props) {
           />
           <View style={styles.buttonRow}>
             <Button
-              onPress={() => console.log(min, max)}
-              containerStyle={{ width: width(25) }}
-              title={'Apply'}
+              onPress={() => {
+                search()
+                setModalVisible(false)
+              }}
+              containerStyle={{ width: width(60) }}
+              title={'Done'}
             />
-            <Button
+            {/* <Button
               planButton
               textStyle={{ color: AppColors.white }}
               containerStyle={styles.cancelBtn}
               title={'Cancel'}
               onPress={() => setModalVisible(false)}
-            />
+            /> */}
           </View>
         </View>
       </Modal>

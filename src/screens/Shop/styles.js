@@ -45,6 +45,20 @@ const styles = StyleSheet.create({
   flatlist: {
     width: width(90),
   },
+  btnContainer: {
+    backgroundColor: AppColors.transparent,
+    borderColor: AppColors.primaryGold,
+    borderWidth: width(0.15),
+    width: width(25)
+  },
+  searchIcon: {
+    color: AppColors.primaryGold,
+    fontSize: width(6)
+  },
+  renderedIcons: {
+    fontSize: width(5),
+    color: AppColors.primaryGold
+  },
   // ****************modal view**************************
   modalView: {
     marginHorizontal: width(8),

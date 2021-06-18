@@ -18,7 +18,7 @@ import PostReview from '../../components/PostReview';
 import ReviewCard from '../../components/ReviewCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { reviewList } from '../../dummyData';
-import { getItemsById, postProductReview } from '../../firebaseConfig';
+import { getItemsById, postProductReview, saveData } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import { setItems } from '../../Redux/Actions/Barber';
 import AppColors from '../../utills/AppColors';
@@ -30,6 +30,7 @@ export default function ProductDetails(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
   const [cameraModal, setCameraModal] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
   const [quantity, setQuantity] = useState(0);
   const [starCount, setStarCount] = useState(3);
   const [reviewText, setReviewText] = useState('');
@@ -49,7 +50,6 @@ export default function ProductDetails(props) {
     snapshot.forEach(doc => {
       temp.push(doc.data())
     })
-    console.log(temp)
     setReviews(temp)
   }
   const openCamera = () => {
@@ -85,11 +85,49 @@ export default function ProductDetails(props) {
       reviewerImage={{ uri: item.image }}
     />
   );
-  const openModal = () => {
-    setModalVisible(true);
-    setTimeout(() => {
-      props.navigation.navigate('Shop');
-    }, 5000);
+  const addToCart = async () => {
+    if (quantity == 0) {
+      alert('Quantity cannot be 0.')
+      return
+    }
+    try {
+      setCartLoading(true)
+      let cart = {}
+      if (user.cart) {
+        console.log('=====+=====>>>>>>')
+        cart = {
+          total: Number(user?.cart?.total) + (Number(product?.price) * Number(quantity)),
+          itemCount: Number(user?.cart?.itemCount) + 1,
+          items: [...user?.cart?.items, product]
+        }
+        await saveData('Users', auth().currentUser.uid, { cart })
+        dispatch(login({
+          ...user,
+          cart: cart
+        }))
+      } else {
+        console.log('here')
+        cart = {
+          total: Number(product?.price) * Number(quantity),
+          itemCount: 1,
+          items: [product]
+        }
+        await saveData('Users', auth().currentUser.uid, { cart })
+        dispatch(login({
+          ...user,
+          cart: cart
+        }))
+      }
+      setCartLoading(false)
+      setModalVisible(true);
+      setTimeout(() => {
+        setModalVisible(false)
+        props.navigation.navigate('Shop');
+      }, 1500)
+    } catch (error) {
+      console.log(error.message)
+      setCartLoading(false)
+    }
   };
   const postRating = async () => {
     if (reviewText == '') {
@@ -163,8 +201,10 @@ export default function ProductDetails(props) {
             />
             <Button
               planButton
+              isLoading={cartLoading}
+              disabled={cartLoading}
               title="Add to cart"
-              onPress={() => openModal()}
+              onPress={() => addToCart()}
               containerStyle={styles.addCartBtn}
               textStyle={{ color: 'white' }}
             />
