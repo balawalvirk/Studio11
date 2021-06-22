@@ -23,7 +23,9 @@ import {
   setCustomerType,
   setLoginScreenType,
 } from '../../Redux/Actions/Auth';
+import firestore from '@react-native-firebase/firestore'
 import { setCuttings, setItems, setVideos } from '../../Redux/Actions/Barber';
+import { setCart } from '../../Redux/Actions/Customer';
 import { UserTypes } from '../../utills/Enums';
 export default function Login(props) {
   const [email, setemail] = useState('Customer@mail.com');
@@ -90,6 +92,16 @@ export default function Login(props) {
           }));
         }
       } else if (userObj?.Type == UserTypes.CUSTOMER) {
+        let cartItems = []
+        const cartData = await getData('Cart', auth().currentUser.uid)
+        const snapshot = await firestore().collection('Cart').doc(auth().currentUser.uid).collection('Cart').get()
+        snapshot.forEach(doc => {
+          cartItems.push(doc.data())
+        })
+        dispatch(setCart({
+          ...cartData,
+          cartItems,
+        }))
         dispatch(login(userObj));
       }
     } else {

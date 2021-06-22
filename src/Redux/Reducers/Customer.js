@@ -1,6 +1,6 @@
 import { CART } from '../Types';
 const intialState = {
-    cart: []
+    cart: {}
 };
 const reducer = (state = intialState, action) => {
     switch (action.type) {

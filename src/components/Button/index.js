@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Text, TouchableOpacity} from 'react-native';
+import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
 import AppColors from '../../utills/AppColors';
@@ -24,7 +24,7 @@ const Button = ({
       {!isLoading ? (
         <Text style={[styles.text, textStyle]}>{title}</Text>
       ) : (
-        <ActivityIndicator size={'small'} color={AppColors.black} />
+        <ActivityIndicator size={'small'} color={AppColors.primaryGold} />
       )}
     </TouchableOpacity>
   ) : (

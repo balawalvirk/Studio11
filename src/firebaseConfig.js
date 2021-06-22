@@ -39,6 +39,19 @@ export const removeFromArray = async (collection, doc, array, index) => {
     });
   }
 };
+export const removeFromArrayInObj = async (collection, doc, object, array, index) => {
+  let docRef = firestore().collection(collection).doc(doc);
+  let docData = await docRef.get();
+  if (docData.exists) {
+    docRef.update({
+      [object]: {
+        [array]: firebase.firestore.FieldValue.arrayRemove(
+          docData.data()[object][array][index],
+        ),
+      }
+    });
+  }
+};
 export const removeValueFromArray = async (collection, doc, array, value) => {
   try {
     let docRef = firestore().collection(collection).doc(doc);
@@ -538,4 +551,5 @@ export async function endBreak(userId) {
     console.log(error.message);
   }
 }
+
 export default firebase;

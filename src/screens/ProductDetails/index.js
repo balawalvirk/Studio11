@@ -21,12 +21,14 @@ import { reviewList } from '../../dummyData';
 import { getItemsById, postProductReview, saveData } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import { setItems } from '../../Redux/Actions/Barber';
+import { setCart } from '../../Redux/Actions/Customer';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
 export default function ProductDetails(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch()
   const product = props.route.params.item;
+  const cart = useSelector(state => state.Customer.cart)
   const [modalVisible, setModalVisible] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
   const [cameraModal, setCameraModal] = useState(false);
@@ -39,6 +41,7 @@ export default function ProductDetails(props) {
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
     loadData()
+    console.log(cart)
   }, [])
   const loadData = async () => {
     let temp = []
@@ -90,32 +93,68 @@ export default function ProductDetails(props) {
       alert('Quantity cannot be 0.')
       return
     }
+    // if (user.cart) {
+    //   const index = user.cart.items.findIndex(item => item.id == product.id)
+    //   if (index > -1) {
+    //     alert('Item is already in cart.')
+    //     return
+    //   }
+    // }
     try {
       setCartLoading(true)
-      let cart = {}
-      if (user.cart) {
-        console.log('=====+=====>>>>>>')
-        cart = {
-          total: Number(user?.cart?.total) + (Number(product?.price) * Number(quantity)),
-          itemCount: Number(user?.cart?.itemCount) + 1,
-          items: [...user?.cart?.items, product]
-        }
-        await saveData('Users', auth().currentUser.uid, { cart })
-        dispatch(login({
-          ...user,
-          cart: cart
+      let newProduct = {
+        ...product,
+        quantity: quantity
+      }
+      console.log({
+        total: Number(product.price) * Number(quantity),
+        itemCount: 1
+      })
+      if (cart.itemCount == 0) {
+        console.log('here==============>')
+        await firestore()
+          .collection('Cart')
+          .doc(auth().currentUser.uid)
+          .set({
+            total: Number(product.price) * Number(quantity),
+            itemCount: 1
+          }, { merge: true })
+        await firestore()
+          .collection('Cart')
+          .doc(auth().currentUser.uid)
+          .collection('Cart')
+          .doc(product.id)
+          .set(newProduct)
+        dispatch(setCart({
+          itemCount: 1,
+          total: Number(product.price) * Number(quantity),
+          cartItems: [newProduct]
         }))
       } else {
-        console.log('here')
-        cart = {
-          total: Number(product?.price) * Number(quantity),
-          itemCount: 1,
-          items: [product]
+        console.log('herrre+++++++++++++++++++++++++>')
+        const doc = await firestore().collection('Cart').doc(auth().currentUser.uid).collection('Cart').doc(product.id).get()
+        if (doc.exists) {
+          alert('Item is already in cart.')
+          setCartLoading(false)
+          return
         }
-        await saveData('Users', auth().currentUser.uid, { cart })
-        dispatch(login({
-          ...user,
-          cart: cart
+        await firestore()
+          .collection('Cart')
+          .doc(auth().currentUser.uid)
+          .set({
+            total: Number(cart.total) + (Number(product.price) * Number(quantity)),
+            itemCount: Number(cart.itemCount) + 1
+          }, { merge: true })
+        await firestore()
+          .collection('Cart')
+          .doc(auth().currentUser.uid)
+          .collection('Cart')
+          .doc(product.id)
+          .set(newProduct)
+        dispatch(setCart({
+          itemCount: cart.itemCount + 1,
+          total: Number(cart.total) + (Number(product.price) * Number(quantity)),
+          cartItems: [...cart.cartItems, newProduct]
         }))
       }
       setCartLoading(false)
@@ -224,6 +263,7 @@ export default function ProductDetails(props) {
             rating={product?.rating?.toFixed(1)}
             ratingCountValue={product?.ratingCount}
             itemPrice={product?.price}
+            qtyControls={false}
           />
         </View>
         <View style={styles.textRow}>

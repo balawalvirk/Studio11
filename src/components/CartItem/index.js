@@ -1,11 +1,12 @@
-import React from 'react';
-import {Text, View, Image, TouchableOpacity, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, Image, FlatList, ActivityIndicator } from 'react-native';
 import HighlightedText from '../HighlightedText';
 import styles from './styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AppColors from '../../utills/AppColors';
-import {height} from 'react-native-dimension';
-
+import { height } from 'react-native-dimension';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import firestore from '@react-native-firebase/firestore'
 const CartItem = ({
   onPressItem,
   itemImage,
@@ -13,23 +14,28 @@ const CartItem = ({
   rating,
   ratingCountValue,
   itemPrice,
+  isLoading,
   itemQuantity,
   onPressDecrease,
   onPressIncrease,
   imageStyle,
   imageIcons,
   images,
+  onPlus,
+  onMinus,
+  qtyControls = true,
 }) => {
-  const renderImages = ({item, index}) => (
+  const renderImages = ({ item, index }) => (
     <Image
       resizeMode="cover"
       style={styles.imageIcon}
-      source={{uri: item.imageUri}}
+      source={{ uri: item.imageUri }}
     />
   );
   return (
-    <View style={styles.cartItem}>
-      <TouchableOpacity onPress={onPressItem}>
+    <View
+      style={styles.cartItem}>
+      <TouchableOpacity activeOpacity={0.7} onPress={onPressItem}>
         <Image
           style={[styles.productImage, imageStyle]}
           resizeMode="cover"
@@ -37,7 +43,7 @@ const CartItem = ({
         />
       </TouchableOpacity>
       <View style={styles.itemDetails}>
-        <TouchableOpacity onPress={onPressItem} style={styles.upperSection}>
+        <TouchableOpacity activeOpacity={0.7} onPress={onPressItem} style={styles.upperSection}>
           <Text style={styles.whiteText}>{itemName}</Text>
           <View style={styles.row}>
             <FontAwesome name="star" style={styles.ratingIcon} />
@@ -55,6 +61,16 @@ const CartItem = ({
             ${itemPrice}
           </Text>
         </TouchableOpacity>
+        {qtyControls &&
+          <View style={styles.qtyContainer}>
+            <TouchableOpacity disabled={isLoading} onPress={() => onMinus()}>
+              <FontAwesome name="minus-circle" style={styles.countIcon} />
+            </TouchableOpacity>
+            <Text style={styles.qtyText}>{itemQuantity}</Text>
+            <TouchableOpacity disabled={isLoading} onPress={() => onPlus()}>
+              <FontAwesome name="plus-circle" style={styles.countIcon} />
+            </TouchableOpacity>
+          </View>}
         <FlatList
           horizontal
           // style={{backgroundColor: 'teal',}}

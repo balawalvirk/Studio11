@@ -1,14 +1,15 @@
-import {StyleSheet} from 'react-native';
-import {width, height} from 'react-native-dimension';
+import { StyleSheet } from 'react-native';
+import { width, height } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   cartItem: {
     flexDirection: 'row',
+    paddingVertical: height(1)
   },
   productImage: {
-    width: width(25),
-    height: width(25),
+    width: width(35),
+    height: width(35),
     borderRadius: width(3),
     marginRight: width(4),
   },
@@ -18,6 +19,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-evenly',
+    width: width(15)
   },
   ratingIcon: {
     color: AppColors.primaryGold,
@@ -25,18 +28,19 @@ const styles = StyleSheet.create({
   },
   countIcon: {
     color: AppColors.primaryGold,
-    fontSize: width(5),
+    fontSize: width(4.5),
     marginHorizontal: width(2),
   },
   whiteText: {
     color: AppColors.white,
     fontWeight: 'bold',
     fontSize: width(4),
-    marginVertical: height(0.5),
+    marginVertical: height(0.75),
   },
   white50: {
     color: AppColors.white50,
-    fontSize: width(4),
+    fontSize: width(3.5),
+    marginVertical: height(0.5)
   },
   imageIcon: {
     width: width(11),
@@ -48,5 +52,15 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingBottom: height(0.5),
   },
+  qtyContainer: {
+    flexDirection: 'row',
+    width: width(20),
+    justifyContent: 'space-evenly',
+    position: 'absolute',
+    bottom: 0,
+  },
+  qtyText: {
+    color: AppColors.white
+  }
 });
 export default styles;

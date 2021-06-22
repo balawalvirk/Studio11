@@ -24,6 +24,7 @@ export default function Shop(props) {
   const [searchText, setSearchText] = useState('');
   useEffect(() => {
     loadData();
+
   }, []);
   const loadData = async () => {
     try {

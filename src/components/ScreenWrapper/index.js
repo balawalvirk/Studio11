@@ -4,6 +4,7 @@ import styles from './styles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useIsFocused } from '@react-navigation/native';
 import AppColors from '../../utills/AppColors';
+import { height } from 'react-native-dimension';
 const ScreenWrapper = ({
   children,
   statusBarColor = AppColors.textColor,
@@ -34,6 +35,7 @@ const ScreenWrapper = ({
         {headerUnScrollable()}
         {scrollEnabled ? (
           <KeyboardAwareScrollView
+            extraHeight={height(2)}
             style={[styles.container, backgroundImage && { backgroundColor: 'transparent' }]}
             contentContainerStyle={styles.contentContainer}
             keyboardShouldPersistTaps="handled"

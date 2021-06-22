@@ -24,6 +24,12 @@ const styles = StyleSheet.create({
     color: AppColors.white50,
     fontSize: width(4)
   },
+  dash: {
+    width: width(90),
+    marginBottom: height(2),
+    marginVertical: height(1)
+  }
+
 
 });
 export default styles;
