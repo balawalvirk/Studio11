@@ -3,6 +3,8 @@ import { FlatList, Image, Text, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
+import ModalDropdown from 'react-native-modal-dropdown';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import Header from '../../components/Header';
@@ -11,11 +13,9 @@ import HorizontalLine from '../../components/HorizontalLine';
 import InputField from '../../components/InputField';
 import ProductCard from '../../components/ProductCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import ModalDropdown from 'react-native-modal-dropdown';
-import Entypo from 'react-native-vector-icons/Entypo'
 import AppColors from '../../utills/AppColors';
+import { AlphaSortTypes, SortTypes } from '../../utills/Enums';
 import styles from './styles';
-import { AlphaSortTypes, OrderStatus, SortTypes } from '../../utills/Enums';
 export default function ManageShopItems(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
@@ -27,7 +27,6 @@ export default function ManageShopItems(props) {
   const [max, setMax] = useState('')
   const [selectedPrice, setSelectedPrice] = useState(SortTypes.LOW_TO_HIGH)
   const [selectedAlpha, setSelectedAlpha] = useState('A - Z')
-  const [filter, setFilter] = useState(null)
   const priceSort = [SortTypes.LOW_TO_HIGH, SortTypes.HIGH_TO_LOW]
   const alphaSort = [AlphaSortTypes.A_Z, AlphaSortTypes.Z_A]
   useEffect(() => {

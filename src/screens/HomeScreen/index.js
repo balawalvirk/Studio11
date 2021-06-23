@@ -13,9 +13,13 @@ import Appointments from '../Appointments';
 import AppColors from '../../utills/AppColors';
 import { manageCuttingImages, stylersData } from '../../dummyData';
 import { getAllOfCollection, getBarbers, getPopularCuts } from '../../firebaseConfig';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 export default function HomeScreen(props) {
   const [barbers, setBarbers] = useState([]);
   const [popularStyles, setPopularStyles] = useState([]);
+  const appointments = useSelector((state) => state.Customer.appointments);
+
   useEffect(() => {
     loadData();
   }, []);
@@ -47,7 +51,12 @@ export default function HomeScreen(props) {
       cuttingImage={{ uri: item?.CuttingImage }}
       cuttingTitle={item?.CuttingTitle}
     />
-
+  const getDaysLeft = (dateMoment) => {
+    const apptDate = dateMoment.toDate()
+    const duration = moment.duration(moment(apptDate).diff(moment())).asDays().toFixed(0)
+    const daysLeft = duration + ' days left'
+    return daysLeft
+  }
   return (
     <ScreenWrapper
       scrollEnabled
@@ -68,16 +77,15 @@ export default function HomeScreen(props) {
             onPress={() => props.navigation.navigate(Appointments)}
           />
         </View>
-        <AppointmentCard
-          onpressAppointmentcard={() =>
-            props.navigation.navigate('AppointmentDetails')
-          }
-          barberName={'Dorris Ortiz'}
-          cuttingName={'Crew Cut'}
-          appointmentTime={'Monday, 13th March, 3:00 PM'}
-          timeLeft={'3 days left'}
-          appointmentImage={require('../../assets/images/cuttings/1.png')}
-        />
+        {appointments.length > 0 &&
+          <AppointmentCard
+            onpressAppointmentcard={() => props.navigation.navigate('AppointmentDetails', { appointmentDetails: appointments[0] })}
+            barberName={appointments[0].barberDetails.FirstName + '' + appointments[0].barberDetails.LastName}
+            cuttingName={appointments[0].hairStyle}
+            appointmentTime={appointments[0].date}
+            timeLeft={getDaysLeft(appointments[0].dateMoment)}
+            appointmentImage={{ uri: appointments[0]?.barberDetails?.Image?.imageUrl }}
+          />}
         {popularStyles.length > 0 &&
           <>
             <View style={styles.dash} />

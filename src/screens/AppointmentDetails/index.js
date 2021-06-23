@@ -8,8 +8,16 @@ import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button';
 import CustomModal from '../../components/customModal';
+import moment from 'moment';
 export default function AppointmentDetails(props) {
+  const { appointmentDetails } = props.route.params
   const [modalVisible, setModalVisible] = useState(false);
+  const getDaysLeft = (dateMoment) => {
+    const apptDate = dateMoment.toDate()
+    const duration = moment.duration(moment(apptDate).diff(moment())).asDays().toFixed(0)
+    const daysLeft = duration + ' days left'
+    return daysLeft
+  }
   return (
     <ScreenWrapper transclucent statusBarColor={AppColors.transparent}>
       <Header headerTitle={'Appointment Details'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />
@@ -17,20 +25,21 @@ export default function AppointmentDetails(props) {
         <View style={styles.appointmentDetails}>
           <View style={styles.textSection}>
             <View>
-              <Text style={styles.whiteText}>Barber: <Text style={styles.white50}>Cyrus Kihn</Text></Text>
-              <Text style={styles.whiteText}>Hair Style: <Text style={styles.white50}>Crew Cut</Text></Text>
+              <Text style={styles.whiteText}>Barber: <Text style={styles.white50}>{appointmentDetails?.barberDetails?.FirstName} {appointmentDetails?.barberDetails?.LastName}</Text></Text>
+              <Text style={styles.whiteText}>Hair Style: <Text style={styles.white50}>{appointmentDetails.hairStyle}</Text></Text>
               <Text style={styles.whiteText}>Date & Time:</Text>
-              <Text style={styles.white50}>Monday, 13th March, 3:00 PM</Text>
+              <Text style={styles.white50}>{appointmentDetails.date}</Text>
               <Text style={styles.whiteText}>Additional Notes</Text>
-              <Text style={styles.white50}>I would like to have coffee while my haircut.</Text>
+              <Text style={styles.white50}>{appointmentDetails.notes}</Text>
             </View>
-            <Text style={styles.goldenText}>10 days left</Text>
+            <Text style={styles.goldenText}>{getDaysLeft(appointmentDetails.dateMoment)}</Text>
           </View>
-          <Image style={styles.imageSection} source={require('../../assets/images/cuttings/9.png')} />
+          <Image style={styles.imageSection} source={{ uri: appointmentDetails?.barberDetails?.Image?.imageUrl }} />
         </View>
         <HorizontalLine lineColor={{ marginTop: 0, marginVertical: height(2), width: width(80) }} />
         <View style={styles.buttonRow}>
-          <Button onPress={() => props.navigation.navigate('BarberProfile')}
+          <Button
+            onPress={() => props.navigation.navigate('BarberProfile', { barberId: appointmentDetails.barberDetails.id })}
             containerStyle={{ width: width(45) }} title={'View Barber Profile'} />
           <Button planButton onPress={() => props.navigation.navigate('Chat')}
             containerStyle={{ backgroundColor: AppColors.cardColor, width: width(30) }} textStyle={{ color: AppColors.white }}

@@ -16,26 +16,27 @@ const styles = StyleSheet.create({
   },
   textSection: {
     justifyContent: 'space-between',
-    width:width(50)
+    width: width(50)
   },
   imageSection: {
     width: width(25),
     height: width(25),
     resizeMode: 'cover',
-    borderRadius: width(4)
+    borderRadius: width(4),
+    marginTop: height(2)
   },
   whiteText: {
     color: AppColors.white,
-    fontSize: width(4),
+    fontSize: width(3.5),
   },
   goldenText: {
     color: AppColors.primaryGold,
-    fontSize: width(4),
+    fontSize: width(3.5),
     marginTop: width(2)
   },
   white50: {
     color: AppColors.white50,
-    fontSize: width(4),
+    fontSize: width(3.5),
     lineHeight: width(8)
   },
   transparent: {
@@ -47,8 +48,8 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width:width(80),
-    alignContent:'center',
+    width: width(80),
+    alignContent: 'center',
   }
 });
 export default styles;

@@ -18,4 +18,5 @@ export const VIDEOS = 'VIDEOS';
 
 //CUSTOMER
 export const CART = 'CART';
+export const APPOINTMENT = 'APPOINTMENT';
 

@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import { HairCuts, UserTypes } from './utills/Enums';
+import moment from 'moment';
 export async function addToArray(collection, doc, array, value) {
   let docRef = await firestore().collection(collection).doc(doc);
   let docData = await docRef.get();
@@ -547,6 +548,75 @@ export async function endBreak(userId) {
       .set({
         breakTime: null
       }, { merge: true })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function setAppointment(appointmentObj) {
+  const userId = auth().currentUser.uid
+  try {
+    await saveData('Appointments', appointmentObj.id, appointmentObj)
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function checkBarberAvailablity(barberId, selectedDate) {
+  try {
+    const barberDetails = await getData('Users', barberId)
+    if (barberDetails.breakTime) {
+      const from = barberDetails.breakTime.fromMoment.toDate()
+      const to = barberDetails.breakTime.toMoment.toDate()
+      if (selectedDate > from && selectedDate < to) {
+        console.log('BREAK IN PROGRESS')
+        return false
+      } else {
+        console.log('BARBER AVAILABLE')
+        return true
+      }
+    } else {
+      return true
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function clearCart() {
+  const userId = auth().currentUser.uid
+  try {
+    //remove data then items
+    await firestore()
+      .collection('Cart')
+      .doc(userId)
+      .set({
+        itemCount: 0,
+        total: 0,
+      }, { merge: true })
+    const batch = firestore().batch()
+    const snapshot = await firestore()
+      .collection('Cart')
+      .doc(userId)
+      .collection('Cart')
+      .get()
+    snapshot.docs.forEach(doc => {
+      batch.delete(doc.ref)
+    })
+    await batch.commit()
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getAppointments() {
+  const userId = auth().currentUser.uid
+  try {
+    let aptmnts = []
+    const snapshot = await firestore()
+      .collection('Appointments')
+      .where('customerId', '==', userId)
+      .get()
+    snapshot.forEach(doc => {
+      aptmnts.push(doc.data())
+    })
+    return aptmnts
   } catch (error) {
     console.log(error.message);
   }

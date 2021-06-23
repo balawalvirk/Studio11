@@ -22,3 +22,7 @@ export const AlphaSortTypes = {
   A_Z: 'A - Z',
   Z_A: 'Z - A'
 };
+export const AppointmentStatus = {
+  PLACED: 'PLACED',
+  CANCELLED: 'CANCELLED'
+};

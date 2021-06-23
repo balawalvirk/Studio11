@@ -1,6 +1,7 @@
-import { CART } from '../Types';
+import { CART, APPOINTMENT } from '../Types';
 const intialState = {
-    cart: {}
+    cart: {},
+    appointments: []
 };
 const reducer = (state = intialState, action) => {
     switch (action.type) {
@@ -8,6 +9,12 @@ const reducer = (state = intialState, action) => {
             return {
                 ...state,
                 cart: action.payload,
+            };
+        }
+        case APPOINTMENT: {
+            return {
+                ...state,
+                appointments: action.payload,
             };
         }
         default:

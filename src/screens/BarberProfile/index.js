@@ -205,7 +205,7 @@ export default function BarberProfile(props) {
           <Button
             containerStyle={styles.btnStyle}
             textStyle={{ fontSize: width(3) }}
-            onPress={() => props.navigation.navigate('GetAppointment')}
+            onPress={() => props.navigation.navigate('GetAppointment', { hairStyles: cuttings, barberDetails })}
             title={'Get an appointment'}
           />
           <Button

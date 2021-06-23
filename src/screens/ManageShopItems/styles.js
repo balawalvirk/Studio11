@@ -114,16 +114,16 @@ const styles = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
   },
+  dropDown: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent'
+  },
   priceContainer: {
     backgroundColor: AppColors.black,
     width: width(30),
     paddingVertical: height(1),
     paddingHorizontal: width(2),
     borderRadius: width(1.5)
-  },
-  dropDown: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent'
   },
   rowText: {
     color: AppColors.white

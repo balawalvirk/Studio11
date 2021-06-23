@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import React, { useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, Text, View, ActivityIndicator } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/Button';
@@ -10,7 +10,7 @@ import Header from '../../components/Header';
 import HighlightedText from '../../components/HighlightedText';
 import HorizontalLine from '../../components/HorizontalLine';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { getAllOfCollection, getData, removeFromArrayInObj, saveData } from '../../firebaseConfig';
+import { clearCart, getAllOfCollection, getData, removeFromArrayInObj, saveData } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import { setCart } from '../../Redux/Actions/Customer';
 import AppColors from '../../utills/AppColors';
@@ -20,7 +20,7 @@ export default function ShoppingCart(props) {
   const user = useSelector(state => state.Auth.user)
   const cart = useSelector(state => state.Customer.cart)
   const [isLoading, setLoading] = useState(false)
-
+  const [screenLoading, setScreenLoading] = useState(false)
   const renderCartItem = ({ item, index }) =>
     <CartItem
       itemImage={{ uri: item.images[0].imageUri }}
@@ -29,9 +29,8 @@ export default function ShoppingCart(props) {
       ratingCountValue={item?.ratingCount}
       itemPrice={item?.price}
       itemQuantity={item.quantity}
-      onPressItem={() => props.navigation.navigate('ProductDetails', { product: item })}
-      onPressDecrease={() => console.log('decrease')}
-      onPressIncrease={() => console.log('Increase')}
+      onPressItem={() => props.navigation.navigate('ProductDetails', { item })}
+
       onPlus={() => onPlus(item)}
       onMinus={() => onMinus(item)}
       quantity={item.quantity}
@@ -132,6 +131,22 @@ export default function ShoppingCart(props) {
       console.log(error.message)
     }
   }
+  const onPressClearAll = async () => {
+    setScreenLoading(true)
+    try {
+      await clearCart()
+      dispatch(setCart({
+        cartItems: [],
+        itemCount: 0,
+        total: 0
+      }))
+      setScreenLoading(false)
+    } catch (error) {
+      console.log(error.message)
+      setScreenLoading(false)
+
+    }
+  }
   return (
     <ScreenWrapper scrollEnabled headerUnScrollable={() =>
       <Header headerTitle={'Shopping Cart'}
@@ -139,16 +154,21 @@ export default function ShoppingCart(props) {
       transclucent statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
         <View style={styles.row}>
-          <Text style={styles.whiteText}>{cart.itemCount ?? 0} Items</Text>
-          <HighlightedText onPress={() => alert('Under Development')} text={'Clear All'} />
+          <Text style={styles.whiteText}>{cart.itemCount ?? 0} Item(s)</Text>
+          <HighlightedText onPress={() => onPressClearAll()} text={'Clear All'} />
         </View>
         <HorizontalLine lineColor={{ width: width(90), marginTop: 0, marginBottom: height(2) }} />
-        <FlatList
-          data={cart.cartItems ?? []}
-          keyExtractor={item => item.id}
-          renderItem={renderCartItem}
-          ItemSeparatorComponent={() => <HorizontalLine lineColor={styles.dash} />}
-        />
+        {screenLoading ?
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size={'large'} color={AppColors.primaryGold} />
+          </View>
+          : <FlatList
+            contentContainerStyle={{ height: height(68) }}
+            data={cart.cartItems ?? []}
+            keyExtractor={item => item.id}
+            renderItem={renderCartItem}
+            ItemSeparatorComponent={() => <HorizontalLine lineColor={styles.dash} />}
+          />}
         <View style={styles.row}>
           <Text style={styles.whiteText}>Total Amount:</Text>
           <Text style={styles.whiteText}>${cart.total ?? 0}</Text>

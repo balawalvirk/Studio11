@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: width(90),
-    marginVertical: height(2)
+    marginVertical: height(2),
+
   },
   whiteText: {
     color: AppColors.white,
@@ -28,8 +29,11 @@ const styles = StyleSheet.create({
     width: width(90),
     marginBottom: height(2),
     marginVertical: height(1)
+  },
+  loaderContainer: {
+    height: height(68),
+    justifyContent: 'center'
   }
-
 
 });
 export default styles;

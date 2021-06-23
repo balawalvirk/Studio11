@@ -16,8 +16,6 @@ const CartItem = ({
   itemPrice,
   isLoading,
   itemQuantity,
-  onPressDecrease,
-  onPressIncrease,
   imageStyle,
   imageIcons,
   images,

@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/dist/AntDesign';
 import AppColors from '../../utills/AppColors';
 import { height, width } from 'react-native-dimension';
 import {
+  getAppointments,
   getCuttingsById,
   getData,
   getItemsById,
@@ -25,7 +26,7 @@ import {
 } from '../../Redux/Actions/Auth';
 import firestore from '@react-native-firebase/firestore'
 import { setCuttings, setItems, setVideos } from '../../Redux/Actions/Barber';
-import { setCart } from '../../Redux/Actions/Customer';
+import { setAppointments, setCart } from '../../Redux/Actions/Customer';
 import { UserTypes } from '../../utills/Enums';
 export default function Login(props) {
   const [email, setemail] = useState('Customer@mail.com');
@@ -94,10 +95,13 @@ export default function Login(props) {
       } else if (userObj?.Type == UserTypes.CUSTOMER) {
         let cartItems = []
         const cartData = await getData('Cart', auth().currentUser.uid)
+        const appointments = await getAppointments()
+        console.log('=======>', appointments)
         const snapshot = await firestore().collection('Cart').doc(auth().currentUser.uid).collection('Cart').get()
         snapshot.forEach(doc => {
           cartItems.push(doc.data())
         })
+        dispatch(setAppointments(appointments))
         dispatch(setCart({
           ...cartData,
           cartItems,
