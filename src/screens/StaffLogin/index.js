@@ -11,13 +11,14 @@ import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import auth from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
-import { getData } from '../../firebaseConfig';
+import { getCuttingsById, getData, getItemsById, getVideosById } from '../../firebaseConfig';
 import {
   login,
   logout,
   setCustomerType,
   setLoginScreenType,
 } from '../../Redux/Actions/Auth';
+import { setCuttings, setItems, setVideos } from '../../Redux/Actions/Barber';
 export default function StaffLogin(props) {
   const dispatch = useDispatch();
   const [email, setemail] = useState('Barbe@mail.com');
@@ -62,7 +63,28 @@ export default function StaffLogin(props) {
             if (result.user.displayName === 'Barber') {
               const user = await getData('Users', result.user.uid);
               dispatch(setCustomerType(user.Type));
-              dispatch(login(user));
+              const items = await getItemsById();
+              const videos = await getVideosById();
+              const cuttings = await getCuttingsById();
+              const { breakTime } = user
+              dispatch(setItems(items));
+              dispatch(setCuttings(cuttings));
+              dispatch(setVideos(videos));
+              if (breakTime) {
+                dispatch(login({
+                  ...user,
+                  breakTime: {
+                    fromMoment: breakTime?.fromMoment?.toDate(),
+                    toMoment: breakTime?.toMoment?.toDate(),
+                    to: breakTime.to,
+                    from: breakTime.from
+                  }
+                }));
+              } else {
+                dispatch(login({
+                  ...user,
+                }));
+              }
             } else {
               alert('invalid User details');
               await auth().signOut();

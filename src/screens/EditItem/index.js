@@ -1,10 +1,10 @@
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
-import React, {useState} from 'react';
-import {FlatList, View} from 'react-native';
-import {height, width} from 'react-native-dimension';
+import React, { useState } from 'react';
+import { FlatList, View } from 'react-native';
+import { height, width } from 'react-native-dimension';
 import ImagePicker from 'react-native-image-crop-picker';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../../components/Button';
 import CameraModel from '../../components/CameraModal';
 import Header from '../../components/Header';
@@ -22,13 +22,12 @@ import {
 } from '../../firebaseConfig';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
-import {setItems} from '../../Redux/Actions/Barber';
+import { setItems } from '../../Redux/Actions/Barber';
 export default function EditItem(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
   const barberItems = useSelector((state) => state.Barber.barberItems);
-  const {item, index} = props.route.params;
-  console.log(index);
+  const { item, index } = props.route.params;
   const [itemName, setItemName] = useState(item?.name);
   const [imageArray, setImageArray] = useState(item?.images ?? []);
   const [moreImgs, setMoreImgs] = useState([]);
@@ -41,13 +40,13 @@ export default function EditItem(props) {
   const [nameError, setNameError] = useState('');
   const [priceError, setPriceError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
-  const renderImage = ({item, index}) => {
+  const renderImage = ({ item, index }) => {
     return (
       <NewItemImage
         disabled={true}
-        imageAddress={{uri: item?.imageUri}}
+        imageAddress={{ uri: item?.imageUri }}
         onPress={() => onDeleteImage(item, index)}
-        containerStyle={{marginRight: width(2)}}
+        containerStyle={{ marginRight: width(2) }}
       />
     );
   };
@@ -70,7 +69,6 @@ export default function EditItem(props) {
     setLoading(true);
     let urls = [];
     if (moreImgs.length > 0) {
-      console.log(moreImgs);
       for (let i = 0; i < moreImgs.length; i++) {
         const imageUri = moreImgs[i].uri;
         const name = moreImgs[i].name;
@@ -103,7 +101,6 @@ export default function EditItem(props) {
       return;
     }
     const imageRef = imageItem.imageRef;
-    console.log('ShopItems', item.id, 'images', indexItem);
     try {
       const ref = storage().ref(imageRef);
       await ref.delete();
@@ -119,9 +116,9 @@ export default function EditItem(props) {
     ImagePicker.openCamera({}).then((image) => {
       setMoreImgs([
         ...moreImgs,
-        {name: image.path.split('/').pop(), uri: image.path},
+        { name: image.path.split('/').pop(), uri: image.path },
       ]);
-      setImageArray([...imageArray, {imageUri: image.path}]);
+      setImageArray([...imageArray, { imageUri: image.path }]);
       setCameraModal(false);
     });
   };
@@ -129,9 +126,9 @@ export default function EditItem(props) {
     ImagePicker.openPicker({}).then((image) => {
       setMoreImgs([
         ...moreImgs,
-        {name: image.path.split('/').pop(), uri: image.path},
+        { name: image.path.split('/').pop(), uri: image.path },
       ]);
-      setImageArray([...imageArray, {imageUri: image.path}]);
+      setImageArray([...imageArray, { imageUri: image.path }]);
       setCameraModal(false);
     });
   };
@@ -169,7 +166,7 @@ export default function EditItem(props) {
             placeholder="title"
             value={name}
             onChangeText={(text) => setName(text)}
-            inputStyle={{borderRadius: width(4)}}
+            inputStyle={{ borderRadius: width(4) }}
           />
           <InputField
             fielderror={priceError}
@@ -177,12 +174,12 @@ export default function EditItem(props) {
             placeholder="$130"
             value={price}
             onChangeText={(text) => setPrice(text)}
-            inputStyle={{borderRadius: width(4)}}
+            inputStyle={{ borderRadius: width(4) }}
           />
-          <HorizontalLine lineColor={{marginTop: 0}} />
+          <HorizontalLine lineColor={{ marginTop: 0 }} />
           {imageArray?.length > 0 && (
             <FlatList
-              contentContainerStyle={{alignItems: 'center'}}
+              contentContainerStyle={{ alignItems: 'center' }}
               style={styles.flatlist}
               horizontal
               data={imageArray}
@@ -199,7 +196,7 @@ export default function EditItem(props) {
               paddingVertical: height(1),
             }}
           />
-          <HorizontalLine lineColor={{marginTop: 0}} />
+          <HorizontalLine lineColor={{ marginTop: 0 }} />
           <InputField
             fielderror={descriptionError}
             multiline
@@ -209,7 +206,7 @@ export default function EditItem(props) {
             multiline
             numoflines={10}
             placeholder="Description"
-            inputStyle={{height: 'auto'}}
+            inputStyle={{ height: 'auto' }}
           />
         </View>
       </View>

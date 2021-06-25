@@ -21,7 +21,7 @@ export default function ManageShopItems(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
   const barberItems = useSelector((state) => state.Barber.barberItems);
-  const [searchedItems, setSearchedItems] = useState(barberItems)
+  const [searchedItems, setSearchedItems] = useState([])
   const [searchText, setSearchText] = useState('');
   const [min, setMin] = useState('')
   const [max, setMax] = useState('')
@@ -30,8 +30,9 @@ export default function ManageShopItems(props) {
   const priceSort = [SortTypes.LOW_TO_HIGH, SortTypes.HIGH_TO_LOW]
   const alphaSort = [AlphaSortTypes.A_Z, AlphaSortTypes.Z_A]
   useEffect(() => {
-    // search()
-  }, [])
+    console.log('fired')
+    setSearchedItems(barberItems)
+  }, [barberItems])
   const search = (val = null) => {
     let items = [...barberItems]
     if (min != 0 && max != 0) {
@@ -85,8 +86,8 @@ export default function ManageShopItems(props) {
     setModalVisible(false)
     search(searchText)
   }
-  const renderItem = ({ item, index }) =>
-    <ProductCard
+  const renderItem = ({ item, index }) => {
+    return <ProductCard
       editable
       onPressProduct={() => console.log(min, max)}//props.navigation.navigate('EditItem', { item, index })
       productImage={
@@ -99,6 +100,7 @@ export default function ManageShopItems(props) {
       productRatingCount={item.ratingCount}
       productPrice={item.price}
     />
+  }
   const renderPriceRow = (data) =>
     <TouchableOpacity
       onPress={() => console.log(data)}
@@ -154,7 +156,7 @@ export default function ManageShopItems(props) {
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           data={searchedItems}
-          keyExtractor={(item) => item.Id}
+          keyExtractor={(item) => item.id}
           renderItem={renderItem}
         />
       </View>

@@ -212,7 +212,7 @@ export default function BarberProfile(props) {
             planButton
             containerStyle={styles.btnMessage}
             textStyle={{ color: AppColors.white }}
-            onPress={() => props.navigation.navigate('Chat')}
+            onPress={() => props.navigation.navigate('Chat', { barberDetails: barberDetails })}
             planButton
             textStyle={{ fontSize: width(3), color: AppColors.white }}
             title={'Message'}

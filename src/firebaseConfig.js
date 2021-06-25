@@ -1,6 +1,7 @@
 // import * as firebase from "react-native-firebase";
 import firebase from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
+import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import { HairCuts, UserTypes } from './utills/Enums';
@@ -305,7 +306,8 @@ export async function getBarbers() {
       .where('Type', '==', UserTypes.BARBER)
       .get();
     snapshot.forEach((doc) => {
-      barbers.push(doc.data());
+      if (doc.data().stylesAvailable && doc.data().stylesAvailable.length > 0)
+        barbers.push(doc.data());
     });
     return barbers;
   } catch (error) {
@@ -621,5 +623,30 @@ export async function getAppointments() {
     console.log(error.message);
   }
 }
-
+export async function setChatRoom(roomObj) {
+  try {
+    await database()
+      .ref('ChatRooms')
+      .child(roomObj.customerId + '_' + roomObj.barberId)
+      .set(roomObj)
+    return
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getChatRooms(roomObj) {
+  const userId = auth().currentUser.uid
+  try {
+    let rooms = []
+    const snapshot = await database()
+      .ref('ChatRooms')
+      .orderByChild('customerId')
+      .equalTo(userId)
+      .once('value')
+    snapshot.forEach(item => rooms.push(item.val()))
+    return rooms
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 export default firebase;

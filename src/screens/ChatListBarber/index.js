@@ -7,7 +7,7 @@ import HorizontalLine from '../../components/HorizontalLine';
 import { useDispatch, useSelector } from 'react-redux';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { width } from 'react-native-dimension';
-import { NavigationContainer, DrawerActions, useNavigation  } from '@react-navigation/native';
+import { NavigationContainer, DrawerActions, useNavigation } from '@react-navigation/native';
 import AppColors from '../../utills/AppColors';
 export default function ChatListBarber(props) {
   const user = useSelector((state) => state.Auth.user);
@@ -51,12 +51,12 @@ export default function ChatListBarber(props) {
     },
   ];
   return (
-    <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent} 
-    headerUnScrollable={()=><Header  leadingIcon={'menu'}
-    // onPressLeadingIcon={() => props.navigation.dispatch(DrawerActions.openDrawer())}
-    onPressLeadingIcon={() => navigation.openDrawer()} 
-    headerTitle={'Messages'} />}>
-      
+    <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}
+      headerUnScrollable={() => <Header leadingIcon={'menu'}
+        // onPressLeadingIcon={() => props.navigation.dispatch(DrawerActions.openDrawer())}
+        onPressLeadingIcon={() => navigation.openDrawer()}
+        headerTitle={'Messages'} />}>
+
       <View style={styles.mainViewContainer}>
 
         <FlatList
@@ -64,24 +64,24 @@ export default function ChatListBarber(props) {
           keyExtractor={item => item.id}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity 
-              onPress={()=>props.navigation.navigate('Chat')}
-              style={{alignItems:'center',width:width(90)}}>
-              <View style={styles.messageRow}>
-                <View style={styles.messageLeftSection}>
-                  <Image style={styles.messageDp}
-                    source={item.dp} />
-                  <View style={styles.messageDetails}>
-                    <Text style={styles.userTitle}>{item.title}</Text>
-                    <Text style={styles.messageText}>{item.message}</Text>
+              <TouchableOpacity
+                // onPress={() => props.navigation.navigate('Chat')}
+                style={{ alignItems: 'center', width: width(90) }}>
+                <View style={styles.messageRow}>
+                  <View style={styles.messageLeftSection}>
+                    <Image style={styles.messageDp}
+                      source={item.dp} />
+                    <View style={styles.messageDetails}>
+                      <Text style={styles.userTitle}>{item.title}</Text>
+                      <Text style={styles.messageText}>{item.message}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.messageTime}>
+                    <Text style={styles.messageTimeText}>{item.time}</Text>
                   </View>
                 </View>
-                <View style={styles.messageTime}>
-                  <Text style={styles.messageTimeText}>{item.time}</Text>
-                </View>
-              </View>
                 <HorizontalLine lineColor={styles.HorizontalLine100} />
-           </TouchableOpacity>
+              </TouchableOpacity>
             );
           }}
         />

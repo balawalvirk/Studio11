@@ -1,6 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -51,6 +52,7 @@ export default function BarberHomeScreen(props) {
     },
   ];
   const user = useSelector((state) => state.Auth.user);
+  const userRef = useRef(user)
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [breakLoading, setBreakLoading] = useState(false);
@@ -63,27 +65,37 @@ export default function BarberHomeScreen(props) {
   const [toError, setToError] = useState('');
   const [fromMoment, setFromMoment] = useState('');
   const [toMoment, setToMoment] = useState('');
+  const [timeLeft, setTimeLeft] = useState('');
   const [dateTimeString, setDateTimeString] = useState(moment().format('dddd, DD MMMM, hh:mm a'));
 
   const [pickerMode, setPickerMode] = useState(0); //0 => from   1=> To
+  useEffect(() => { userRef.current = user }, [user])
   useEffect(() => {
     clearInterval(window.checkStatus)
-    window.checkStatus = setInterval(() => checkBreakStatus(), 5000)
+    window.checkStatus = setInterval(() => checkBreakStatus(), 1000)
   }, []);
   const checkBreakStatus = async () => {
     try {
       setDateTimeString(moment().format('dddd, DD MMMM, hh:mm a'))
       if (user.breakTime) {
-        const fromTime = user?.breakTime?.fromMoment
-        const toTime = user?.breakTime?.toMoment
-        const duration = moment.duration(moment(toTime).diff(fromTime)).asSeconds()
-        // if (moment().isSameOrAfter(fromTime) && moment().isSameOrBefore(toTime)) {
+        const fromTime = userRef.current?.breakTime?.fromMoment
+        const toTime = userRef.current?.breakTime?.toMoment
+
+        const minutes = moment.duration(toTime - moment().valueOf()).minutes()
+        const hrs = moment.duration(toTime - moment().valueOf()).hours()
+        const secs = moment.duration(toTime - moment().valueOf()).seconds()
+
+        const minS = minutes.toString().length == 1 ? '0' + minutes : minutes
+        const hrsS = hrs.toString().length == 1 ? '0' + hrs : hrs
+        const secsS = secs.toString().length == 1 ? '0' + secs : secs
+        setTimeLeft(hrsS + " : " + minS + " : " + secsS)
         if (moment().valueOf() > fromTime && moment().valueOf() < toTime) {
           setworkBreak(true)
         } else {
           setworkBreak(false)
         }
       } else {
+        setworkBreak(false)
       }
     } catch (error) {
       console.log(error.message)
@@ -100,14 +112,15 @@ export default function BarberHomeScreen(props) {
       return
     }
     setToError('')
-    // clearInterval(window.checkStatus)
+    clearInterval(window.checkStatus)
+
     try {
       setBreakLoading(true);
       const breakObj = {
         from,
         to,
-        toMoment: toMoment,
-        fromMoment: fromMoment
+        toMoment: moment(toMoment).valueOf(),
+        fromMoment: moment(fromMoment).valueOf()
       };
       await saveData('Users', auth().currentUser.uid, { breakTime: breakObj });
       dispatch(login({
@@ -125,7 +138,8 @@ export default function BarberHomeScreen(props) {
     }
     setModalVisible(false);
     setworkBreak(true);
-  };
+    window.checkStatus = setInterval(() => checkBreakStatus(), 1000)
+  }
   const resumeWork = async () => {
     try {
       await endBreak(auth().currentUser.uid)
@@ -202,7 +216,7 @@ export default function BarberHomeScreen(props) {
               You are on break
               {user.breakTime && <Text style={styles.white50}> ({moment(user.breakTime.fromMoment).format('h:mm a')} - {moment(user.breakTime.toMoment).format('h:mm a')})</Text>}
             </Text>
-            <Text style={styles.whiteText}>Time left: 00:18:34</Text>
+            <Text style={styles.whiteText}>Time left: {timeLeft}</Text>
             <Button
               onPress={() => setresumeModalVisible(true)}
               title={'Resume work right now'}

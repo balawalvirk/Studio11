@@ -28,6 +28,7 @@ import firestore from '@react-native-firebase/firestore'
 import { setCuttings, setItems, setVideos } from '../../Redux/Actions/Barber';
 import { setAppointments, setCart } from '../../Redux/Actions/Customer';
 import { UserTypes } from '../../utills/Enums';
+import moment from 'moment';
 export default function Login(props) {
   const [email, setemail] = useState('Customer@mail.com');
   const dispatch = useDispatch();
@@ -77,12 +78,11 @@ export default function Login(props) {
         dispatch(setCuttings(cuttings));
         dispatch(setVideos(videos));
         if (breakTime) {
-          console.log(breakTime)
           dispatch(login({
             ...userObj,
             breakTime: {
-              fromMoment: breakTime?.fromMoment?.toDate(),
-              toMoment: breakTime?.toMoment?.toDate(),
+              fromMoment: breakTime?.fromMoment,
+              toMoment: breakTime?.toMoment,
               to: breakTime.to,
               from: breakTime.from
             }
@@ -96,7 +96,6 @@ export default function Login(props) {
         let cartItems = []
         const cartData = await getData('Cart', auth().currentUser.uid)
         const appointments = await getAppointments()
-        console.log('=======>', appointments)
         const snapshot = await firestore().collection('Cart').doc(auth().currentUser.uid).collection('Cart').get()
         snapshot.forEach(doc => {
           cartItems.push(doc.data())
@@ -110,6 +109,7 @@ export default function Login(props) {
       }
     } else {
       console.log('USER NOT LOGGED IN');
+
     }
   }
   useEffect(() => {
@@ -127,6 +127,18 @@ export default function Login(props) {
             if (result.user.displayName === 'Customer') {
               const user = await getData('Users', result.user.uid);
               dispatch(setCustomerType(user.Type));
+              let cartItems = []
+              const cartData = await getData('Cart', auth().currentUser.uid)
+              const appointments = await getAppointments()
+              const snapshot = await firestore().collection('Cart').doc(auth().currentUser.uid).collection('Cart').get()
+              snapshot.forEach(doc => {
+                cartItems.push(doc.data())
+              })
+              dispatch(setAppointments(appointments))
+              dispatch(setCart({
+                ...cartData,
+                cartItems,
+              }))
               dispatch(login(user));
               setLoading(false);
             } else {

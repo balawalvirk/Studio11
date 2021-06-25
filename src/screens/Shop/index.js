@@ -76,23 +76,24 @@ export default function Shop(props) {
     setSearchedItems(items)
   }
   const onChangeMin = text => {
-    if (text == '') {
+    const filteredText = text.replace(/[^0-9]/g, '')
+    if (filteredText == '') {
       setMin('')
       return
     }
-    setMin(Number(text))
+    setMin(Number(filteredText))
   }
   const onChangeMax = text => {
-    if (text == '') {
+    const filteredText = text.replace(/[^0-9]/g, '')
+    if (filteredText == '') {
       setMax('')
       return
     }
-    setMax(Number(text))
+    setMax(Number(filteredText))
   }
   const clearAllFilters = () => {
     setMin('')
     setMax('')
-    setModalVisible(false)
     search(searchText)
   }
   const renderShopItems = ({ item }) =>
@@ -233,7 +234,7 @@ export default function Shop(props) {
               dropdownStyle={styles.dropDown}
               options={alphaSort}>
               <>
-                <Text style={styles.label}>Price</Text>
+                <Text style={styles.label}>Name</Text>
                 <View style={styles.dropContainer}>
                   <Text style={styles.selectedText}>{selectedAlpha}</Text>
                   <Entypo

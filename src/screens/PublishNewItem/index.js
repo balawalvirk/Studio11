@@ -33,7 +33,6 @@ export default function PublishNewItem(props) {
   const [itemNameError, setItemNameError] = useState('');
   const [descrError, setDescError] = useState('');
   const [priceError, setPriceError] = useState('');
-  console.log(barberData);
   const Adddata = async () => {
     if (itemName == '') {
       setItemNameError('Please enter item name!');
@@ -105,9 +104,18 @@ export default function PublishNewItem(props) {
           onPressLeadingIcon={() => props.navigation.goBack()}
         />
       )}
-      // footerUnScrollable={() =>
+      footerUnScrollable={() =>
+        waiting ? null : (
+          <View style={styles.footer}>
+            <Button
+              title="Publish New Item"
+              onPress={() => Adddata()}
+              containerStyle={styles.btn}
+            />
+          </View>
+        )
+      }
 
-      // }
       transclucent
       statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
@@ -130,7 +138,7 @@ export default function PublishNewItem(props) {
                 label="Item Price"
                 placeholder="$130"
                 value={itemPrice}
-                onChangeText={(itemPrice) => setitemPrice(itemPrice)}
+                onChangeText={(itemPrice) => setitemPrice(itemPrice.replace(/[^0-9]/g, ''))}
                 inputStyle={{ borderRadius: width(4) }}
                 keyboardType={'number-pad'}
               />
@@ -159,7 +167,7 @@ export default function PublishNewItem(props) {
                 fielderror={descrError}
                 value={itemDetail}
                 onChangeText={(itemDetail) => setitemDetail(itemDetail)}
-                numoflines={15}
+                numoflines={12}
                 placeholder="Description..."
                 multiline
                 label="Item Description"
@@ -167,15 +175,7 @@ export default function PublishNewItem(props) {
             </>
           )}
         </View>
-        {waiting ? null : (
-          <View style={styles.footer}>
-            <Button
-              title="Publish New Item"
-              onPress={() => Adddata()}
-              containerStyle={styles.btn}
-            />
-          </View>
-        )}
+
       </View>
       <CameraModel
         isVisible={CameraModelView}
@@ -183,7 +183,10 @@ export default function PublishNewItem(props) {
         iconName={'photo-camera'}
         labelName={'Take Photo'}
         imageFromCamera={() =>
-          ImagePicker.openCamera({}).then((image) => {
+          ImagePicker.openCamera({
+            mediaType: 'photo',
+            compressImageQuality: 0.2
+          }).then((image) => {
             setImageArray([
               ...imageArray,
               { name: image.path.split('/').pop(), uri: image.path },
@@ -192,7 +195,10 @@ export default function PublishNewItem(props) {
           })
         }
         imageFromGallery={() =>
-          ImagePicker.openPicker({}).then((image) => {
+          ImagePicker.openPicker({
+            mediaType: 'photo',
+            compressImageQuality: 0.2
+          }).then((image) => {
             setImageArray([
               ...imageArray,
               { name: image.path.split('/').pop(), uri: image.path },
