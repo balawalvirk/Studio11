@@ -11,7 +11,7 @@ import PostReview from '../../components/PostReview';
 import ReviewCard from '../../components/ReviewCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import Thumbnail from '../../components/Thumbnail';
-import { getCuttingsById, getData, getReviewsBarber, getVideosById, postBarberReview } from '../../firebaseConfig';
+import { getCuttingsById, getData, getReviewsBarber, getVideosById, postBarberReview, setChatRoom } from '../../firebaseConfig';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -21,6 +21,7 @@ import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import { useSelector } from 'react-redux';
 import { reviewList } from '../../dummyData';
+import database from '@react-native-firebase/database'
 export default function BarberProfile(props) {
   const barberId = props.route.params.barberId;
   const user = useSelector(state => state.Auth.user)
@@ -35,6 +36,7 @@ export default function BarberProfile(props) {
   const [reviewErr, setReviewErr] = useState('');
   const [starCount, setStarCount] = useState('');
   const [reviewImg, setReviewImg] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     getBarberProfile()
@@ -42,6 +44,26 @@ export default function BarberProfile(props) {
     getBarberVideos()
     getBarberReviews()
   }, []);
+  const createRoom = async () => {
+    const roomObj = {
+      roomId: user.id + '_' + barberDetails.id,
+      barberId: barberDetails.id,
+      barberDetails,
+      customerId: user.id,
+      customerDetails: user,
+      lastMessage: '',
+      barberAvatar: barberDetails?.Image?.imageUrl ? barberDetails.Image.imageUrl : '',
+      customerAvatar: '',
+      lastUpdated: database.ServerValue.TIMESTAMP
+    }
+    try {
+      await setChatRoom(roomObj)
+      return roomObj
+    } catch (error) {
+      console.log(error.message)
+      setLoading(false)
+    }
+  }
   const getBarberReviews = async () => {
     try {
       const reviews = await getReviewsBarber(barberId)
@@ -135,6 +157,17 @@ export default function BarberProfile(props) {
     }
 
   }
+  const onMessagePress = async () => {
+    try {
+      setLoading(true)
+      const roomObj = await createRoom()
+      setLoading(false)
+      props.navigation.navigate('Chat', { roomId: roomObj.roomId })
+    } catch (error) {
+      console.log(error.message)
+      setLoading(false)
+    }
+  }
   const renderReview = ({ item }) => (
     <ReviewCard
       containerstyle={{ marginHorizontal: width(2), marginBottom: height(3) }}
@@ -162,6 +195,7 @@ export default function BarberProfile(props) {
       containerStyle={{ marginVertical: width(2) }}
     />
   );
+
   return (
     <ScreenWrapper
       scrollEnabled
@@ -210,9 +244,10 @@ export default function BarberProfile(props) {
           />
           <Button
             planButton
+            isLoading={isLoading}
             containerStyle={styles.btnMessage}
             textStyle={{ color: AppColors.white }}
-            onPress={() => props.navigation.navigate('Chat', { barberDetails: barberDetails })}
+            onPress={() => onMessagePress()}
             planButton
             textStyle={{ fontSize: width(3), color: AppColors.white }}
             title={'Message'}

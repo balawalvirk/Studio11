@@ -634,7 +634,7 @@ export async function setChatRoom(roomObj) {
     console.log(error.message);
   }
 }
-export async function getChatRooms(roomObj) {
+export async function getChatRooms() {
   const userId = auth().currentUser.uid
   try {
     let rooms = []
@@ -645,6 +645,68 @@ export async function getChatRooms(roomObj) {
       .once('value')
     snapshot.forEach(item => rooms.push(item.val()))
     return rooms
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getChatRoomsForBarber() {
+  const userId = auth().currentUser.uid
+  try {
+    let rooms = []
+    const snapshot = await database()
+      .ref('ChatRooms')
+      .orderByChild('barberId')
+      .equalTo(userId)
+      .once('value')
+    snapshot.forEach(item => rooms.push(item.val()))
+    return rooms
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getChatRoomById(roomId) {
+  try {
+    let rooms = []
+    const snapshot = await database()
+      .ref('ChatRooms')
+      .child(roomId)
+      .once('value')
+    return snapshot.val()
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function sendMessage(message, roomId) {
+  try {
+    await database()
+      .ref('ChatLists')
+      .child(roomId)
+      .child(message.id)
+      .set(message)
+    await database()
+      .ref('ChatRooms')
+      .child(roomId)
+      .update({
+        lastUpdated: database.ServerValue.TIMESTAMP,
+        lastMessage: message.message
+      })
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getRoomChatList(roomId) {
+  try {
+    let messages = []
+    const snapshot = await database()
+      .ref('ChatLists')
+      .child(roomId)
+      .orderByChild('timestamp')
+      .once('value')
+    snapshot.forEach(item => {
+      messages.push(item.val())
+    })
+    return messages
   } catch (error) {
     console.log(error.message);
   }

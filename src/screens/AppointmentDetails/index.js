@@ -16,6 +16,9 @@ export default function AppointmentDetails(props) {
     const apptDate = dateMoment.toDate()
     const duration = moment.duration(moment(apptDate).diff(moment())).asDays().toFixed(0)
     const daysLeft = duration + ' days left'
+    if (duration < 0) {
+      return false
+    }
     return daysLeft
   }
   return (
@@ -41,7 +44,9 @@ export default function AppointmentDetails(props) {
           <Button
             onPress={() => props.navigation.navigate('BarberProfile', { barberId: appointmentDetails.barberDetails.id })}
             containerStyle={{ width: width(45) }} title={'View Barber Profile'} />
-          <Button planButton onPress={() => props.navigation.navigate('Chat')}
+          <Button
+            planButton
+            onPress={() => alert('Under Development')}
             containerStyle={{ backgroundColor: AppColors.cardColor, width: width(30) }} textStyle={{ color: AppColors.white }}
             title={'Message'} />
         </View>

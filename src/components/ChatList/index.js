@@ -1,50 +1,36 @@
+import moment from 'moment';
 import React from 'react';
-import { ActivityIndicator, Text, Image, View, FlatList } from 'react-native';
-import { totalSize } from 'react-native-dimension';
-import AppColors from '../../utills/AppColors';
+import { FlatList, Image, Text, View } from 'react-native';
 import styles from './styles';
-import Entypo from 'react-native-vector-icons/Entypo'
-import Img from '../../assets/images/bg.jpg'
-export default ChatList = ({
+export default React.forwardRef(({
     messages = [],
     myID
-}) => {
+}, ref) => {
     const renderMessage = ({ item }) => {
-        if (item.senderId == myID) {
-            return (
-                <View style={styles.flexRow}>
-                    {item.avatarImg != '' && <Image source={item.avatarImg} style={styles.avatarImg} />}
-                    <View style={styles.mssgContainer}>
-                        {item.image && item.image != '' && <Image source={{ uri: item.image }} resizeMode={'cover'} style={styles.mssgImage} />}
-                        <View style={styles.textContainer}>
-                            <Text style={styles.mssgText}>{item.message}</Text>
-                            <Text style={styles.mssgTimeText}>{item.timestamp}</Text>
-                        </View>
+        const isMyMessage = item.senderId == myID
+        console.log(isMyMessage && item.avatarImg != '')
+        return (
+            <View style={[styles.flexRow, { alignSelf: isMyMessage ? 'flex-end' : 'flex-start' }]}>
+                {(!isMyMessage && item.avatarImg != '') && <Image source={{ uri: item.avatarImg }} style={styles.avatarImg} />}
+                <View style={isMyMessage ? styles.myMssgContainer : styles.mssgContainer}>
+                    {item.image && item.image != '' && <Image source={{ uri: item.image }} resizeMode={'cover'} style={styles.mssgImage} />}
+                    <View style={styles.textContainer}>
+                        <Text style={styles.mssgText}>{item.message}</Text>
+                        <Text style={styles.mssgTimeText}>{moment(item.timestamp).format('hh:mm a')}</Text>
                     </View>
                 </View>
-            )
-        } else {
-            return (
-                <View style={[styles.flexRow, { alignSelf: 'flex-end', }]}>
-                    <View style={styles.myMssgContainer}>
-                        {item.image && item.image != '' && <Image source={{ uri: item.image }} resizeMode={'cover'} style={styles.mssgImage} />}
-                        <View style={styles.textContainer}>
-                            <Text style={styles.myMssgText}>{item.message}</Text>
-                            <Text style={styles.myMssgTimeText}>{item.timestamp}</Text>
-                        </View>
-                    </View>
-                    {item.avatarImg != '' && <Image source={item.avatarImg} style={styles.avatarImg} />}
-                </View>
-            )
-        }
+                {(isMyMessage && item.avatarImg != '') && <Image source={{ uri: item.avatarImg }} style={styles.avatarImg} />}
+            </View>
+        )
     }
     return (
         <FlatList
+            onLayout={() => ref.current.scrollToEnd()}
+            ref={ref}
             style={styles.container}
             data={messages}
             renderItem={renderMessage}
             keyExtractor={item => item.id}
         />
     );
-};
-
+})

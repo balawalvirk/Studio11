@@ -29,11 +29,9 @@ export default function Messages(props) {
     }
   }
   const renderRoom = ({ item }) => {
-    console.log("Items===============", item.customerDetails.FirstName)
-
     return (
       <TouchableOpacity
-        onPress={() => alert('Under Development')}//props.navigation.navigate('Chat')
+        onPress={() => props.navigation.navigate('Chat', { roomId: item.roomId })}//props.navigation.navigate('Chat')
         style={{ alignItems: 'center', width: width(90) }}>
         <View style={styles.messageRow}>
           <View style={styles.messageLeftSection}>
@@ -53,7 +51,7 @@ export default function Messages(props) {
     );
   }
   return (
-    <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}
+    <ScreenWrapper transclucent statusBarColor={AppColors.transparent}
       headerUnScrollable={() => <Header headerTitle={'Messages'} />}>
 
       <View style={styles.mainViewContainer}>

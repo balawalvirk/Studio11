@@ -55,6 +55,9 @@ export default function HomeScreen(props) {
     const apptDate = dateMoment.toDate()
     const duration = moment.duration(moment(apptDate).diff(moment())).asDays().toFixed(0)
     const daysLeft = duration + ' days left'
+    if (duration < 0) {
+      return false
+    }
     return daysLeft
   }
   return (

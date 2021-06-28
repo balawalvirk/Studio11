@@ -38,6 +38,11 @@ const styles = StyleSheet.create({
     borderRadius: width(2),
     margin: width(1),
   },
-  searchInput: { marginTop: height(1), width: width(80), }
+  searchInput: { marginTop: height(1), width: width(80), },
+  loadContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
 export default styles;

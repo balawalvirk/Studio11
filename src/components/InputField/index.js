@@ -26,7 +26,9 @@ const InputField = ({
   suffixIconName,
   suffixIconstyle,
   editable,
+  onFocus,
   inputStyle,
+  onPressOut
 }) => {
   return (
     <View style={[{ width: width(80) }, containerStyles ? containerStyles : {}]}>
@@ -42,6 +44,8 @@ const InputField = ({
               paddingVertical: multiline ? height(2) : height(0.5),
             },
           ]}
+          onPressOut={onPressOut}
+          onFocus={onFocus}
           defaultValue={defaultValue}
           multiline={multiline}
           numberOfLines={numoflines}

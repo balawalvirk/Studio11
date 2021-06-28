@@ -3,10 +3,10 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
 
 const AppointmentCard = ({
-  barberName, cuttingName, appointmentTime,timeLeft,appointmentImage,onpressAppointmentcard,appointmentDetails={},
+  barberName, cuttingName, appointmentTime, timeLeft, appointmentImage, onpressAppointmentcard, appointmentDetails = {},
 }) => {
   return (
-    <TouchableOpacity style={[styles.appointmentCard,appointmentDetails]} onPress={onpressAppointmentcard}>
+    <TouchableOpacity style={[styles.appointmentCard, appointmentDetails]} onPress={onpressAppointmentcard}>
       <View style={styles.textSection}>
         <View>
           <Text style={styles.whiteText}>Barber: <Text style={styles.white50}>{barberName}</Text></Text>
@@ -14,7 +14,7 @@ const AppointmentCard = ({
           <Text style={styles.whiteText}>Date & Time:</Text>
           <Text style={styles.white50}>{appointmentTime}</Text>
         </View>
-        <Text style={styles.goldenText}>{timeLeft}</Text>
+        {timeLeft && <Text style={styles.goldenText}>{timeLeft}</Text>}
       </View>
       <Image style={styles.imageSection} source={appointmentImage} />
     </TouchableOpacity>
