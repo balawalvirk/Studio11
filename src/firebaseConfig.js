@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
-import { HairCuts, UserTypes } from './utills/Enums';
+import { AppointmentStatus, HairCuts, UserTypes } from './utills/Enums';
 import moment from 'moment';
 export async function addToArray(collection, doc, array, value) {
   let docRef = await firestore().collection(collection).doc(doc);
@@ -566,8 +566,8 @@ export async function checkBarberAvailablity(barberId, selectedDate) {
   try {
     const barberDetails = await getData('Users', barberId)
     if (barberDetails.breakTime) {
-      const from = barberDetails.breakTime.fromMoment.toDate()
-      const to = barberDetails.breakTime.toMoment.toDate()
+      const from = barberDetails.breakTime.fromMoment
+      const to = barberDetails.breakTime.toMoment
       if (selectedDate > from && selectedDate < to) {
         console.log('BREAK IN PROGRESS')
         return false
@@ -607,13 +607,14 @@ export async function clearCart() {
     console.log(error.message);
   }
 }
-export async function getAppointments() {
+export async function getAppointments(type = UserTypes.CUSTOMER) {
   const userId = auth().currentUser.uid
   try {
     let aptmnts = []
     const snapshot = await firestore()
       .collection('Appointments')
-      .where('customerId', '==', userId)
+      .where(type == UserTypes.CUSTOMER ? 'customerId' : 'barberId', '==', userId)
+      .where('status', '==', AppointmentStatus.PLACED)
       .get()
     snapshot.forEach(doc => {
       aptmnts.push(doc.data())
@@ -707,6 +708,18 @@ export async function getRoomChatList(roomId) {
       messages.push(item.val())
     })
     return messages
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function cancelAppointment(appointment) {
+  try {
+    await firestore()
+      .collection('Appointments')
+      .doc(appointment.id)
+      .set({
+        status: AppointmentStatus.CANCELLED
+      }, { merge: true })
   } catch (error) {
     console.log(error.message);
   }

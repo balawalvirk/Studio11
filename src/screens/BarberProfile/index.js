@@ -54,7 +54,7 @@ export default function BarberProfile(props) {
       lastMessage: '',
       barberAvatar: barberDetails?.Image?.imageUrl ? barberDetails.Image.imageUrl : '',
       customerAvatar: '',
-      lastUpdated: database.ServerValue.TIMESTAMP
+      lastUpdated: moment().toISOString()
     }
     try {
       await setChatRoom(roomObj)

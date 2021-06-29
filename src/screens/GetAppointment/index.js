@@ -58,7 +58,7 @@ export default function GetAppointment(props) {
     }
     setLoading(true)
     try {
-      isAvailable = await checkBarberAvailablity(barberDetails.id, dateMoment)
+      isAvailable = await checkBarberAvailablity(barberDetails.id, dateMoment.valueOf())
     } catch (error) {
       console.log(error)
       setLoading(false)

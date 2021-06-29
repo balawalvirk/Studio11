@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {width, height} from 'react-native-dimension';
+import { StyleSheet } from 'react-native';
+import { width, height } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
   messageBtn: {
     width: width(25),
     borderRadius: height(3),
-    margin: 0,
   },
 });
 export default styles;

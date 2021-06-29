@@ -17,7 +17,10 @@ export default function ChatListBarber(props) {
   const navigation = useNavigation();
   const [rooms, setRooms] = useState([])
   useEffect(() => {
-    loadData()
+    const sub = props.navigation.addListener('focus', () => {
+      loadData()
+    })
+    return sub
   }, [])
   const loadData = async () => {
     try {

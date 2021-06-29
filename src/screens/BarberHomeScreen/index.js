@@ -16,9 +16,10 @@ import InputModal from '../../components/inputModal';
 import ScheduleCard from '../../components/ScheduleCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import WelcomeBarberText from '../../components/WelcomeBarberText';
-import { endBreak, saveData } from '../../firebaseConfig';
+import { endBreak, getAppointments, saveData, setChatRoom } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import AppColors from '../../utills/AppColors';
+import { UserTypes } from '../../utills/Enums';
 import styles from './styles';
 export default function BarberHomeScreen(props) {
   const scheduledAppointments = [
@@ -56,6 +57,7 @@ export default function BarberHomeScreen(props) {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [breakLoading, setBreakLoading] = useState(false);
+  const [appointments, setAppointments] = useState([]);
   const [resumeModalVisible, setresumeModalVisible] = useState(false);
   const [workBreak, setworkBreak] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -71,9 +73,53 @@ export default function BarberHomeScreen(props) {
   const [pickerMode, setPickerMode] = useState(0); //0 => from   1=> To
   useEffect(() => { userRef.current = user }, [user])
   useEffect(() => {
+    const sub = props.navigation.addListener('focus', () => {
+      getTodaysAppointments()
+    })
     clearInterval(window.checkStatus)
     window.checkStatus = setInterval(() => checkBreakStatus(), 1000)
+    return sub
   }, []);
+  const getTodaysAppointments = async () => {
+    try {
+      const appts = await getAppointments(UserTypes.BARBER)
+      setAppointments(appts)
+    } catch (error) {
+      error.message
+    }
+  }
+  const createRoom = async (item) => {
+    const roomObj = {
+      roomId: item.customerId + '_' + user.id,
+      barberId: user.id,
+      barberDetails: user,
+      customerId: item.customerId,
+      customerDetails: item.customerDetails,
+      barberAvatar: item?.barberDetails?.Image?.imageUrl ? item?.barberDetails.Image.imageUrl : '',
+      customerAvatar: '',
+      lastUpdated: moment().toISOString()
+    }
+    try {
+      await setChatRoom(roomObj)
+      props.navigation.navigate('Chat', { roomId: roomObj.roomId })
+      return roomObj
+    } catch (error) {
+      console.log(error.message)
+      setLoading(false)
+    }
+  }
+  const getDaysLeft = (dateMoment) => {
+    const apptDate = dateMoment.toDate()
+    const duration = moment.duration(moment(apptDate).diff(moment())).asDays().toFixed(0)
+    const daysLeft = duration + ' days left'
+    if (duration < 0) {
+      return false
+    }
+    if (duration == 0) {
+      return 'Today'
+    }
+    return daysLeft
+  }
   const checkBreakStatus = async () => {
     try {
       setDateTimeString(moment().format('dddd, DD MMMM, hh:mm a'))
@@ -157,15 +203,15 @@ export default function BarberHomeScreen(props) {
   const renderAppointments = ({ item }) => (
     <ScheduleCard
       onpressScheuledCard={() =>
-        props.navigation.navigate('CustomerAppoinmentBarber')
+        props.navigation.navigate('CustomerAppoinmentBarber', { appointmentDetails: item })
       }
-      barberName={item.barberName}
-      cuttingName={item.cuttingName}
-      scheduledTime={item.scheduledTime}
-      additionalNotes={item.Notes}
-      timeLeft={item.timeLeft}
+      barberName={item?.barberDetails?.FirstName + ' ' + item?.barberDetails?.LastName}
+      cuttingName={item?.hairStyle}
+      scheduledTime={moment(item.dateMoment.toDate()).format('dddd, DD MMMM, hh:mm a')}
+      additionalNotes={item?.notes}
+      timeLeft={getDaysLeft(item.dateMoment)}
       appointmentImage={item.appointmentImage}
-      onpressMessage={() => props.navigation.navigate('Chat')}
+      onpressMessage={() => createRoom(item)}
     />
   );
   const onDateTimePick = (date) => {
@@ -240,7 +286,7 @@ export default function BarberHomeScreen(props) {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={scheduledAppointments}
+          data={appointments}
           keyExtractor={(item) => item.id}
           renderItem={renderAppointments}
         />

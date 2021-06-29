@@ -19,6 +19,9 @@ export default function Appointments(props) {
     if (duration < 0) {
       return false
     }
+    if (duration == 0) {
+      return 'Today'
+    }
     return daysLeft
   }
   const renderAppointment = ({ item }) =>

@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text, View, Image, TouchableOpacity, Pressable} from 'react-native';
-import {height, width} from 'react-native-dimension';
+import { Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
+import { height, width } from 'react-native-dimension';
 import Button from '../Button';
 import styles from './styles';
 
@@ -14,11 +14,12 @@ const ScheduleCard = ({
   onpressMessage,
   scheuledCardStyle = {},
   additionalNotes,
+  messageLoading
 }) => {
   return (
     <View style={[styles.scheuledCard, scheuledCardStyle]}>
       <Pressable style={styles.upperSection} onPress={onpressScheuledCard}>
-        <View style={{width: width(50)}}>
+        <View style={{ width: width(50) }}>
           <Text style={styles.whiteText}>
             Name: <Text style={styles.white50}>{barberName}</Text>
           </Text>
@@ -35,6 +36,7 @@ const ScheduleCard = ({
       <View style={styles.bottomSection}>
         <Text style={styles.goldenText}>{timeLeft}</Text>
         <Button
+          isLoading={messageLoading}
           containerStyle={styles.messageBtn}
           onPress={onpressMessage}
           title={'Message'}

@@ -7,7 +7,7 @@ import Button from '../Button';
 import { height, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 const customModal = ({ iconName, description, isVisible, onClose, navigateTo, buttonLine, onpressFirstButton, onpressSecondButton,
-  firstButtonTitle, secondButtonTitle, modalImage, modalImagePath
+  firstButtonTitle, secondButtonTitle, modalImage, modalImagePath, cancelLoading
 }) => {
   return (
     <Modal
@@ -19,6 +19,7 @@ const customModal = ({ iconName, description, isVisible, onClose, navigateTo, bu
         {buttonLine ?
           <View style={styles.btnContainer}>
             <Button
+              isLoading={cancelLoading}
               containerStyle={{ width: width(25) }}
               title={firstButtonTitle}
               onPress={onpressFirstButton} />
