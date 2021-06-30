@@ -1,6 +1,9 @@
 import { CART, APPOINTMENT } from '../Types';
 const intialState = {
-    cart: {},
+    cart: {
+        total: 0,
+        itemCount: 0
+    },
     appointments: []
 };
 const reducer = (state = intialState, action) => {

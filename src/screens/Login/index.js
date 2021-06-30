@@ -101,10 +101,12 @@ export default function Login(props) {
           cartItems.push(doc.data())
         })
         dispatch(setAppointments(appointments))
-        dispatch(setCart({
-          ...cartData,
-          cartItems,
-        }))
+        if (cartData) {
+          dispatch(setCart({
+            ...cartData,
+            cartItems,
+          }))
+        }
         dispatch(login(userObj));
       }
     } else {
@@ -135,10 +137,12 @@ export default function Login(props) {
                 cartItems.push(doc.data())
               })
               dispatch(setAppointments(appointments))
-              dispatch(setCart({
-                ...cartData,
-                cartItems,
-              }))
+              if (cartData) {
+                dispatch(setCart({
+                  ...cartData,
+                  cartItems,
+                }))
+              }
               dispatch(login(user));
               setLoading(false);
             } else {

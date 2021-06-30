@@ -93,23 +93,20 @@ export default function ProductDetails(props) {
       alert('Quantity cannot be 0.')
       return
     }
-    // if (user.cart) {
-    //   const index = user.cart.items.findIndex(item => item.id == product.id)
-    //   if (index > -1) {
-    //     alert('Item is already in cart.')
-    //     return
-    //   }
-    // }
+    if (user.cart) {
+      const index = user.cart.items.findIndex(item => item.id == product.id)
+      if (index > -1) {
+        alert('Item is already in cart.')
+        return
+      }
+    }
     try {
       setCartLoading(true)
       let newProduct = {
         ...product,
         quantity: quantity
       }
-      console.log({
-        total: Number(product.price) * Number(quantity),
-        itemCount: 1
-      })
+      console.log("ITEM COUNT: ", cart)
       if (cart.itemCount == 0) {
         console.log('here==============>')
         await firestore()
@@ -119,6 +116,10 @@ export default function ProductDetails(props) {
             total: Number(product.price) * Number(quantity),
             itemCount: 1
           }, { merge: true })
+        console.log({
+          total: Number(product.price) * Number(quantity),
+          itemCount: 1
+        })
         await firestore()
           .collection('Cart')
           .doc(auth().currentUser.uid)
