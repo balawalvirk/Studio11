@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, Image, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import Header from '../../components/Header';
 import HorizontalLine from '../../components/HorizontalLine';
@@ -15,16 +15,22 @@ export default function Messages(props) {
   const user = useSelector(state => state.Auth.user)
   const [rooms, setRooms] = useState([])
   const [info, setInfo] = useState({})
+  const [isLoading, setLoading] = useState(true)
+
 
   useEffect(() => {
-    loadData()
+    const sub = props.navigation.addListener('focus', () => {
+      loadData()
+    })
+    return sub
   }, [])
   const loadData = async () => {
     try {
       const rooms = await getChatRooms()
-
       setRooms(rooms)
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.log(error.message)
     }
   }
@@ -55,13 +61,18 @@ export default function Messages(props) {
       headerUnScrollable={() => <Header headerTitle={'Messages'} />}>
 
       <View style={styles.mainViewContainer}>
-
-        <FlatList
+        {!isLoading ? <FlatList
           data={rooms}
-          // keyExtractor={item => item.lastUpdated.toString()}
+          keyExtractor={item => item.lastUpdated.toString()}
           renderItem={renderRoom}
-        />
-
+          ListEmptyComponent={() =>
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No ongoing chat</Text>
+            </View>}
+        /> :
+          <View style={styles.emptyContainer}>
+            <ActivityIndicator color={AppColors.primaryGold} size={'large'} />
+          </View>}
       </View>
     </ScreenWrapper>
   );

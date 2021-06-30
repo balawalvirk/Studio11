@@ -78,7 +78,10 @@ export default function BarberHomeScreen(props) {
     })
     clearInterval(window.checkStatus)
     window.checkStatus = setInterval(() => checkBreakStatus(), 1000)
-    return sub
+    return () => {
+      sub
+      clearInterval(window.checkStatus)
+    }
   }, []);
   const getTodaysAppointments = async () => {
     try {
@@ -123,7 +126,8 @@ export default function BarberHomeScreen(props) {
   const checkBreakStatus = async () => {
     try {
       setDateTimeString(moment().format('dddd, DD MMMM, hh:mm a'))
-      if (user.breakTime) {
+      console.log(user.breakTime)
+      if (user?.breakTime) {
         const fromTime = userRef.current?.breakTime?.fromMoment
         const toTime = userRef.current?.breakTime?.toMoment
 
@@ -159,7 +163,6 @@ export default function BarberHomeScreen(props) {
     }
     setToError('')
     clearInterval(window.checkStatus)
-
     try {
       setBreakLoading(true);
       const breakObj = {
@@ -188,13 +191,18 @@ export default function BarberHomeScreen(props) {
   }
   const resumeWork = async () => {
     try {
+      clearInterval(window.checkStatus)
       await endBreak(auth().currentUser.uid)
       setworkBreak(false)
       dispatch(login({
         ...user,
-        breakTime: null
+        breakTime: {
+          toMoment: 10000,
+          fromMoment: 10000,
+        }
       }))
       setresumeModalVisible(false)
+      window.checkStatus = setInterval(() => checkBreakStatus(), 1000)
     } catch (error) {
       console.log(error.message)
     }

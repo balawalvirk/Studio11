@@ -22,6 +22,7 @@ import auth from '@react-native-firebase/auth'
 import { useSelector } from 'react-redux';
 import { reviewList } from '../../dummyData';
 import database from '@react-native-firebase/database'
+import moment from 'moment';
 export default function BarberProfile(props) {
   const barberId = props.route.params.barberId;
   const user = useSelector(state => state.Auth.user)

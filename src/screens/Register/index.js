@@ -14,6 +14,7 @@ import AppColors from '../../utills/AppColors';
 import { saveData } from '../../firebaseConfig';
 import { login, setLoginScreenType } from '../../Redux/Actions/Auth';
 import { UserTypes } from '../../utills/Enums';
+import moment from 'moment';
 export default function Register(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
@@ -96,6 +97,10 @@ export default function Register(props) {
                   userOBJ.HairCutCount = 0;
                   userOBJ.Rating = 0;
                   userOBJ.RatingCount = 0;
+                  userOBJ.breakTime = {
+                    fromMoment: moment().valueOf(),
+                    toMoment: moment().valueOf()
+                  }
                 }
                 await saveData('Users', result.user.uid, userOBJ);
                 console.log('User account created & signed in!');

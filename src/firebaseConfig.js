@@ -548,7 +548,10 @@ export async function endBreak(userId) {
       .collection('Users')
       .doc(userId)
       .set({
-        breakTime: null
+        breakTime: {
+          toMoment: 10000,
+          fromMoment: 10000,
+        }
       }, { merge: true })
   } catch (error) {
     console.log(error.message);
