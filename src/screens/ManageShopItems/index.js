@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, View } from 'react-native';
+import { FlatList, Image, Text, View, TouchableOpacity } from 'react-native';
 import { height, width } from 'react-native-dimension';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity as TouchableGesture } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -15,6 +15,7 @@ import ProductCard from '../../components/ProductCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import AppColors from '../../utills/AppColors';
 import { AlphaSortTypes, SortTypes } from '../../utills/Enums';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import styles from './styles';
 export default function ManageShopItems(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,6 +28,7 @@ export default function ManageShopItems(props) {
   const [max, setMax] = useState('')
   const [selectedPrice, setSelectedPrice] = useState(SortTypes.LOW_TO_HIGH)
   const [selectedAlpha, setSelectedAlpha] = useState('A - Z')
+  const [selectedSort, setSelectedSort] = useState(0);
   const priceSort = [SortTypes.LOW_TO_HIGH, SortTypes.HIGH_TO_LOW]
   const alphaSort = [AlphaSortTypes.A_Z, AlphaSortTypes.Z_A]
   useEffect(() => {
@@ -52,17 +54,21 @@ export default function ManageShopItems(props) {
         return itemData.indexOf(textData) > -1;
       });
     }
-    if (selectedPrice == SortTypes.LOW_TO_HIGH) {
-      items = items.sort((a, b) => a.price - b.price)
-    }
-    if (selectedPrice == SortTypes.HIGH_TO_LOW) {
-      items = items.sort((a, b) => b.price - a.price)
-    }
-    if (selectedAlpha == AlphaSortTypes.A_Z) {
-      items.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    if (selectedAlpha == AlphaSortTypes.Z_A) {
-      items.sort((a, b) => b.name.localeCompare(a.name));
+    if (selectedSort == 0) {
+      if (selectedPrice == SortTypes.LOW_TO_HIGH) {
+        items = items.sort((a, b) => a.price - b.price)
+      }
+      if (selectedPrice == SortTypes.HIGH_TO_LOW) {
+        console.log("SORT TYPE: ", selectedPrice)
+        items = items.sort((a, b) => b.price - a.price)
+      }
+    } else {
+      if (selectedAlpha == AlphaSortTypes.A_Z) {
+        items.sort((a, b) => a.name.localeCompare(b.name));
+      }
+      if (selectedAlpha == AlphaSortTypes.Z_A) {
+        items.sort((a, b) => b.name.localeCompare(a.name));
+      }
     }
     setSearchedItems(items)
   }
@@ -89,7 +95,7 @@ export default function ManageShopItems(props) {
   const renderItem = ({ item, index }) => {
     return <ProductCard
       editable
-      onPressProduct={() => console.log(min, max)}//props.navigation.navigate('EditItem', { item, index })
+      onPressProduct={() => props.navigation.navigate('EditItem', { item, index })}//
       productImage={
         item?.images?.length > 0
           ? { uri: item?.images[0]?.imageUri ?? '' }
@@ -102,11 +108,11 @@ export default function ManageShopItems(props) {
     />
   }
   const renderPriceRow = (data) =>
-    <TouchableOpacity
+    <TouchableGesture
       onPress={() => console.log(data)}
       style={styles.priceContainer}>
       <Text style={styles.rowText}>{data}</Text>
-    </TouchableOpacity>
+    </TouchableGesture>
   return (
     <ScreenWrapper
       scrollEnabled
@@ -198,41 +204,52 @@ export default function ManageShopItems(props) {
             }}
           />
           <Text style={styles.modalTitle}>Sort</Text>
-          <View style={[styles.inputRow, { width: width(70) }]}>
-            <ModalDropdown
-              renderRow={renderPriceRow}
-              onSelect={(value) => setSelectedPrice(priceSort[value])}
-              dropdownStyle={styles.dropDown}
-              options={priceSort}>
-              <>
-                <Text style={styles.label}>Price</Text>
-                <View style={styles.dropContainer}>
-                  <Text style={styles.selectedText}>{selectedPrice}</Text>
-                  <Entypo
-                    name={'chevron-down'}
-                    size={width(4)}
-                    color={AppColors.primaryGold}
-                  />
-                </View>
-              </>
-            </ModalDropdown>
-            <ModalDropdown
-              renderRow={renderPriceRow}
-              onSelect={(value) => setSelectedAlpha(alphaSort[value])}
-              dropdownStyle={styles.dropDown}
-              options={alphaSort}>
-              <>
-                <Text style={styles.label}>Price</Text>
-                <View style={styles.dropContainer}>
-                  <Text style={styles.selectedText}>{selectedAlpha}</Text>
-                  <Entypo
-                    name={'chevron-down'}
-                    size={width(4)}
-                    color={AppColors.primaryGold}
-                  />
-                </View>
-              </>
-            </ModalDropdown>
+          <View style={styles.radioContainer}>
+            <TouchableOpacity onPress={() => setSelectedSort(0)} activeOpacity={0.7} style={styles.flexRow}>
+              <Ionicons name={selectedSort == 0 ? 'radio-button-on' : 'radio-button-off'} size={width(5)} color={AppColors.primaryGold} />
+              <Text style={styles.white50}>Price</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setSelectedSort(1)} activeOpacity={0.7} style={styles.flexRow}>
+              <Ionicons name={selectedSort == 1 ? 'radio-button-on' : 'radio-button-off'} size={width(5)} color={AppColors.primaryGold} />
+              <Text style={styles.white50}>Name</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={[{ width: width(70), alignItems: 'center', marginVertical: height(2) }]}>
+            {selectedSort == 0 ?
+              <ModalDropdown
+                renderRow={renderPriceRow}
+                onSelect={(value) => setSelectedPrice(priceSort[value])}
+                dropdownStyle={styles.dropDown}
+                options={priceSort}>
+                <>
+                  {/* <Text style={styles.label}>Price</Text> */}
+                  <View style={styles.dropContainer}>
+                    <Text style={styles.selectedText}>{selectedPrice}</Text>
+                    <Entypo
+                      name={'chevron-down'}
+                      size={width(4)}
+                      color={AppColors.primaryGold}
+                    />
+                  </View>
+                </>
+              </ModalDropdown> :
+              <ModalDropdown
+                renderRow={renderPriceRow}
+                onSelect={(value) => setSelectedAlpha(alphaSort[value])}
+                dropdownStyle={styles.dropDown}
+                options={alphaSort}>
+                <>
+                  {/* <Text style={styles.label}>Name</Text> */}
+                  <View style={styles.dropContainer}>
+                    <Text style={styles.selectedText}>{selectedAlpha}</Text>
+                    <Entypo
+                      name={'chevron-down'}
+                      size={width(4)}
+                      color={AppColors.primaryGold}
+                    />
+                  </View>
+                </>
+              </ModalDropdown>}
           </View>
           <HorizontalLine
             lineColor={{
@@ -271,6 +288,6 @@ export default function ManageShopItems(props) {
           </View>
         </View>
       </Modal>
-    </ScreenWrapper>
+    </ScreenWrapper >
   );
 }

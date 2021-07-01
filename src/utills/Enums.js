@@ -13,6 +13,8 @@ export const OrderStatus = {
   PROCESSED: 2,
   SHIP_READY: 3,
   DELIVERY: 4,
+  COMPLETED: 5,
+  CANCELLED: 6
 };
 export const SortTypes = {
   HIGH_TO_LOW: 'High - Low',

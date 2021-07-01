@@ -1,21 +1,24 @@
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { View, FlatList } from 'react-native';
-import styles from './styles';
+import { FlatList, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../components/Header';
 import HorizontalLine from '../../components/HorizontalLine';
-import { useDispatch, useSelector } from 'react-redux';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import AppColors from '../../utills/AppColors';
-import ScheduleCard from '../../components/ScheduleCard';
 import InputField from '../../components/InputField';
-import { todaysAppointments } from '../../dummyData';
-import { UserTypes } from '../../utills/Enums';
+import ScheduleCard from '../../components/ScheduleCard';
+import ScreenWrapper from '../../components/ScreenWrapper';
 import { getAppointments, setChatRoom } from '../../firebaseConfig';
-import moment from 'moment';
+import AppColors from '../../utills/AppColors';
+import { UserTypes } from '../../utills/Enums';
+import styles from './styles';
+
 export default function TodaysAppointmentBarber(props) {
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
   const [appointments, setAppointments] = useState([]);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
 
   useEffect(() => {
     getTodaysAppointments()
@@ -76,6 +79,10 @@ export default function TodaysAppointmentBarber(props) {
       />
     );
   }
+  const onDateTimePick = (date) => {
+    console.log(date)
+    setDatePickerVisible(false);
+  };
   return (
     <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}
       headerUnScrollable={() => <Header
@@ -84,8 +91,13 @@ export default function TodaysAppointmentBarber(props) {
         onPressLeadingIcon={() => props.navigation.goBack()} />}>
 
       <View style={styles.mainViewContainer}>
-        <InputField containerStyles={{}} labelStyle={{ marginTop: 0, paddingTop: 0 }}
-          label={'Filter by time:'} placeholder={'2:00 PM — 3:00 PM'} />
+        <TouchableOpacity activeOpacity={0.5}>
+          <InputField
+            editable={false}
+            containerStyles={{}}
+            labelStyle={{ marginTop: 0, paddingTop: 0 }}
+            label={'Filter by time:'} placeholder={'2:00 PM — 3:00 PM'} />
+        </TouchableOpacity>
         <HorizontalLine />
         <FlatList
           contentContainerStyle={{}}
@@ -94,8 +106,13 @@ export default function TodaysAppointmentBarber(props) {
           keyExtractor={item => item.id}
           renderItem={renderAppointment}
         />
-
       </View>
+      <DateTimePickerModal
+        isVisible={datePickerVisible}
+        mode="datetime"
+        onConfirm={onDateTimePick}
+        onCancel={() => setDatePickerVisible(false)}
+      />
     </ScreenWrapper>
   );
 };

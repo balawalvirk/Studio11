@@ -8,7 +8,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { height, width } from 'react-native-dimension';
 import { OrderStatus } from '../../utills/Enums';
 const OrderStatusComponent = ({
-    orderStatus = [OrderStatus.CONFIRMED, OrderStatus.PROCESSED, OrderStatus.PLACED],
+    orderStatus = 0,
     containerStyle,
 }) => {
     const RenderRow = ({ title, description, date, checked }) =>
@@ -34,31 +34,31 @@ const OrderStatusComponent = ({
     return (
         <View style={[styles.container, containerStyle]}>
             <RenderRow
-                checked={orderStatus.includes(OrderStatus.PLACED)}
+                checked={true}
                 title={'Order Placed'}
                 description={'We have received your order'}
                 date={'23-May-2021'}
             />
             <RenderRow
-                checked={orderStatus.includes(OrderStatus.CONFIRMED)}
+                checked={orderStatus >= OrderStatus.CONFIRMED}
                 title={'Order Confirmed'}
                 description={'Your order has been confirmed'}
                 date={'23-May-2021'}
             />
             <RenderRow
-                checked={orderStatus.includes(OrderStatus.PROCESSED)}
+                checked={orderStatus >= OrderStatus.PROCESSED}
                 title={'Order Processed'}
                 description={'Your order is being processed'}
                 date={'23-May-2021'}
             />
             <RenderRow
-                checked={orderStatus.includes(OrderStatus.SHIP_READY)}
+                checked={orderStatus >= OrderStatus.SHIP_READY}
                 title={'Ready to Ship'}
                 description={'Your order is ready for shipping'}
                 date={'23-May-2021'}
             />
             <RenderRow
-                checked={orderStatus.includes(OrderStatus.DELIVERY)}
+                checked={orderStatus >= OrderStatus.DELIVERY}
                 title={'Out for Delivery'}
                 description={'Your order is out for delivery'}
                 date={'23-May-2021'}

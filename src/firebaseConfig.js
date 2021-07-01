@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import database from '@react-native-firebase/database';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
-import { AppointmentStatus, HairCuts, UserTypes } from './utills/Enums';
+import { AppointmentStatus, HairCuts, OrderStatus, UserTypes } from './utills/Enums';
 import moment from 'moment';
 export async function addToArray(collection, doc, array, value) {
   let docRef = await firestore().collection(collection).doc(doc);
@@ -723,6 +723,46 @@ export async function cancelAppointment(appointment) {
       .set({
         status: AppointmentStatus.CANCELLED
       }, { merge: true })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function checkout(orderObj) {
+  try {
+    await firestore()
+      .collection('Orders')
+      .doc(orderObj.id)
+      .set(orderObj, { merge: true })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getCustomerOngoingOrders() {
+  const userId = auth().currentUser.uid
+  try {
+    let orders = []
+    const snapshot = await firestore()
+      .collection('Orders')
+      .where('customerId', '==', userId)
+      .where('status', 'not-in', [OrderStatus.COMPLETED, OrderStatus.CANCELLED])
+      .get()
+    snapshot.forEach(doc => orders.push(doc.data()))
+    return orders
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getCustomerPastOrders() {
+  const userId = auth().currentUser.uid
+  try {
+    let orders = []
+    const snapshot = await firestore()
+      .collection('Orders')
+      .where('customerId', '==', userId)
+      .where('status', '==', OrderStatus.COMPLETED)
+      .get()
+    snapshot.forEach(doc => orders.push(doc.data()))
+    return orders
   } catch (error) {
     console.log(error.message);
   }

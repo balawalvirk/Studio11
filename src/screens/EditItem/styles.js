@@ -32,5 +32,11 @@ const styles = StyleSheet.create({
     alignSelf: 'baseline',
     marginVertical: height(1)
   },
+  uploadingContainer: {
+    height: height(18),
+    width: width(100),
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 export default styles;

@@ -9,6 +9,7 @@ import Messages from '../../screens/Messages';
 import Notifications from '../../screens/Notifications';
 import Shop from '../../screens/Shop';
 import TrackOrder from '../../screens/TrackOrder';
+import OrderDetails from '../../screens/OrderDetails';
 
 
 const Tab = createBottomTabNavigator();
@@ -35,6 +36,7 @@ function ShopStackScreen() {
     <ShopStack.Navigator headerMode='none'>
       <ShopStack.Screen name="CustomerShop" component={Shop} />
       <ShopStack.Screen name="TrackOrder" component={TrackOrder} />
+      <ShopStack.Screen name="OrderDetails" component={OrderDetails} />
     </ShopStack.Navigator>
   );
 }

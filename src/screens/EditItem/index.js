@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import React, { useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, View, ActivityIndicator } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,8 +35,9 @@ export default function EditItem(props) {
   const [isLoading, setLoading] = useState(false);
   const [name, setName] = useState(item?.name);
   const [price, setPrice] = useState(item?.price);
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [description, setDescription] = useState(item?.description);
-
+  console.log(item?.price, '=================>')
   const [nameError, setNameError] = useState('');
   const [priceError, setPriceError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
@@ -102,12 +103,14 @@ export default function EditItem(props) {
     }
     const imageRef = imageItem.imageRef;
     try {
+      setUploadLoading(true)
       const ref = storage().ref(imageRef);
       await ref.delete();
       await removeFromArray('ShopItems', item.id, 'images', indexItem);
       const items = await getItemsById();
       dispatch(setItems(items));
       imageArray.splice(indexItem, 1);
+      setUploadLoading(false)
     } catch (error) {
       console.log(error.message);
     }
@@ -172,21 +175,23 @@ export default function EditItem(props) {
             fielderror={priceError}
             label="Item Price"
             placeholder="$130"
-            value={price}
+            value={price + ''}
             onChangeText={(text) => setPrice(text)}
             inputStyle={{ borderRadius: width(4) }}
           />
           <HorizontalLine lineColor={{ marginTop: 0 }} />
-          {imageArray?.length > 0 && (
-            <FlatList
+          {uploadLoading ?
+            <View style={styles.uploadingContainer}>
+              <ActivityIndicator size={'large'} color={AppColors.primaryGold} />
+            </View>
+            : <FlatList
               contentContainerStyle={{ alignItems: 'center' }}
               style={styles.flatlist}
               horizontal
               data={imageArray}
               renderItem={renderImage}
               keyExtractor={(item) => item.imageUri}
-            />
-          )}
+            />}
           <Button
             disabled={isLoading}
             onPress={() => setCameraModal(true)}

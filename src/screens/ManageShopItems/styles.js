@@ -52,6 +52,13 @@ const styles = StyleSheet.create({
     borderWidth: width(0.15),
     width: width(25)
   },
+  radioContainer: {
+    marginTop: height(1.5),
+    flexDirection: 'row',
+    width: width(65),
+    justifyContent: 'space-evenly'
+  },
+
   // ****************modal view**************************
   modalView: {
     marginHorizontal: width(6),
@@ -92,7 +99,7 @@ const styles = StyleSheet.create({
   },
   labelStyle: { fontSize: width(3) },
   dropContainer: {
-    width: width(32),
+    width: width(65),
     paddingHorizontal: width(4),
     paddingVertical: height(1),
     borderWidth: width(0.15),
@@ -120,7 +127,7 @@ const styles = StyleSheet.create({
   },
   priceContainer: {
     backgroundColor: AppColors.black,
-    width: width(30),
+    width: width(65),
     paddingVertical: height(1),
     paddingHorizontal: width(2),
     borderRadius: width(1.5)

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   white50: {
     color: AppColors.white50,
-    fontSize: width(4),
+    fontSize: width(3.5),
   },
   flatlistcolumn: {
     justifyContent: 'space-between',
@@ -58,6 +58,12 @@ const styles = StyleSheet.create({
   renderedIcons: {
     fontSize: width(5),
     color: AppColors.primaryGold
+  },
+  radioContainer: {
+    marginTop: height(1.5),
+    flexDirection: 'row',
+    width: width(65),
+    justifyContent: 'space-evenly'
   },
   // ****************modal view**************************
   modalView: {
@@ -107,14 +113,14 @@ const styles = StyleSheet.create({
   },
   labelStyle: { fontSize: width(3) },
   dropContainer: {
-    width: width(32),
+    width: width(65),
     paddingHorizontal: width(4),
     paddingVertical: height(1),
     borderWidth: width(0.15),
     borderColor: AppColors.primaryGold,
     borderRadius: height(3),
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   selectedText: {
     color: AppColors.white50,
@@ -128,10 +134,13 @@ const styles = StyleSheet.create({
   },
   flexRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    width: width(25)
   },
   priceContainer: {
     backgroundColor: AppColors.black,
-    width: width(30),
+    width: width(65),
     paddingVertical: height(1),
     paddingHorizontal: width(2),
     borderRadius: width(1.5)

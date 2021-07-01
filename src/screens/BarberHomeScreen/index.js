@@ -126,7 +126,6 @@ export default function BarberHomeScreen(props) {
   const checkBreakStatus = async () => {
     try {
       setDateTimeString(moment().format('dddd, DD MMMM, hh:mm a'))
-      console.log(user.breakTime)
       if (user?.breakTime) {
         const fromTime = userRef.current?.breakTime?.fromMoment
         const toTime = userRef.current?.breakTime?.toMoment

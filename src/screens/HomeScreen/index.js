@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList } from 'react-native';
 import styles from './styles';
+import { FlatList as FlatListGesture } from 'react-native-gesture-handler'
 import ScreenWrapper from '../../components/ScreenWrapper';
 import HighlightedText from '../../components/HighlightedText';
 import Header from '../../components/Header';
@@ -22,6 +23,7 @@ export default function HomeScreen(props) {
   const lastIndex = appointments.length - 1
   useEffect(() => {
     loadData();
+    console.log(appointments)
   }, []);
   const loadData = async () => {
     const barberList = await getBarbers();
@@ -76,25 +78,28 @@ export default function HomeScreen(props) {
       )}
       statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
-        <View style={[styles.textRow, { marginTop: height(1.5) }]}>
-          <Text style={styles.whiteText}>Appointments</Text>
-          <HighlightedText
-            text={'View all'}
-            onPress={() => props.navigation.navigate(Appointments)}
-          />
-        </View>
         {appointments.length > 0 &&
-          <AppointmentCard
-            onpressAppointmentcard={() => props.navigation.navigate('AppointmentDetails', { appointmentDetails: appointments[lastIndex] })}
-            barberName={appointments[lastIndex].barberDetails.FirstName + '' + appointments[lastIndex].barberDetails.LastName}
-            cuttingName={appointments[lastIndex].hairStyle}
-            appointmentTime={appointments[lastIndex].date}
-            timeLeft={getDaysLeft(appointments[lastIndex].dateMoment)}
-            appointmentImage={{ uri: appointments[lastIndex]?.barberDetails?.Image?.imageUrl }}
-          />}
+          <>
+            <View style={[styles.textRow, { marginTop: height(1.5) }]}>
+              <Text style={styles.whiteText}>Appointments</Text>
+              <HighlightedText
+                text={'View all'}
+                onPress={() => props.navigation.navigate(Appointments)}
+              />
+            </View>
+            <AppointmentCard
+              onpressAppointmentcard={() => props.navigation.navigate('AppointmentDetails', { appointmentDetails: appointments[lastIndex] })}
+              barberName={appointments[lastIndex].barberDetails.FirstName + '' + appointments[lastIndex].barberDetails.LastName}
+              cuttingName={appointments[lastIndex].hairStyle}
+              appointmentTime={appointments[lastIndex].date}
+              timeLeft={getDaysLeft(appointments[lastIndex].dateMoment)}
+              appointmentImage={{ uri: appointments[lastIndex]?.barberDetails?.Image?.imageUrl }}
+            />
+            <View style={styles.dash} />
+          </>
+        }
         {popularStyles.length > 0 &&
           <>
-            <View style={styles.dash} />
             <View style={styles.textRow}>
               <Text style={styles.whiteText}>Popular Hair Styles</Text>
               <HighlightedText
@@ -104,6 +109,7 @@ export default function HomeScreen(props) {
             </View>
             <FlatList
               horizontal={true}
+
               contentContainerStyle={styles.flatlist}
               showsHorizontalScrollIndicator={false}
               data={popularStyles}

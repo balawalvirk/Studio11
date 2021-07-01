@@ -57,5 +57,10 @@ const styles = StyleSheet.create({
     // height:height(0.125),
     marginTop: height(1)
   },
+  loaderFlex: {
+    height: height(80),
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
 export default styles;

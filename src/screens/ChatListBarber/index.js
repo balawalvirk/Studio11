@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { width } from 'react-native-dimension';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from '../../components/Header';
@@ -16,6 +16,7 @@ export default function ChatListBarber(props) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [rooms, setRooms] = useState([])
+  const [isLoading, setLoading] = useState(true)
   useEffect(() => {
     const sub = props.navigation.addListener('focus', () => {
       loadData()
@@ -26,8 +27,11 @@ export default function ChatListBarber(props) {
     try {
       const rooms = await getChatRoomsForBarber()
       setRooms(rooms)
+      setLoading(false)
     } catch (error) {
       console.log(error.message)
+      setLoading(false)
+
     }
   }
   const renderItem = ({ item }) =>
@@ -59,11 +63,15 @@ export default function ChatListBarber(props) {
 
       <View style={styles.mainViewContainer}>
 
-        <FlatList
-          data={rooms}
-          keyExtractor={item => item.roomId}
-          renderItem={renderItem}
-        />
+        {isLoading ?
+          <View style={styles.loaderFlex}>
+            <ActivityIndicator size={'large'} color={AppColors.primaryGold} />
+          </View> :
+          <FlatList
+            data={rooms}
+            keyExtractor={item => item.roomId}
+            renderItem={renderItem}
+          />}
 
       </View>
     </ScreenWrapper>

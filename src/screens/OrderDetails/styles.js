@@ -57,8 +57,9 @@ const styles = StyleSheet.create({
         marginVertical: height(0.5)
     },
     productImg: {
-        height: width(25),
-        width: width(25)
+        height: width(27),
+        width: width(27),
+        borderRadius: width(2)
     },
     dash: {
         backgroundColor: AppColors.white,
@@ -78,44 +79,5 @@ const styles = StyleSheet.create({
         marginBottom: height(3),
         marginTop: height(1)
     },
-    pastContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    details: {
-        flex: 0.95,
-        paddingVertical: height(2),
-        paddingHorizontal: width(4)
-    },
-    pastImg: {
-        height: width(25),
-        width: width(25),
-        borderRadius: width(2)
-    },
-    id: {
-        color: AppColors.white
-    },
-    title: {
-        color: AppColors.white,
-        fontWeight: 'bold'
-    },
-    total: {
-        color: AppColors.white,
-        fontWeight: 'bold'
-    },
-    status: {
-        color: AppColors.primaryGold,
-        marginTop: height(0.5)
-    },
-    emptyContainer: {
-        height: height(80),
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    emptext: {
-        fontSize: width(4),
-        fontWeight: 'bold',
-        color: AppColors.primaryGold
-    }
 });
 export default styles;

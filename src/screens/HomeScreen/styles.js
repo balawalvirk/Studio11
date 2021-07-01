@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     width: width(90),
     alignItems: 'center',
     marginBottom: height(2),
+    marginTop: height(2)
   },
   whiteText: {
     color: AppColors.white,
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     height: width(0.1),
     marginVertical: height(3),
   },
-  flatlist: { paddingHorizontal: width(4), width: '100%' },
+  flatlist: { paddingHorizontal: width(4), },
   // ***********************drawer styling**************************
   itemStyle: {
     borderBottomColor: AppColors.white,

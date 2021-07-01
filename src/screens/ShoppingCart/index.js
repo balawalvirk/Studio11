@@ -10,16 +10,18 @@ import Header from '../../components/Header';
 import HighlightedText from '../../components/HighlightedText';
 import HorizontalLine from '../../components/HorizontalLine';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { clearCart, getAllOfCollection, getData, removeFromArrayInObj, saveData } from '../../firebaseConfig';
+import { checkout, clearCart, getAllOfCollection, getData, removeFromArrayInObj, saveData } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import { setCart } from '../../Redux/Actions/Customer';
 import AppColors from '../../utills/AppColors';
+import { OrderStatus } from '../../utills/Enums';
 import styles from './styles';
 export default function ShoppingCart(props) {
   const dispatch = useDispatch()
   const user = useSelector(state => state.Auth.user)
   const cart = useSelector(state => state.Customer.cart)
   const [isLoading, setLoading] = useState(false)
+  const [checkOutLoading, setCheckoutLoading] = useState(false)
   const [screenLoading, setScreenLoading] = useState(false)
   const renderCartItem = ({ item, index }) =>
     <CartItem
@@ -62,6 +64,7 @@ export default function ShoppingCart(props) {
         total: Number(cart.total) + Number(item.price),
         cartItems: items
       }))
+
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -147,6 +150,32 @@ export default function ShoppingCart(props) {
 
     }
   }
+  const onCheckoutPress = async () => {
+    if (cart?.cartItems.length > 0) {
+      setCheckoutLoading(true)
+      const orderId = firestore().collection('rnd').doc().id
+      let orderObj = {
+        ...cart,
+        status: OrderStatus.PLACED,
+        customerId: user.id,
+        id: orderId,
+      }
+      try {
+        await checkout(orderObj)
+        await clearCart()
+        dispatch(setCart({
+          cartItems: [],
+          itemCount: 0,
+          total: 0
+        }))
+        setCheckoutLoading(false)
+        props.navigation.goBack()
+      } catch (error) {
+        console.log(error.message)
+        setCheckoutLoading(false)
+      }
+    }
+  }
   return (
     <ScreenWrapper scrollEnabled headerUnScrollable={() =>
       <Header headerTitle={'Shopping Cart'}
@@ -174,10 +203,10 @@ export default function ShoppingCart(props) {
           <Text style={styles.whiteText}>${cart.total ?? 0}</Text>
         </View>
         <HorizontalLine lineColor={{ width: width(90), marginTop: 0 }} />
-        <Button title='Checkout' onPress={() => {
-          // props.navigation.navigate('SelectPaymentMethodShop')
-          alert('Under development')
-        }}
+        <Button
+          isLoading={checkOutLoading}
+          title='Checkout'
+          onPress={onCheckoutPress}
           containerStyle={{ width: width(90) }}
           gradientContainerStyle={{ borderRadius: width(3), paddingVertical: height(1.5) }} />
       </View>
