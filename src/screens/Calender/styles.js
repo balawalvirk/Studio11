@@ -4,8 +4,7 @@ import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
-    // flex: 1,
-    height: height(100),
+    flex: 1,
     alignItems: 'center',
     backgroundColor: AppColors.textColor,
   },
@@ -52,6 +51,10 @@ const styles = StyleSheet.create({
     height: height(5),
     flex: 1,
     paddingTop: height(5)
+  },
+  nameText: {
+    color: AppColors.primaryGold,
+    marginBottom: height(0.5)
   }
 });
 export default styles;

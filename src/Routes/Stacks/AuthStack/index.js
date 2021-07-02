@@ -6,11 +6,13 @@ import Register from '../../../screens/Register';
 import ResetPassword from '../../../screens/ResetPassword';
 import StaffLogin from '../../../screens/StaffLogin';
 import TermsConditions from '../../../screens/TermsConditions';
+import Splash from '../../../screens/Splash';
 
 const Stack = createStackNavigator();
 export function AuthStack() {
     return (
-        <Stack.Navigator initialRouteName="Login" headerMode="none">
+        <Stack.Navigator initialRouteName="Splash" headerMode="none">
+            <Stack.Screen name="Splash" component={Splash} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Dummy" component={Dummy} />
             <Stack.Screen name="Register" component={Register} />

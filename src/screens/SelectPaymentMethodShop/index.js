@@ -12,6 +12,7 @@ import PaymentCard from '../../components/PaymentCard';
 import { FlatList } from 'react-native-gesture-handler';
 import { cardsData } from '../../dummyData';
 export default function SelectPaymentMethodShop(props) {
+  const { product, quantity } = props.route.params
   const [modalVisible, setModalVisible] = useState(false);
   const [master, setmaster] = useState(false);
   const [paypal, setpaypal] = useState(false);
@@ -40,7 +41,6 @@ export default function SelectPaymentMethodShop(props) {
       headerUnScrollable={() => <Header headerTitle={'Select Payment Method'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />
       }>
       <View style={styles.mainViewContainer}>
-
         <FlatList
           ListHeaderComponent={() => <PaymentCard disabled textStyle={{ color: AppColors.white50 }}
             cardTitle={'Account Tile'}
@@ -57,15 +57,20 @@ export default function SelectPaymentMethodShop(props) {
           />}
         />
         <HorizontalLine />
-        <Button containerStyle={{
-          paddingVertical: height(2), width: '80%',
-        }} title={'Proceed'}
+        <Button
+          containerStyle={{
+            width: width(80),
+          }}
+          title={'Proceed'}
           onPress={() => openModal()}
           gradientContainerStyle={{ borderRadius: width(3), paddingVertical: height(1.5) }}
         />
       </View>
-      <CustomModal isVisible={modalVisible} onClose={() => setModalVisible(false)}
-        iconName={"checkcircle"} description={'Your order has been successfully placed.'} />
+      <CustomModal
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        iconName={"checkcircle"}
+        description={'Your order has been successfully placed.'} />
     </ScreenWrapper>
   );
 };

@@ -235,9 +235,13 @@ export default function ProductDetails(props) {
             <Button
               title="Buy now"
               containerStyle={styles.buyBtn}
-              onPress={() =>
-                props.navigation.navigate('SelectPaymentMethodShop')
-              }
+              onPress={() => {
+                if (quantity < 1) {
+                  alert('Please select quantity')
+                  return
+                }
+                props.navigation.navigate('SelectPaymentMethodShop', { quantity: quantity, product: product })
+              }}
             />
             <Button
               planButton

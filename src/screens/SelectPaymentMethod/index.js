@@ -24,17 +24,15 @@ export default function SelectPaymentMethod(props) {
       props.navigation.navigate('Dashboard');
     }, 5000)
   }
-  const renderItem = ({ item, index }) => {
-    return (
-      <PaymentCard
-        onPress={() => setSelectedIndex(index)}
-        cardTitle={item.cardTitle}
-        textStyle={{ color: AppColors.white50 }}
-        cardImage={item.cardImage}
-        iconName={selectedIndex == index ? 'radio-btn-active' : 'radio-btn-passive'}
-      />
-    )
-  }
+  const renderItem = ({ item, index }) =>
+    <PaymentCard
+      onPress={() => setSelectedIndex(index)}
+      cardTitle={item.cardTitle}
+      textStyle={{ color: AppColors.white50 }}
+      cardImage={item.cardImage}
+      iconName={selectedIndex == index ? 'radio-btn-active' : 'radio-btn-passive'}
+    />
+
   return (
     <ScreenWrapper transclucent statusBarColor={AppColors.transparent}
       headerUnScrollable={() => <Header headerTitle={'Select Payment Method'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />
@@ -57,10 +55,17 @@ export default function SelectPaymentMethod(props) {
           />}
         />
         <HorizontalLine />
-        <Button containerStyle={{ paddingVertical: height(2), width: '80%', borderRadius: width(4) }} title={'Proceed'} onPress={() => openModal()} />
+        <Button
+          containerStyle={styles.proceedBtn}
+          inputStyle={{ height: 'auto' }}
+          title={'Proceed'}
+          onPress={() => openModal()} />
       </View>
-      <CustomModal isVisible={modalVisible} onClose={() => setModalVisible(false)}
-        iconName={"checkcircle"} description={'Your appointment have been sent to the barber successfully.'} />
+      <CustomModal
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        iconName={"checkcircle"}
+        description={'Your appointment have been sent to the barber successfully.'} />
     </ScreenWrapper>
   );
 };

@@ -4,10 +4,12 @@ import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
-    height: height(100),
+    height: height(90),
     alignItems: 'center',
+    width: width(100),
+    justifyContent: 'center',
     backgroundColor: AppColors.textColor,
-    paddingTop: height(4),
+
   },
   suggestionImage: {
     width: width(50),
@@ -32,15 +34,11 @@ const styles = StyleSheet.create({
   suggestionLabel: {
     color: AppColors.white50,
     fontSize: width(4),
-    marginLeft:width(3),
-    marginBottom:width(2),
+    marginLeft: width(3),
+    marginBottom: width(2),
   },
   longInputStyle: {
-    borderColor: AppColors.primaryGold,
-    borderRadius: width(4),
-    borderWidth: width(0.25),
-    color: AppColors.white,
-    paddingHorizontal:width(3)
+
   }
 
 });

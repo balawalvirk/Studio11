@@ -85,8 +85,16 @@ export default function BarberHomeScreen(props) {
   }, []);
   const getTodaysAppointments = async () => {
     try {
+      let todaysAppointments = []
       const appts = await getAppointments(UserTypes.BARBER)
-      setAppointments(appts)
+      const today = moment().format('DD-MM-YYYY')
+      appts.map(item => {
+        const apptDate = moment(item?.dateMoment.toDate()).format('DD-MM-YYYY')
+        if (apptDate == today) {
+          todaysAppointments.push(item)
+        }
+      })
+      setAppointments(todaysAppointments)
     } catch (error) {
       error.message
     }
@@ -256,7 +264,7 @@ export default function BarberHomeScreen(props) {
       <View style={styles.mainViewContainer}>
         <WelcomeBarberText
           date={dateTimeString}
-          appointments={'6'}
+          appointments={appointments.length}
         />
         <HorizontalLine lineColor={{ width: width(90), marginTop: height(2) }} />
         {workBreak ? (
@@ -284,9 +292,9 @@ export default function BarberHomeScreen(props) {
         )}
         <HorizontalLine lineColor={{ width: width(90) }} />
         <View style={styles.textRow}>
-          <Text style={styles.whiteText}>Today's Schedule (9 AM - 10 AM)</Text>
+          <Text style={styles.whiteText}>Todays Appointments</Text>
           <HighlightedText
-            text={'View all for today'}
+            text={'View All'}
             containerStyle={styles.yellowText}
             onPress={() => props.navigation.navigate('TodaysAppointmentBarber')}
           />

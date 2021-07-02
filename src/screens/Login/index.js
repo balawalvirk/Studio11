@@ -63,61 +63,7 @@ export default function Login(props) {
     return valid;
   };
 
-  async function onAuthStateChanged(user) {
-    if (user) {
-      const userObj = await getData('Users', user.uid);
-      dispatch(setCustomerType(userObj?.Type));
-      console.log('USER LOGGED IN ', userObj?.Type);
 
-      if (userObj?.Type == UserTypes.BARBER) {
-        const items = await getItemsById();
-        const videos = await getVideosById();
-        const cuttings = await getCuttingsById();
-        const { breakTime } = userObj
-        dispatch(setItems(items));
-        dispatch(setCuttings(cuttings));
-        dispatch(setVideos(videos));
-        if (breakTime) {
-          dispatch(login({
-            ...userObj,
-            breakTime: {
-              fromMoment: breakTime?.fromMoment,
-              toMoment: breakTime?.toMoment,
-              to: breakTime.to,
-              from: breakTime.from
-            }
-          }));
-        } else {
-          dispatch(login({
-            ...userObj,
-          }));
-        }
-      } else if (userObj?.Type == UserTypes.CUSTOMER) {
-        let cartItems = []
-        const cartData = await getData('Cart', auth().currentUser.uid)
-        const appointments = await getAppointments()
-        const snapshot = await firestore().collection('Cart').doc(auth().currentUser.uid).collection('Cart').get()
-        snapshot.forEach(doc => {
-          cartItems.push(doc.data())
-        })
-        dispatch(setAppointments(appointments))
-        if (cartData) {
-          dispatch(setCart({
-            ...cartData,
-            cartItems,
-          }))
-        }
-        dispatch(login(userObj));
-      }
-    } else {
-      console.log('USER NOT LOGGED IN');
-
-    }
-  }
-  useEffect(() => {
-    window.subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
   const _login = async () => {
     if (checkEmail()) {
       if (checkPassword()) {

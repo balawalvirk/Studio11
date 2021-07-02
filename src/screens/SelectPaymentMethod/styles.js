@@ -9,6 +9,11 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.textColor,
     paddingTop: height(4),
   },
-
+  proceedBtn: {
+    paddingVertical: height(2),
+    width: '80%',
+    borderRadius: width(4),
+    height: 'auto'
+  }
 });
 export default styles;

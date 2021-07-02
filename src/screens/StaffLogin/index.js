@@ -74,8 +74,8 @@ export default function StaffLogin(props) {
                 dispatch(login({
                   ...user,
                   breakTime: {
-                    fromMoment: breakTime?.fromMoment?.toDate(),
-                    toMoment: breakTime?.toMoment?.toDate(),
+                    fromMoment: breakTime?.fromMoment,
+                    toMoment: breakTime?.toMoment,
                     to: breakTime.to,
                     from: breakTime.from
                   }

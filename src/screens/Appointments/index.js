@@ -1,17 +1,28 @@
-import React from 'react';
-import { View, FlatList } from 'react-native';
-import styles from './styles';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { FlatList, View } from 'react-native';
+import { height } from 'react-native-dimension';
 import AppointmentCard from '../../components/AppointmentCard';
 import Header from '../../components/Header';
-import HorizontalLine from '../../components/HorizontalLine';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { height } from 'react-native-dimension';
+import { getAppointments } from '../../firebaseConfig';
 import AppColors from '../../utills/AppColors';
-import { Appointmentslist } from '../../dummyData';
-import { useSelector } from 'react-redux';
-import moment from 'moment';
+import { UserTypes } from '../../utills/Enums';
+import styles from './styles';
 export default function Appointments(props) {
-  const appointments = useSelector(state => state.Customer.appointments)
+  const [appointments, setAppointments] = useState([])
+  useEffect(() => {
+    loadData()
+
+  }, [])
+  const loadData = async () => {
+    try {
+      const appointments = await getAppointments(UserTypes.CUSTOMER)
+      setAppointments(appointments)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
   const getDaysLeft = (dateMoment) => {
     const apptDate = dateMoment.toDate()
     const duration = moment.duration(moment(apptDate).diff(moment())).asDays().toFixed(0)
@@ -45,7 +56,6 @@ export default function Appointments(props) {
           keyExtractor={item => item.id}
           renderItem={renderAppointment}
         />
-
       </View>
     </ScreenWrapper>
   );

@@ -14,6 +14,7 @@ const ScreenWrapper = ({
   barStyle = "light-content",
   headerUnScrollable = () => null,
   footerUnScrollable = () => null,
+  hideStatus = false
 }) => {
   function FocusAwareStatusBar(props) {
     const isFocused = useIsFocused();

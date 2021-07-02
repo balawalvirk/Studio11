@@ -34,7 +34,7 @@ export default function BarberNotifications(props) {
     </View>
 
   return (
-    <ScreenWrapper scrollEnabled transclucent statusBarColor={AppColors.transparent}
+    <ScreenWrapper transclucent statusBarColor={AppColors.transparent}
       headerUnScrollable={() => <Header leadingIcon={'menu'}
         onPressLeadingIcon={() => props.navigation.openDrawer()} headerTitle={'Notifications'} />}>
       <View style={styles.mainViewContainer}>

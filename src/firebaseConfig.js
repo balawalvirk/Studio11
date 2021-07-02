@@ -627,6 +627,58 @@ export async function getAppointments(type = UserTypes.CUSTOMER) {
     console.log(error.message);
   }
 }
+export async function getAppointmentsByDate(type = UserTypes.CUSTOMER, date) {
+  const userId = auth().currentUser.uid
+  try {
+    let aptmnts = []
+    const snapshot = await firestore()
+      .collection('Appointments')
+      .where(type == UserTypes.CUSTOMER ? 'customerId' : 'barberId', '==', userId)
+      .where('status', '!=', AppointmentStatus.CANCELLED)
+      .where('dateMoment', '==', date)
+      .get()
+    snapshot.forEach(doc => {
+      aptmnts.push(doc.data())
+    })
+    return aptmnts
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getCompletedAppointments(type = UserTypes.CUSTOMER) {
+  const userId = auth().currentUser.uid
+  try {
+    let aptmnts = []
+    const snapshot = await firestore()
+      .collection('Appointments')
+      .where(type == UserTypes.CUSTOMER ? 'customerId' : 'barberId', '==', userId)
+      .where('status', '==', AppointmentStatus.COMPLETED)
+      .get()
+    snapshot.forEach(doc => {
+      aptmnts.push(doc.data())
+    })
+    return aptmnts
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getCancelledAppointments(type = UserTypes.CUSTOMER) {
+  const userId = auth().currentUser.uid
+  try {
+    let aptmnts = []
+    const snapshot = await firestore()
+      .collection('Appointments')
+      .where(type == UserTypes.CUSTOMER ? 'customerId' : 'barberId', '==', userId)
+      .where('status', '==', AppointmentStatus.CANCELLED)
+      .get()
+    snapshot.forEach(doc => {
+      aptmnts.push(doc.data())
+    })
+    return aptmnts
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 export async function setChatRoom(roomObj) {
   try {
     await database()

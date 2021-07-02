@@ -1,20 +1,18 @@
-import React, { useCallback, useState } from 'react';
-import { View, FlatList, Text, TouchableOpacity, Alert } from 'react-native';
-import styles from './styles';
-import Header from '../../components/Header';
-import { useDispatch, useSelector } from 'react-redux';
-import ScreenWrapper from '../../components/ScreenWrapper';
-import AppColors from '../../utills/AppColors';
-import HorizonLine from '../../components/HorizontalLine';
-import { height, width } from 'react-native-dimension';
-import CalendarStrip from 'react-native-calendar-strip';
-import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import moment from 'moment';
-import ScheduledAppointmentCard from '../../components/ScheduledAppointmentCard';
-import ScheduleCard from '../../components/ScheduleCard';
-import { counterEvent } from 'react-native/Libraries/Performance/Systrace';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { Agenda } from 'react-native-calendars';
+import { height, width } from 'react-native-dimension';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import Header from '../../components/Header';
 import HighlightedText from '../../components/HighlightedText';
+import HorizonLine from '../../components/HorizontalLine';
+import ScreenWrapper from '../../components/ScreenWrapper';
+import { getAppointments } from '../../firebaseConfig';
+import AppColors from '../../utills/AppColors';
+import { UserTypes } from '../../utills/Enums';
+import styles from './styles';
 export default function Calender(props) {
   const user = useSelector((state) => state.Auth.user);
   const [items, setItems] = useState({});
@@ -40,53 +38,38 @@ export default function Calender(props) {
       timeLeft: '3 days left',
     }
   ];
-  const loadItems = (day) => {
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = timeToString(time);
-        if (!items[strTime]) {
-          items[strTime] = [];
-          const numItems = Math.floor(Math.random() * 3 + 1);
-          for (let j = 0; j < numItems; j++) {
-            items[strTime].push({
-              name: 'Item for ' + strTime + ' #' + j,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            });
-          }
-        }
-      }
-      const newItems = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
-      });
-      setItems(newItems
-      );
-    }, 1000);
+  useEffect(() => {
+    loadData()
+  }, [])
+  const loadData = async () => {
+    try {
+      const appointments = await getAppointments(UserTypes.BARBER)
+      let obj = {}
+      appointments.map(item => {
+        obj[moment(item.dateMoment.toDate()).format('YYYY-MM-DD')] = appointments.filter(obj => moment(obj.dateMoment.toDate()).format('YYYY-MM-DD') == moment(item.dateMoment.toDate()).format('YYYY-MM-DD'))
+      })
+      setItems(obj)
+    } catch (error) {
+      console.log(error.message)
+    }
   }
-  const renderItem = (item) => {
-    return (
-      <TouchableOpacity
-        testID={'testIDs.agenda.ITEM'}
-        style={[styles.item]}
-        onPress={() => {
-          setiselected(isSelected => !isSelected);
-        }}
-      >
-        <View>
-          <HighlightedText text='Carter Keebler' />
-          <Text style={{ color: AppColors.white50 }}>9:19 PM</Text>
-          <Text style={{ color: AppColors.white50 }}>{item.name}</Text>
-        </View>
-
-        <Icon style={styles.checkIcon}
-          name={isSelected ? 'check-box-outline' : 'checkbox-blank-outline'}
-        />
-
-
-      </TouchableOpacity>
-    );
-  }
+  const renderItem = (item) =>
+    <TouchableOpacity
+      testID={'testIDs.agenda.ITEM'}
+      style={[styles.item]}
+      onPress={() => {
+        setiselected(isSelected => !isSelected);
+      }}
+    >
+      <View>
+        <Text style={styles.nameText}>{item?.customerDetails?.FirstName + ' ' + item?.customerDetails?.LastName}</Text>
+        <Text style={{ color: AppColors.white50 }}>{moment(item?.dateMoment.toDate()).format('h:mm a')}</Text>
+        <Text style={{ color: AppColors.white50 }}>{item?.notes}</Text>
+      </View>
+      {/* <Icon style={styles.checkIcon}
+        name={isSelected ? 'check-box-outline' : 'checkbox-blank-outline'}
+      /> */}
+    </TouchableOpacity>
 
   const renderEmptyDate = () => {
     return (
@@ -108,15 +91,17 @@ export default function Calender(props) {
     return <Agenda
       testID={'testIDs.agenda.CONTAINER'}
       items={items}
-      loadItemsForMonth={loadItems}
-      selected={'2021-05-25'}
-      // pastScrollRange={1}
-      // minDate={moment()}
-      // futureScrollRange={1}
+      // loadItemsForMonth={loadItems}
+      selected={moment().format('YYYY-MM-DD')}
+      // markedDates={{
+      //   [moment().format('YYYY-MM-DD')]: { selected: true, marked: true },
+      // }}
       renderItem={renderItem}
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}
       markingType='custom'
+      hideKnob={false}
+      showClosingKnob={true}
       theme={{
         calendarBackground: AppColors.headerColor, //
         agendaKnobColor: AppColors.primaryGold, //agenda knob color where we can drag calender
@@ -135,43 +120,17 @@ export default function Calender(props) {
         backgroundColor: AppColors.textColor,
 
       }}
-      style={{ width: '100%' }}
+      style={{ width: '100%', }}
     />
   }, [items, isSelected])
   return (
-    <ScreenWrapper transclucent statusBarColor={AppColors.transparent}
+    <ScreenWrapper
+      transclucent
+      statusBarColor={AppColors.transparent}
       headerUnScrollable={() => <Header headerTitle={'Calender'} leadingIcon={'menu'}
         onPressLeadingIcon={() => props.navigation.openDrawer()} />}>
       <View style={styles.mainViewContainer}>
-        <View style={{ width: '100%', height: '100%' }}>
-          {CustomAgenda()}
-        </View>
-        <HorizonLine lineColor={{ width: width(90) }} />
-        <View style={styles.headingContainer}>
-          <Text style={styles.whiteText}>
-            Friday, 30 May, 2021  ({scheduledAppointments.length})
-          </Text>
-        </View>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={scheduledAppointments}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => {
-            return (
-              <ScheduleCard
-                scheuledCardStyle={{ width: width(90) }}
-                // onpressScheuledCard={() => props.navigation.navigate('CustomerAppoinmentBarber')}
-                barberName={item.barberName}
-                cuttingName={item.cuttingName}
-                scheduledTime={item.scheduledTime}
-                additionalNotes={item.Notes}
-                timeLeft={item.timeLeft}
-                appointmentImage={item.appointmentImage}
-              // onpressMessage={() => props.navigation.navigate('Chat')}
-              />
-            );
-          }}
-        />
+        {CustomAgenda()}
       </View>
 
     </ScreenWrapper>
