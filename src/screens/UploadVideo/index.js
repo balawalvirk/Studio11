@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import React, { useState } from 'react';
-import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native';
+import { Text, Image, TouchableOpacity, View } from 'react-native';
 import { height, width } from 'react-native-dimension';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -12,10 +12,12 @@ import Header from '../../components/Header';
 import HighlightedText from '../../components/HighlightedText';
 import InputField from '../../components/InputField';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { saveData, uploadImage } from '../../firebaseConfig';
+import { saveData } from '../../firebaseConfig';
 import { setVideos } from '../../Redux/Actions/Barber';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
+import * as Progress from 'react-native-progress';
+import storage from '@react-native-firebase/storage'
 export default function UploadVideo(props) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.Auth.user);
@@ -35,6 +37,36 @@ export default function UploadVideo(props) {
   // **************************************
   const [titleError, setTitleError] = useState('');
   const [descError, setDescError] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [progressMessage, setProgressMessage] = useState('');
+  async function uploadImage(uri, path, progressMessage) {
+    try {
+      setProgressMessage(progressMessage)
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const ref = storage().ref(path);
+      const task = ref.put(blob);
+      return new Promise((resolve, reject) => {
+        task.on(
+          'state_changed',
+          snapshot => {
+            let progress = (snapshot.bytesTransferred / snapshot.totalBytes);
+            setProgress(progress)
+            console.log(progress)
+          },
+          (err) => {
+            reject(err);
+          },
+          async () => {
+            const url = await task.snapshot.ref.getDownloadURL();
+            resolve(url);
+          },
+        );
+      });
+    } catch (err) {
+      console.log('uploadImage error: ' + err.message);
+    }
+  }
   const publishVideo = async () => {
     try {
       if (!capturedVideo) {
@@ -57,8 +89,9 @@ export default function UploadVideo(props) {
       const thumbnailURL = await uploadImage(
         capturedThumbnail,
         'VIDEO_THUMBS/' + thumbnailName,
+        'Uploading Thumbnail...'
       );
-      const videoUrl = await uploadImage(capturedVideo, 'VIDEOS/' + videoName);
+      const videoUrl = await uploadImage(capturedVideo, 'VIDEOS/' + videoName, 'Uploading Video...');
       const videoId = firestore().collection('rnd').doc().id;
       const newVideo = {
         Id: videoId,
@@ -98,7 +131,10 @@ export default function UploadVideo(props) {
       <View style={styles.mainViewContainer}>
         <View style={styles.bringCenter}>
           {waiting ? (
-            <ActivityIndicator size="large" color={AppColors.primaryGold} />
+            <>
+              <Text style={styles.progText}>{(progress * 100).toFixed(0)}% {progressMessage}</Text>
+              <Progress.Pie progress={progress} size={100} color={AppColors.primaryGold} />
+            </>
           ) : (
             <>
               <View style={styles.flexRow}>
@@ -200,7 +236,10 @@ export default function UploadVideo(props) {
         iconName={'camera'}
         labelName={'Add Thumbnail'}
         imageFromCamera={() =>
-          ImagePicker.openCamera({}).then((image) => {
+          ImagePicker.openCamera({
+            mediaType: 'photo',
+            compressImageQuality: 0.2
+          }).then((image) => {
             setcapturedThumbnail(image.path);
             setThumbnailName(image.path.split('/').pop());
             setThumbnailModelView(false);
@@ -208,7 +247,10 @@ export default function UploadVideo(props) {
           })
         }
         imageFromGallery={() =>
-          ImagePicker.openPicker({}).then((image) => {
+          ImagePicker.openPicker({
+            mediaType: 'photo',
+            compressImageQuality: 0.2
+          }).then((image) => {
             setcapturedThumbnail(image.path);
             setThumbnailName(image.path.split('/').pop());
             setThumbnailModelView(false);

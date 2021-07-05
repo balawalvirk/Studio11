@@ -177,7 +177,7 @@ export default function Register(props) {
           }}
           // onBlur={()=>}
           label={'Email'}
-          placeholder={'Enter your Email'}
+          placeholder={'name@email.com'}
           fielderror={emailerror}
         />
         <InputField
@@ -189,7 +189,7 @@ export default function Register(props) {
             // { (password.length < 7) ? setpassworderror('invalid password') : setpassworderror('') }
           }}
           label={'Password'}
-          placeholder={'Enter your Password'}
+          placeholder={'******'}
           fielderror={passworderror}
         />
         <View>

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.5",
+    "@react-native-community/art": "^1.2.0",
     "@react-native-community/datetimepicker": "^3.5.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/app": "^12.0.0",
@@ -39,6 +40,7 @@
     "react-native-modal": "^11.10.0",
     "react-native-modal-datetime-picker": "^10.0.0",
     "react-native-modal-dropdown": "https://github.com/siemiatj/react-native-modal-dropdown",
+    "react-native-progress": "^4.1.2",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.15.0",

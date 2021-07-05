@@ -14,6 +14,8 @@ import AppColors from '../../utills/AppColors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Button from '../../components/Button';
 import Thumbnail from '../../components/Thumbnail';
+import Feather from 'react-native-vector-icons/Feather'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 export default function ProfileBarber(props) {
   const user = useSelector((state) => state.Auth.user);
   const videos = useSelector((state) => state.Barber.videos);
@@ -35,7 +37,15 @@ export default function ProfileBarber(props) {
       cuttingImage={{ uri: item.CuttingImage }}
       cuttingTitle={item.CuttingTitle}
     />
-
+  const renderOrderIcon = () =>
+    <TouchableOpacity
+      onPress={() => props.navigation.navigate('TrackOrder')}
+      style={styles.icon}>
+      <Feather
+        name="box"
+        style={styles.renderedIcons}
+      />
+    </TouchableOpacity>
   return (
     <ScreenWrapper
       scrollEnabled
@@ -43,12 +53,15 @@ export default function ProfileBarber(props) {
         <Header
           headerTitle={'Profile'}
           leadingIcon={'menu'}
+          renderTrackOrder={renderOrderIcon}
           renderIconRight={() => (
-            <MaterialCommunityIcons
-              name="pencil"
-              onPress={() => props.navigation.navigate('EditProfileBarber')}
-              style={{ fontSize: width(5), color: AppColors.primaryGold }}
-            />
+            <View style={styles.icon}>
+              <MaterialCommunityIcons
+                name="pencil"
+                onPress={() => props.navigation.navigate('EditProfileBarber')}
+                style={styles.renderedIcons}
+              />
+            </View>
           )}
           onPressLeadingIcon={() => props.navigation.openDrawer()}
         />

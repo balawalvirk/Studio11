@@ -157,7 +157,7 @@ export default function StaffLogin(props) {
               }}
               fielderror={emailError}
               label={'Username'}
-              placeholder={'Enter you Email'}
+              placeholder={'name@email.com'}
             />
             <InputField
               secureTextEntry
@@ -168,7 +168,7 @@ export default function StaffLogin(props) {
               }}
               fielderror={passwordError}
               label={'Password'}
-              placeholder={'Enter you Password'}
+              placeholder={'******'}
             />
             <View style={styles.RowafterInputField}>
               <HighlightedText

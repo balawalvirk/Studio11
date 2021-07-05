@@ -819,4 +819,34 @@ export async function getCustomerPastOrders() {
     console.log(error.message);
   }
 }
+export async function getBarberOngoingOrders() {
+  const userId = auth().currentUser.uid
+  try {
+    let orders = []
+    const snapshot = await firestore()
+      .collection('Orders')
+      .where('barberId', '==', userId)
+      .where('status', 'not-in', [OrderStatus.COMPLETED, OrderStatus.CANCELLED])
+      .get()
+    snapshot.forEach(doc => orders.push(doc.data()))
+    return orders
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+export async function getBarberPastOrders() {
+  const userId = auth().currentUser.uid
+  try {
+    let orders = []
+    const snapshot = await firestore()
+      .collection('Orders')
+      .where('barberId', '==', userId)
+      .where('status', '==', OrderStatus.COMPLETED)
+      .get()
+    snapshot.forEach(doc => orders.push(doc.data()))
+    return orders
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 export default firebase;

@@ -79,5 +79,16 @@ const styles = StyleSheet.create({
         marginBottom: height(3),
         marginTop: height(1)
     },
+    plainBtn: {
+        backgroundColor: AppColors.gray,
+        elevation: 3,
+        width: width(30)
+    },
+    flexRow: {
+        flexDirection: 'row',
+        // alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: height(2)
+    }
 });
 export default styles;

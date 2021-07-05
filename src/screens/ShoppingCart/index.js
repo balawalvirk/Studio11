@@ -153,27 +153,47 @@ export default function ShoppingCart(props) {
   const onCheckoutPress = async () => {
     if (cart?.cartItems.length > 0) {
       setCheckoutLoading(true)
-      const orderId = firestore().collection('rnd').doc().id
-      let orderObj = {
-        ...cart,
-        status: OrderStatus.PLACED,
-        customerId: user.id,
-        id: orderId,
+      let barbers = []
+      cart?.cartItems.map((item, index) => {
+        barbers.push(item.userId)
+      })
+      barbers = [...new Set(barbers)]
+      let obj = {}
+      barbers.map(item => {
+        obj[item] = cart.cartItems.filter(element => element.userId == item)
+      })
+      // Object.keys(obj).map(async (item, index) => {
+      for (let key in obj) {
+        const orderId = firestore().collection('rnd').doc().id
+        const orderObj = {
+          id: orderId,
+          customerId: auth().currentUser.uid,
+          barberId: key,
+          cartItems: obj[key],
+          itemCount: obj[key].length,
+          status: OrderStatus.PLACED,
+        }
+        let total = 0
+        obj[key].map(cartItem => {
+          total = total + (cartItem.price * cartItem.quantity)
+        })
+        orderObj.total = total
+        try {
+          await checkout(orderObj)
+          await clearCart()
+          dispatch(setCart({
+            cartItems: [],
+            itemCount: 0,
+            total: 0
+          }))
+          setCheckoutLoading(false)
+          props.navigation.goBack()
+        } catch (error) {
+          console.log(error.message)
+          setCheckoutLoading(false)
+        }
       }
-      try {
-        await checkout(orderObj)
-        await clearCart()
-        dispatch(setCart({
-          cartItems: [],
-          itemCount: 0,
-          total: 0
-        }))
-        setCheckoutLoading(false)
-        props.navigation.goBack()
-      } catch (error) {
-        console.log(error.message)
-        setCheckoutLoading(false)
-      }
+      // })
     }
   }
   return (

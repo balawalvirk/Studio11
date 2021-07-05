@@ -3,8 +3,15 @@ import { height, totalSize, width } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
-    container: {
+    mainContainer: {
         flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignSelf: 'flex-end'
+    },
+    container: {
+        // flex: 1,
+        alignSelf: 'flex-end',
         paddingHorizontal: width(2),
     },
     avatarImg: {
@@ -23,6 +30,9 @@ const styles = StyleSheet.create({
     textContainer: {
         paddingHorizontal: width(4),
         paddingVertical: height(1.5),
+    },
+    contentContainer: {
+        justifyContent: 'flex-end'
     },
 
     ///////MESSAGE STYLES

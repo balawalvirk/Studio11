@@ -54,6 +54,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: height(90)
   },
-
+  progText: {
+    color: AppColors.primaryGold,
+    marginBottom: height(2),
+    textAlign: 'center',
+    alignSelf: 'center'
+  }
 });
 export default styles;

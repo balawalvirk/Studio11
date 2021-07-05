@@ -9,6 +9,8 @@ import ChatListBarber from '../../screens/ChatListBarber';
 import Calender from '../../screens/Calender';
 import BarberNotifications from '../../screens/BarberNotifications';
 import ProfileBarber from '../../screens/ProfileBarber';
+import TrackOrder from '../../screens/TrackOrder';
+import OrderDetails from '../../screens/OrderDetails';
 
 const Tab = createBottomTabNavigator();
 const BarberStack = createStackNavigator();
@@ -52,6 +54,8 @@ function BarberProfileStackScreen() {
       })
     }} >
       <BarberProfileStack.Screen name="ProfileBarberTab" component={ProfileBarber} />
+      <BarberProfileStack.Screen name="TrackOrder" component={TrackOrder} />
+      <BarberProfileStack.Screen name="OrderDetails" component={OrderDetails} />
     </BarberProfileStack.Navigator>
   );
 }

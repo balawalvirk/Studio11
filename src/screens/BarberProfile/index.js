@@ -100,7 +100,7 @@ export default function BarberProfile(props) {
   const openCamera = () => {
     ImagePicker.openCamera({
       mediaType: 'photo',
-      compressImageQuality: 0.5,
+      compressImageQuality: 0.2,
     }).then((image) => {
       setReviewImg(image.path);
       setCameraModal(false);

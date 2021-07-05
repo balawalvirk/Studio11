@@ -48,9 +48,7 @@ export default function Messages(props) {
               {item.lastMessage != '' && <Text style={styles.messageText}>{item.lastMessage}</Text>}
             </View>
           </View>
-          <View style={styles.messageTime}>
-            <Text style={styles.messageTimeText}>{moment(item.lastUpdated).format('hh:mm a')}</Text>
-          </View>
+          <Text style={styles.messageTimeText}>{moment(item.lastUpdated).format('h:mm a')}</Text>
         </View>
         <HorizontalLine lineWidth={styles.HorizontalLine100} />
       </TouchableOpacity>

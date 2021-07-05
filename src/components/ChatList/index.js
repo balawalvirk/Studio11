@@ -24,13 +24,16 @@ export default React.forwardRef(({
         )
     }
     return (
-        <FlatList
-            onLayout={() => ref.current.scrollToEnd()}
-            ref={ref}
-            style={styles.container}
-            data={messages}
-            renderItem={renderMessage}
-            keyExtractor={item => item.id}
-        />
+        <View style={styles.mainContainer}>
+            <FlatList
+                onLayout={() => ref.current.scrollToEnd()}
+                ref={ref}
+                style={styles.container}
+                contentContainerStyle={styles.contentContainer}
+                data={messages}
+                renderItem={renderMessage}
+                keyExtractor={item => item.id}
+            />
+        </View>
     );
 })

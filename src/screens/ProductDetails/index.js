@@ -18,11 +18,12 @@ import PostReview from '../../components/PostReview';
 import ReviewCard from '../../components/ReviewCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import { reviewList } from '../../dummyData';
-import { getItemsById, postProductReview, saveData } from '../../firebaseConfig';
+import { checkout, getItemsById, postProductReview, saveData } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import { setItems } from '../../Redux/Actions/Barber';
 import { setCart } from '../../Redux/Actions/Customer';
 import AppColors from '../../utills/AppColors';
+import { OrderStatus } from '../../utills/Enums';
 import styles from './styles';
 export default function ProductDetails(props) {
   const user = useSelector((state) => state.Auth.user);
@@ -39,6 +40,8 @@ export default function ProductDetails(props) {
   const [reviewErr, setReviewErr] = useState('');
   const [reviewImg, setReviewImg] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [buyNowLoading, setBuyNowLoading] = useState(false);
+
   useEffect(() => {
     loadData()
     console.log(cart)
@@ -101,6 +104,7 @@ export default function ProductDetails(props) {
       }
     }
     try {
+
       setCartLoading(true)
       let newProduct = {
         ...product,
@@ -209,6 +213,32 @@ export default function ProductDetails(props) {
       setPostLoading(false);
     }
   };
+
+  const onBuyNowPress = async () => {
+    if (quantity < 1) {
+      alert('Please select quantity')
+      return
+    }
+    try {
+      setBuyNowLoading(true)
+      const orderId = firestore().collection('rnd').doc().id
+      const orderObj = {
+        id: orderId,
+        customerId: auth().currentUser.uid,
+        barberId: product?.userId,
+        cartItems: [product],
+        itemCount: 1,
+        status: OrderStatus.PLACED,
+        total: Number(product?.price) * Number(quantity)
+      }
+      await saveData('Orders', orderId, orderObj)
+      setBuyNowLoading(false)
+      props.navigation.navigate('TrackOrder')
+    } catch (error) {
+      console.log(error.message)
+      setBuyNowLoading(false)
+    }
+  }
   return (
     <ScreenWrapper
       scrollEnabled
@@ -233,15 +263,10 @@ export default function ProductDetails(props) {
           </View>
           <View style={styles.buttonRow}>
             <Button
+              isLoading={buyNowLoading}
               title="Buy now"
               containerStyle={styles.buyBtn}
-              onPress={() => {
-                if (quantity < 1) {
-                  alert('Please select quantity')
-                  return
-                }
-                props.navigation.navigate('SelectPaymentMethodShop', { quantity: quantity, product: product })
-              }}
+              onPress={onBuyNowPress}
             />
             <Button
               planButton

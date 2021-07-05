@@ -48,8 +48,9 @@ const styles = StyleSheet.create({
   },
   messageTimeText: {
     color: AppColors.white50,
-    fontSize: width(4),
+    fontSize: width(3.2),
     textAlign: 'center',
+    alignSelf: 'center'
   },
   HorizontalLine100: {
     width: width(100),

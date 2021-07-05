@@ -7,23 +7,37 @@ import OrderStatusComponent from '../../components/OrderStatusComponent';
 import AppColors from '../../utills/AppColors';
 import styles from './styles';
 import { height } from 'react-native-dimension';
-import { getCustomerOngoingOrders, getCustomerPastOrders } from '../../firebaseConfig';
-import { OrderStatus } from '../../utills/Enums';
+import { getBarberOngoingOrders, getBarberPastOrders, getCustomerOngoingOrders, getCustomerPastOrders } from '../../firebaseConfig';
+import { OrderStatus, UserTypes } from '../../utills/Enums';
+import { useSelector } from 'react-redux';
 export default function TrackOrder(props) {
+    const user = useSelector(state => state.Auth.user)
     const [tabState, setTabState] = useState(0) //  0 => current 1 => past 
     const [pastOrders, setPastOrders] = useState([])
     const [onGoingOrders, setOnGoingOrders] = useState([])
+    const [isLoading, setLoading] = useState(true)
     useEffect(() => {
-        loadData()
+        const sub = props.navigation.addListener('focus', () => loadData())
     }, [])
     const loadData = async () => {
         try {
-            const onGoingOrders = await getCustomerOngoingOrders()
-            const pastOrders = await getCustomerPastOrders()
+            setLoading(true)
+            let onGoingOrders = []
+            let pastOrders = []
+            if (user?.Type == UserTypes.CUSTOMER) {
+                onGoingOrders = await getCustomerOngoingOrders()
+                pastOrders = await getCustomerPastOrders()
+            } else {
+                onGoingOrders = await getBarberOngoingOrders()
+                pastOrders = await getBarberPastOrders()
+                console.log(onGoingOrders)
+            }
             setOnGoingOrders(onGoingOrders)
             setPastOrders(pastOrders)
+            setLoading(false)
         } catch (error) {
             console.log(error.message)
+            setLoading(false)
         }
     }
     const Dash = ({ containerStyle }) => <View style={[styles.dash, containerStyle]} />
@@ -43,7 +57,10 @@ export default function TrackOrder(props) {
                 statusText = "Ready for shipment"
                 break
             case OrderStatus.DELIVERY:
-                statusText = "Ready for delivery"
+                statusText = "Out for delivery"
+                break
+            case OrderStatus.COMPLETED:
+                statusText = "Delivered"
                 break
         }
         return (
@@ -84,29 +101,34 @@ export default function TrackOrder(props) {
                 </>
             }
             statusBarColor={AppColors.transparent}>
-            {
-                tabState == 0 ?
-                    <View style={styles.mainViewContainer}>
-                        <FlatList
-                            data={onGoingOrders}
-                            renderItem={renderPastOrder}
-                            keyExtractor={item => item.id}
-                            ListEmptyComponent={renderEmpty}
-                            contentContainerStyle={{ marginTop: height(2) }}
-                            ItemSeparatorComponent={() => <Dash />}
-                        />
-                    </View> :
-                    <View style={styles.mainViewContainer}>
-                        <FlatList
-                            data={pastOrders}
-                            renderItem={renderPastOrder}
-                            keyExtractor={item => item.id}
-                            contentContainerStyle={{ marginTop: height(2) }}
-                            ItemSeparatorComponent={() => <Dash />}
-                            ListEmptyComponent={renderEmpty}
-                        />
-                    </View>
-            }
-        </ScreenWrapper>
+            {isLoading ?
+                <View style={styles.emptyContainer}>
+                    <ActivityIndicator size={'large'} color={AppColors.primaryGold} />
+                </View> :
+                <View>
+                    {tabState == 0 ?
+                        <View style={styles.mainViewContainer}>
+                            <FlatList
+                                data={onGoingOrders}
+                                renderItem={renderPastOrder}
+                                keyExtractor={item => item.id}
+                                ListEmptyComponent={renderEmpty}
+                                contentContainerStyle={{ marginTop: height(2) }}
+                                ItemSeparatorComponent={() => <Dash />}
+                            />
+                        </View> :
+                        <View style={styles.mainViewContainer}>
+                            <FlatList
+                                data={pastOrders}
+                                renderItem={renderPastOrder}
+                                keyExtractor={item => item.id}
+                                contentContainerStyle={{ marginTop: height(2) }}
+                                ItemSeparatorComponent={() => <Dash />}
+                                ListEmptyComponent={renderEmpty}
+                            />
+                        </View>
+                    }
+                </View>}
+        </ScreenWrapper >
     );
 };

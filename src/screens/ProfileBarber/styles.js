@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
-import {width, height} from 'react-native-dimension';
+import { width, height } from 'react-native-dimension';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
@@ -17,6 +17,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: height(2),
     marginVertical: height(3),
+  },
+  icon: { width: width(10), height: height(5), justifyContent: 'center' },
+  renderedIcons: {
+    fontSize: width(5),
+    color: AppColors.primaryGold
   },
   whiteText: {
     color: AppColors.white,

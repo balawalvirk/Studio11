@@ -126,13 +126,14 @@ export default function Shop(props) {
       />
     </View>
   const renderOrderIcon = () =>
-    <View style={styles.icon}>
+    <TouchableOpacity
+      onPress={() => props.navigation.navigate('TrackOrder')}
+      style={styles.icon}>
       <Feather
         name="box"
-        onPress={() => props.navigation.navigate('TrackOrder')}
         style={styles.renderedIcons}
       />
-    </View>
+    </TouchableOpacity>
 
   return (
     <ScreenWrapper
