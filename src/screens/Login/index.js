@@ -30,10 +30,10 @@ import { setAppointments, setCart } from '../../Redux/Actions/Customer';
 import { UserTypes } from '../../utills/Enums';
 import moment from 'moment';
 export default function Login(props) {
-  const [email, setemail] = useState('Customer@mail.com');
+  const [email, setemail] = useState('');
   const dispatch = useDispatch();
   const [emailError, setEmailError] = useState('');
-  const [password, setPassword] = useState('12345678');
+  const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isLoading, setLoading] = useState(false);
 

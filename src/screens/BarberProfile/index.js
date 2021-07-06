@@ -208,6 +208,9 @@ export default function BarberProfile(props) {
         />
       )}
       transclucent
+      enableOnAndroid
+      extraScrollHeight={height(14)}
+      extraHeight={height(25)}
       statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>
         <View style={styles.ProfileDetail}>

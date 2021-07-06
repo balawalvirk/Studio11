@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: width(5),
     borderTopRightRadius: width(5),
     borderTopLeftRadius: width(5),
-    paddingVertical: height(2),
+    paddingVertical: height(1),
   },
   footerTopSection: {
     flexDirection: 'row',

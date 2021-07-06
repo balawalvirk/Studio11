@@ -21,12 +21,12 @@ import {
 import { setCuttings, setItems, setVideos } from '../../Redux/Actions/Barber';
 export default function StaffLogin(props) {
   const dispatch = useDispatch();
-  const [email, setemail] = useState('Barbe@mail.com');
+  const [email, setemail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [checkIcon, setCheckIcon] = useState(false);
   const [activeUser, setactiveUser] = useState(true);
   const [waiting, setwaiting] = useState(false);
-  const [password, setPassword] = useState('12345678');
+  const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isLoading, setLoading] = useState(false);
   const checkEmail = () => {
@@ -92,6 +92,7 @@ export default function StaffLogin(props) {
             }
           })
           .catch((error) => {
+            setwaiting(false)
             if (error.code === 'auth/email-already-in-use') {
               setPasswordError('That email address is already in use!');
               setemail('');
@@ -137,16 +138,15 @@ export default function StaffLogin(props) {
             <Text style={styles.heading}>Welcome Studio 11</Text>
             <Text style={styles.description}> Login to continue</Text>
             <View style={styles.tabContainer}>
-              <TouchableOpacity
-                onPress={() => setactiveUser(true)}
+              <View
                 style={activeUser ? styles.tab : null}>
                 <Text style={styles.tabTitle}>Barber</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </View>
+              {/* <TouchableOpacity
                 onPress={() => setactiveUser(false)}
                 style={activeUser ? null : styles.tab}>
                 <Text style={styles.tabTitle}>Receptionist</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <InputField
               value={email.trim()}

@@ -239,9 +239,43 @@ export default function ProductDetails(props) {
       setBuyNowLoading(false)
     }
   }
+  const renderFooter = () => (
+    <View style={styles.footerStyle}>
+      <View style={styles.footerTopSection}>
+        <Text style={styles.white50}>Quantity:</Text>
+        <TouchableOpacity onPress={onMinus}>
+          <FontAwesome name="minus-circle" style={styles.countIcon} />
+        </TouchableOpacity>
+        <Text style={styles.white50}>{quantity}</Text>
+        <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
+          <FontAwesome name="plus-circle" style={styles.countIcon} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonRow}>
+        <Button
+          isLoading={buyNowLoading}
+          title="Buy now"
+          containerStyle={styles.buyBtn}
+          onPress={onBuyNowPress}
+        />
+        <Button
+          planButton
+          isLoading={cartLoading}
+          disabled={cartLoading}
+          title="Add to cart"
+          onPress={() => addToCart()}
+          containerStyle={styles.addCartBtn}
+          textStyle={{ color: 'white' }}
+        />
+      </View>
+    </View>
+  )
   return (
     <ScreenWrapper
       scrollEnabled
+      enableOnAndroid
+      extraScrollHeight={height(14)}
+      extraHeight={height(25)}
       headerUnScrollable={() => (
         <Header
           leadingIcon={'arrow-left'}
@@ -249,37 +283,7 @@ export default function ProductDetails(props) {
           headerTitle={'Product Details'}
         />
       )}
-      footerUnScrollable={() => (
-        <View style={styles.footerStyle}>
-          <View style={styles.footerTopSection}>
-            <Text style={styles.white50}>Quantity:</Text>
-            <TouchableOpacity onPress={onMinus}>
-              <FontAwesome name="minus-circle" style={styles.countIcon} />
-            </TouchableOpacity>
-            <Text style={styles.white50}>{quantity}</Text>
-            <TouchableOpacity onPress={() => setQuantity(quantity + 1)}>
-              <FontAwesome name="plus-circle" style={styles.countIcon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonRow}>
-            <Button
-              isLoading={buyNowLoading}
-              title="Buy now"
-              containerStyle={styles.buyBtn}
-              onPress={onBuyNowPress}
-            />
-            <Button
-              planButton
-              isLoading={cartLoading}
-              disabled={cartLoading}
-              title="Add to cart"
-              onPress={() => addToCart()}
-              containerStyle={styles.addCartBtn}
-              textStyle={{ color: 'white' }}
-            />
-          </View>
-        </View>
-      )}
+      footerUnScrollable={renderFooter}
       transclucent
       statusBarColor={AppColors.transparent}>
       <View style={styles.mainViewContainer}>

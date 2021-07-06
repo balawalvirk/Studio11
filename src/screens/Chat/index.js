@@ -88,7 +88,7 @@ export default function Chat(props) {
         senderId: user.id,
         receiverId: roomObj?.customerDetails?.id,
         message: messageText,
-        avatarImg: roomObj.barberDetails.Image.imageUrl,
+        avatarImg: roomObj?.barberDetails?.Image?.imageUrl ?? '',
         timestamp: moment().toISOString()
       }
     }
@@ -135,9 +135,9 @@ export default function Chat(props) {
           return null
         }
       }}
-
       footerUnScrollable={renderFooter}
       transclucent
+    // scrollEnabled
     >
       <View style={styles.container}>
         {isLoading ?

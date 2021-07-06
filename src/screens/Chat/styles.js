@@ -18,11 +18,11 @@ const styles = StyleSheet.create({
   footerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    // backgroundColor: AppColors.modalBg,
     height: height(8),
     borderTopRightRadius: width(2),
     borderTopLeftRadius: width(2),
-    paddingHorizontal: width(4)
+    paddingHorizontal: width(4),
+    elevation: 3
   },
   iconContainer: {
     paddingVertical: height(1),

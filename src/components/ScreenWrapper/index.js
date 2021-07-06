@@ -14,7 +14,11 @@ const ScreenWrapper = ({
   barStyle = "light-content",
   headerUnScrollable = () => null,
   footerUnScrollable = () => null,
-  hideStatus = false
+  hideStatus = false,
+  extraHeight,
+  extraScrollHeight,
+  nestedScrollEnabled,
+  enableOnAndroid = false
 }) => {
   function FocusAwareStatusBar(props) {
     const isFocused = useIsFocused();
@@ -36,7 +40,10 @@ const ScreenWrapper = ({
         {headerUnScrollable()}
         {scrollEnabled ? (
           <KeyboardAwareScrollView
-            extraHeight={height(2)}
+            extraScrollHeight={extraScrollHeight}
+            extraHeight={extraHeight}
+            enableOnAndroid={enableOnAndroid}
+            nestedScrollEnabled={nestedScrollEnabled}
             style={[styles.container, backgroundImage && { backgroundColor: 'transparent' }]}
             contentContainerStyle={styles.contentContainer}
             keyboardShouldPersistTaps="handled"

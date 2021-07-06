@@ -1,5 +1,5 @@
-import {ColorPropType, StyleSheet} from 'react-native';
-import {width, height} from 'react-native-dimension';
+import { ColorPropType, StyleSheet } from 'react-native';
+import { width, height } from 'react-native-dimension';
 import AppColors from '../../utills/AppColors';
 import Colors from '../../utills/AppColors';
 
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     width: width(80),
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginVertical: height(2),
   },
 });
