@@ -37,7 +37,7 @@ export default function Appointments(props) {
   }
   const renderAppointment = ({ item }) =>
     <AppointmentCard
-      barberName={item.barberDetails.FirstName + '' + item.barberDetails.FirstName}
+      barberName={item?.barberDetails?.FirstName + '' + item?.barberDetails?.FirstName}
       cuttingName={item.hairStyle}
       appointmentTime={item.date}
       timeLeft={getDaysLeft(item.dateMoment)}
@@ -50,8 +50,8 @@ export default function Appointments(props) {
       headerUnScrollable={() => <Header headerTitle={'Appointments'} leadingIcon={'arrow-left'} onPressLeadingIcon={() => props.navigation.goBack()} />}>
 
       <View style={styles.mainViewContainer}>
-
-        <FlatList contentContainerStyle={{ paddingBottom: height(15) }}
+        <FlatList
+          contentContainerStyle={{ paddingBottom: height(15) }}
           data={appointments}
           keyExtractor={item => item.id}
           renderItem={renderAppointment}

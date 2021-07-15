@@ -90,7 +90,7 @@ export default function CustomerAppoinmentBarber(props) {
         <ScheduleCard
           scheuledCardStyle={{ backgroundColor: AppColors.transparent, marginVertical: 0, padding: 0 }}
           onpressAppointmentcard={() => props.navigation.navigate('CustomerAppoinmentBarber')}
-          barberName={appointmentDetails?.barberDetails?.FirstName + ' ' + appointmentDetails?.barberDetails?.LastName}
+          barberName={appointmentDetails?.customerDetails?.FirstName + ' ' + appointmentDetails?.customerDetails?.LastName}
           cuttingName={appointmentDetails?.hairStyle}
           scheduledTime={moment(appointmentDetails?.dateMoment?.toDate()).format('dddd, DD MMMM, hh:mm a')}
           additionalNotes={appointmentDetails?.notes}

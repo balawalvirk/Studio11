@@ -61,7 +61,7 @@ export default function NoShowAppointments(props) {
       onpressScheuledCard={() =>
         props.navigation.navigate('CustomerAppoinmentBarber', { appointmentDetails: item })
       }
-      barberName={item?.barberDetails?.FirstName + ' ' + item?.barberDetails?.LastName}
+      barberName={item?.customerDetails?.FirstName + ' ' + item?.customerDetails?.LastName}
       cuttingName={item?.hairStyle}
       scheduledTime={moment(item?.dateMoment?.toDate()).format('dddd, DD MMMM, hh:mm a')}
       additionalNotes={item?.notes}
