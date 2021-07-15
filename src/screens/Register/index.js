@@ -219,8 +219,8 @@ export default function Register(props) {
           </TouchableOpacity>
           <Text style={styles.errText}>{termsError}</Text>
         </View>
-        <Text style={styles.whiteText}>Select User Type</Text>
-        <View style={styles.buttonRow}>
+        {/* <Text style={styles.whiteText}>Select User Type</Text> */}
+        {/* <View style={styles.buttonRow}>
           <Button
             planButton={userType != 'Customer'}
             containerStyle={styles.btn}
@@ -233,7 +233,7 @@ export default function Register(props) {
             title="Barber"
             onPress={() => setuserType('Barber')}
           />
-        </View>
+        </View> */}
         <Button
           title="Signup"
           onPress={() => signUpUser()}

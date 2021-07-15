@@ -849,4 +849,20 @@ export async function getBarberPastOrders() {
     console.log(error.message);
   }
 }
+export async function getAppointmentsById(userId) {
+  try {
+    let appointments = []
+    const snapshot = await firestore()
+      .collection('Appointments')
+      .where('barberId', '==', userId)
+      .where('status', '==', AppointmentStatus.PLACED)
+      .get()
+    snapshot.forEach(doc => {
+      appointments.push(doc.data())
+    })
+    return appointments
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 export default firebase;

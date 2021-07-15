@@ -66,9 +66,6 @@ export default function Calender(props) {
         <Text style={{ color: AppColors.white50 }}>{moment(item?.dateMoment.toDate()).format('h:mm a')}</Text>
         <Text style={{ color: AppColors.white50 }}>{item?.notes}</Text>
       </View>
-      {/* <Icon style={styles.checkIcon}
-        name={isSelected ? 'check-box-outline' : 'checkbox-blank-outline'}
-      /> */}
     </TouchableOpacity>
 
   const renderEmptyDate = () => {
