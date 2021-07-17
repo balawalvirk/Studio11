@@ -127,7 +127,53 @@ export default function Login(props) {
       } else null;
     } else null;
   };
-
+  const sendResetPasswordEmail = async (buttonClicked = false) => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (fEmail == '') {
+      setFEmailError('Please enter reset email')
+      return
+    }
+    if (reg.test(fEmail) == false) {
+      setFEmailError('Invalid email format')
+      return
+    }
+    setEmailError('')
+    const provider = await checkAccountProvder()
+    if (provider == Providers.FACEBOOK) {
+      alert("(" + fEmail + ")" + " is a facebook account. Facebook passwords cannot be changed.")
+      return
+    }
+    if (provider == Providers.GOOGLE) {
+      alert("(" + fEmail + ")" + " is a google account. Google passwords cannot be changed.")
+      return
+    }
+    if (buttonClicked) {
+      await auth().sendPasswordResetEmail(fEmail).then(function () {
+        setFEmail('')
+        alert('Password reset email has been sent!')
+        setIsVisible(false)
+      }).catch(error => {
+        setIsVisible(false)
+        if (error.code === "auth/invalid-email") {
+          alert("That email address is invalid!")
+        }
+        else if (error.code === "auth/user-disabled") {
+          alert("User is disabled!")
+        }
+        else if (error.code === "auth/user-not-found") {
+          alert("User not found!")
+        }
+        else if (error.code === "auth/wrong-password") {
+          alert("Incorrect Password!")
+        } else if (error.code === "auth/too-many-requests") {
+          alert("We have blocked all requests from this device due to unusual activity. Try again later.")
+        }
+        else {
+          alert(error.message)
+        }
+      });
+    }
+  }
   return (
     <ScreenWrapper
       transclucent
