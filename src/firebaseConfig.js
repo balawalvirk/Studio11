@@ -610,7 +610,7 @@ export async function clearCart() {
     console.log(error.message);
   }
 }
-export async function getAppointments(type = UserTypes.CUSTOMER) {
+export async function getAppointments(type = UserTypes.CUSTOMER, date = null) {
   const userId = auth().currentUser.uid
   try {
     let aptmnts = []
@@ -619,9 +619,16 @@ export async function getAppointments(type = UserTypes.CUSTOMER) {
       .where(type == UserTypes.CUSTOMER ? 'customerId' : 'barberId', '==', userId)
       .where('status', '==', AppointmentStatus.PLACED)
       .get()
-    snapshot.forEach(doc => {
-      aptmnts.push(doc.data())
-    })
+    if (date) {
+      snapshot.forEach(doc => {
+        if (moment(doc.data().dateMoment.toDate()).format('D-MMMM-YYYY') == date)
+          aptmnts.push(doc.data())
+      })
+    } else {
+      snapshot.forEach(doc => {
+        aptmnts.push(doc.data())
+      })
+    }
     return aptmnts
   } catch (error) {
     console.log(error.message);

@@ -21,13 +21,18 @@ const styles = StyleSheet.create({
         color: AppColors.white,
         fontSize: width(4),
         fontWeight: 'bold',
-        width: width(70),
         textAlign: 'center'
     },
     logo: {
         width: width(20),
         resizeMode: 'contain',
         marginStart: width(30)
+    },
+    flexRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: width(80),
+        justifyContent: 'center'
     }
 
 })

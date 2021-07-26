@@ -14,7 +14,7 @@ export default function ResetPassword(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [fEmail, setFEmail] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const [modalText, setModalText] = useState('Password reset link has been send on your email.');
+  const [modalText, setModalText] = useState('Password reset link has been sent');
   const [iconName, setIconName] = useState('checkcircle');
 
   const openModal = () => {

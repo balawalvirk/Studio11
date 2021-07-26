@@ -1,6 +1,6 @@
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { FlatList, SectionList, Text, TouchableOpacity, View } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import { height, width } from 'react-native-dimension';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,123 +13,158 @@ import { getAppointments } from '../../firebaseConfig';
 import AppColors from '../../utills/AppColors';
 import { UserTypes } from '../../utills/Enums';
 import styles from './styles';
+import MonthPicker from 'react-native-month-year-picker';
+import { useCallback } from 'react';
+
 export default function Calender(props) {
   const user = useSelector((state) => state.Auth.user);
-  const [items, setItems] = useState({});
-  const [isSelected, setiselected] = useState(false);
-  const dispatch = useDispatch();
-  const scheduledAppointments = [
-    {
-      id: '1',
-      barberName: 'Michael Fox',
-      cuttingName: 'Crew Cut',
-      scheduledTime: 'Sunday, 07 March, 06:16 AM',
-      Notes: 'Delectus voluptas qui est delectus recusandae eveniet assumenda fuga earum.',
-      appointmentImage: require('../../assets/images/1.png'),
-      timeLeft: '3 days left',
-    },
-    {
-      id: '2',
-      barberName: 'Tomas Ernser',
-      cuttingName: 'Crew Cut',
-      scheduledTime: 'Saturday, 09 January, 10:42 AM',
-      Notes: 'Iste eos dolores.',
-      appointmentImage: require('../../assets/images/2.png'),
-      timeLeft: '3 days left',
-    }
-  ];
+  const dispatch = useDispatch()
+  const horizontalRef = useRef(null)
+  const [weekArray, setWeekArray] = useState([])
+  const [appointments, setAppointments] = useState([])
+  const [show, setShow] = useState(false)
+  const [pickerDate, setPickerDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState({
+    dayNumber: moment().format('DD'),
+    dayName: moment().format('dd'),
+    month: moment().format('MMMM'),
+    year: moment().format('YYYY')
+  })
+
   useEffect(() => {
-    loadData()
-  }, [])
-  const loadData = async () => {
+    loadData(selectedDate.dayNumber + '-' + selectedDate.month + '-' + selectedDate.year)
+    getDates(selectedDate.dayNumber + '-' + selectedDate.month + '-' + selectedDate.year)
+  }, [selectedDate])
+  const loadData = async (date) => {
     try {
-      const appointments = await getAppointments(UserTypes.BARBER)
-      let obj = {}
-      appointments.map(item => {
-        obj[moment(item.dateMoment.toDate()).format('YYYY-MM-DD')] = appointments.filter(obj => moment(obj.dateMoment.toDate()).format('YYYY-MM-DD') == moment(item.dateMoment.toDate()).format('YYYY-MM-DD'))
+      const appts = await getAppointments(UserTypes.BARBER, date)
+      let headers = []
+      appts.map(item => {
+        headers.push(moment(item.dateMoment.toDate()).format('h A'))
       })
-      setItems(obj)
+      headers = [...new Set(headers)]
+      let sectionListData = []
+      headers.map(item => {
+        let data = []
+        appts.map(appt => {
+          if (moment(appt.dateMoment.toDate()).format('h A') == moment(item, 'h A').format('h A')) {
+            data.push(appt)
+          }
+        })
+        sectionListData.push({
+          title: item,
+          data
+        })
+      })
+      setAppointments(sectionListData)
     } catch (error) {
       console.log(error.message)
     }
   }
-  const renderItem = (item) =>
-    <TouchableOpacity
-      testID={'testIDs.agenda.ITEM'}
-      style={[styles.item]}
-      onPress={() => {
-        setiselected(isSelected => !isSelected);
-      }}
-    >
-      <View>
-        <Text style={styles.nameText}>{item?.customerDetails?.FirstName + ' ' + item?.customerDetails?.LastName}</Text>
-        <Text style={{ color: AppColors.white50 }}>{moment(item?.dateMoment.toDate()).format('h:mm a')}</Text>
-        <Text style={{ color: AppColors.white50 }}>{item?.notes}</Text>
+  const getDates = (date) => {
+    const startOfMonth = Number(moment(date, 'DD-MMMM-YYYY').startOf('month').format('DD'));
+    const endOfMonth = Number(moment(date, 'DD-MMMM-YYYY').endOf('month').format('DD'));
+    const month = moment(date, 'DD-MMMM-YYYY').get('month') + 1;
+    const year = moment(date, 'DD-MMMM-YYYY').get('year')
+    console.log("I'm month", month)
+    console.log("I'm year", year)
+    console.log("Star&End of Month: ", startOfMonth, endOfMonth)
+    let pastArray = []
+    for (let i = startOfMonth; i <= endOfMonth; i++) {
+      const dateObj = {
+        dayName: moment(i + '/' + month + '/' + year, "DD/MM/YYYY").format('dd'),
+        dayNumber: i,
+      }
+      pastArray.push(dateObj)
+    }
+    let newArray = pastArray.sort((a, b) => a.dayNumber > b.dayNumber)
+    const index = newArray.findIndex(item => (item.dayNumber == selectedDate?.dayNumber && item.dayName == selectedDate?.dayName))
+    setWeekArray(newArray)
+    setTimeout(() => {
+      if (index > -1)
+        horizontalRef.current.scrollToIndex({ index })
+    }, 800)
+  }
+  const renderWeekRow = ({ item }) =>
+    <TouchableOpacity style={styles.weekRow} onPress={() => setSelectedDate({ ...selectedDate, ...item })}>
+      <Text style={styles.month}>{item?.dayName}</Text>
+      <View style={(item.dayNumber == selectedDate?.dayNumber && item.dayName == selectedDate?.dayName) ? styles.selected : styles.unselected}>
+        <Text style={styles.day}>{item?.dayNumber}</Text>
       </View>
     </TouchableOpacity>
+  const renderSectionHeader = ({ section }) =>
+    <View style={styles.header}>
+      <Text style={styles.title}>{section.title}</Text>
+    </View>
 
-  const renderEmptyDate = () => {
-    return (
-      <View style={styles.emptyDate}>
-        <Text>This is empty date!</Text>
-      </View>
-    );
-  }
-
-  const rowHasChanged = (r1, r2) => {
-    return r1.name !== r2.name;
-  }
-
-  const timeToString = (time) => {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
-  var CustomAgenda = useCallback(() => {
-    return <Agenda
-      testID={'testIDs.agenda.CONTAINER'}
-      items={items}
-      // loadItemsForMonth={loadItems}
-      selected={moment().format('YYYY-MM-DD')}
-      // markedDates={{
-      //   [moment().format('YYYY-MM-DD')]: { selected: true, marked: true },
-      // }}
-      renderItem={renderItem}
-      renderEmptyDate={renderEmptyDate}
-      rowHasChanged={rowHasChanged}
-      markingType='custom'
-      hideKnob={false}
-      showClosingKnob={true}
-      theme={{
-        calendarBackground: AppColors.headerColor, //
-        agendaKnobColor: AppColors.primaryGold, //agenda knob color where we can drag calender
-        agendaTodayColor: AppColors.primaryGold, //agenda today date and day color
-        agendaDayNumColor: AppColors.white, //agenda date color in list
-        agendaDayTextColor: AppColors.white,  //agenda day text color i.e list day color e.g mon, tu
-        selectedDayBackgroundColor: AppColors.primaryGold, // selected day date color bg in calender
-        selectedDayTextColor: AppColors.black,    //selected day date color in calender
-        dayTextColor: AppColors.white,
-        monthTextColor: AppColors.white,
-        arrowColor: AppColors.white50,
-        todayTextColor: AppColors.primaryGold,    //today date color in calender
-        textSectionTitleColor: AppColors.primaryGold,  //days name in calender color
-        dotColor: AppColors.transparent,
-        selectedDotColor: AppColors.transparent,
-        backgroundColor: AppColors.textColor,
-
-      }}
-      style={{ width: '100%', }}
-    />
-  }, [items, isSelected])
+  const renderItem = ({ item, index, section }) =>
+    <View style={styles.item}>
+      <Text style={styles.nameText}>{item?.customerDetails?.FirstName + ' ' + item?.customerDetails?.LastName}</Text>
+      <Text style={styles.dateText}>{moment(item?.dateMoment?.toDate()).format('h:mm a DD-MMMM-YYYY')} </Text>
+      <Text style={styles.description}>{item?.notes == '' ? 'No other details' : item?.notes}</Text>
+    </View>
+  const showPicker = useCallback((value) => setShow(value), []);
+  const onValueChange = useCallback(
+    (event, newDate) => {
+      console.log(moment(newDate).format('MMMM'))
+      showPicker(false)
+      setSelectedDate({
+        dayNumber: moment(newDate).format('DD'),
+        dayName: moment(newDate).format('dd'),
+        month: moment(newDate).format('MMMM'),
+        year: moment(newDate).format('YYYY')
+      })
+      setPickerDate(newDate)
+    },
+    [pickerDate, showPicker],
+  );
+  const renderEmpty = () =>
+    <View style={styles.empty}>
+      <Text style={styles.emptyText}>No appointments on {selectedDate.dayNumber + '/' + selectedDate.month + '/' + selectedDate.year}</Text>
+    </View>
   return (
     <ScreenWrapper
       transclucent
       statusBarColor={AppColors.transparent}
-      headerUnScrollable={() => <Header headerTitle={'Calender'} leadingIcon={'menu'}
+      headerUnScrollable={() => <Header
+        headerTitle={selectedDate.month + ' ' + selectedDate.year}
+        isCalendar
+        leadingIcon={'menu'}
+        onDatePress={() => showPicker(true)}
         onPressLeadingIcon={() => props.navigation.openDrawer()} />}>
       <View style={styles.mainViewContainer}>
-        {CustomAgenda()}
+        <FlatList
+          ref={horizontalRef}
+          contentContainerStyle={styles.flatlist}
+          horizontal
+          data={weekArray}
+          renderItem={renderWeekRow}
+          keyExtractor={item => item.dayNumber + item.dayName}
+          showsHorizontalScrollIndicator={false}
+          getItemLayout={(data, index) => {
+            return {
+              index: index,
+              length: height(6),
+              offset: index * height(6),
+            }
+          }}
+        />
+        <SectionList
+          sections={appointments}
+          renderSectionHeader={renderSectionHeader}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          ListEmptyComponent={renderEmpty}
+        />
       </View>
-
+      {show && (
+        <MonthPicker
+          onChange={onValueChange}
+          value={pickerDate}
+          minimumDate={new Date(2000, 5)}
+          maximumDate={new Date(2025, 5)}
+        />
+      )}
     </ScreenWrapper>
   );
 };

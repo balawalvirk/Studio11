@@ -119,7 +119,7 @@ export default function HomeScreen(props) {
           </>}
         <View style={styles.dash} />
         <View style={styles.textRow}>
-          <Text style={styles.whiteText}>Our Stylers</Text>
+          <Text style={styles.whiteText}>Our Barbers</Text>
         </View>
         <FlatList
           data={barbers}

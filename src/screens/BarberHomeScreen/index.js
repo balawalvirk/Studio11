@@ -266,8 +266,8 @@ export default function BarberHomeScreen(props) {
           date={dateTimeString}
           appointments={appointments.length}
         />
-        <HorizontalLine lineColor={{ width: width(90), marginTop: height(2) }} />
-        {workBreak ? (
+        {/* <HorizontalLine lineColor={{ width: width(90), marginTop: height(2) }} /> */}
+        {/* {workBreak ? (
           <View
             style={{
               alignItems: 'center',
@@ -289,8 +289,8 @@ export default function BarberHomeScreen(props) {
             onPress={() => setModalVisible(true)}
             title={'Take a break'}
           />
-        )}
-        <HorizontalLine lineColor={{ width: width(90) }} />
+        )} */}
+        {/* <HorizontalLine lineColor={{ width: width(90) }} /> */}
         <View style={styles.textRow}>
           <Text style={styles.whiteText}>Todays Appointments</Text>
           <HighlightedText

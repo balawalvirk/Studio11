@@ -4,7 +4,6 @@ import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
-    flex: 1,
     alignItems: 'center',
     backgroundColor: AppColors.textColor,
   },
@@ -12,6 +11,13 @@ const styles = StyleSheet.create({
     color: AppColors.white,
     fontSize: width(4),
     textAlign: 'left'
+  },
+  empty: {
+    height: height(85),
+    width: width(100),
+    color: AppColors.white,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   highlightedDay: {
     borderRadius: width(4),
@@ -31,15 +37,11 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: AppColors.cardColor,
-    flex: 1,
-    borderRadius: width(5),
-    padding: width(5),
-    marginRight: width(5),
-    alignItems: 'center',
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-    marginTop: height(2),
+    borderRadius: width(2),
+    padding: width(3.5),
+    width: '95%',
+    alignSelf: 'flex-end',
+    marginBottom: height(1)
   },
   checkIcon: {
     color: AppColors.primaryGold,
@@ -54,7 +56,60 @@ const styles = StyleSheet.create({
   },
   nameText: {
     color: AppColors.primaryGold,
-    marginBottom: height(0.5)
+    fontWeight: 'bold',
+    fontSize: width(3.8)
+  },
+  dateText: {
+    color: AppColors.white,
+    fontSize: width(3)
+  },
+  weekRow: {
+    alignItems: 'center',
+    width: width(14.28),
+    height: height(6)
+  },
+  day: {
+    color: AppColors.white
+  },
+  month: {
+    color: AppColors.white
+  },
+  flatlist: {
+    backgroundColor: AppColors.modalBg,
+    paddingVertical: height(1)
+  },
+  selected: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: AppColors.primaryGold,
+    borderRadius: width(7),
+    height: height(3.5),
+    width: height(3.5)
+  },
+  unselected: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: width(3),
+    paddingVertical: width(0.5),
+    paddingHorizontal: width(1)
+  },
+  header: {
+    paddingVertical: height(1),
+    width: width(100),
+    paddingHorizontal: width(3)
+  },
+  description: {
+    color: AppColors.white,
+    fontSize: width(3.3),
+    marginTop: height(0.75)
+  },
+  title: {
+    fontWeight: 'bold',
+    color: AppColors.white
+  },
+  emptyText: {
+    color: AppColors.white,
+    fontSize: width(4)
   }
 });
 export default styles;
