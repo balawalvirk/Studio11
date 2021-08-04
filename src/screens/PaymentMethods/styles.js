@@ -4,13 +4,24 @@ import AppColors from '../../utills/AppColors';
 
 const styles = StyleSheet.create({
   mainViewContainer: {
-    height: height(100),
-    paddingHorizontal:width(10),
-    backgroundColor: AppColors.textColor,
-    paddingTop: height(4)
+    flex: 1,
+    alignItems: 'center',
+    paddingBottom: height(2)
   },
   labels: {
     color: AppColors.white,
+    marginTop: height(2)
   },
+  emptyContainer: {
+    height: height(50),
+
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  emptyText: {
+    color: AppColors.primaryGold,
+    fontWeight: 'bold',
+    fontSize: width(4)
+  }
 });
 export default styles;
