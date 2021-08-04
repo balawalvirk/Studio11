@@ -9,10 +9,23 @@ import AppColors from '../../utills/AppColors';
 import Button from '../../components/Button';
 import { height, width } from 'react-native-dimension';
 import moment from 'moment'
+import stripe from 'tipsi-stripe'
+import auth from '@react-native-firebase/auth'
+import { useDispatch, useSelector } from 'react-redux';
+import { saveCard } from '../../utills/Api';
+import { login } from '../../Redux/Actions/Auth'
+stripe.setOptions({
+  publishableKey:
+    // 'pk_live_51HYiWoGxhZbaAkXb0kJiKlkejB1zK4WuuOGEienBOl229r4J1z86dovXAaFC5XhZaFL0PsBDzgRJBboNvLn3yVhn00sbh5W9Kv',
+    'pk_test_51JKKvPKlzfvLSqIKSk3aHs5GyGrJtOs4aFr9qLg4xdTP7pMH319w3B5AXwuKSPQDoLMlV9TiUBJqacDG6uOQYKBd00RWJLuaTV',
+});
 export default function AddPaymentMethod(props) {
+  const user = useSelector(state => state.Auth.user)
   const [cardNumber, setCardNumber] = useState('')
   const [expDate, setExpDate] = useState('')
   const [cvc, setCvc] = useState('')
+  const [isLoading, setLoading] = useState(false)
+  const dispatch = useDispatch()
   const onChangeExpiry = (cardExpiry) => {
     if (cardExpiry.indexOf('.') >= 0 || cardExpiry.length > 5) {
       return;
@@ -22,7 +35,7 @@ export default function AddPaymentMethod(props) {
     }
     setExpDate(cardExpiry)
   }
-  const onAddPress = () => {
+  const onAddPress = async () => {
     const month = Number(expDate.substr(0, 2))
     const year = Number(expDate.substr(3, 4))
     const currentYear = moment().format('YY')
@@ -42,13 +55,38 @@ export default function AddPaymentMethod(props) {
       alert('Enter valid cvc.')
       return
     }
+    setLoading(true)
     const params = {
-      cardNumber: cardNumber.split(' ').join(''),
+      number: cardNumber.split(' ').join(''),
       expMonth: month,
       expYear: year,
       cvc: cvc,
     }
-    console.log(params)
+    try {
+      const stripeRes = await stripe.createTokenWithCard(params)
+      const tokenId = stripeRes.tokenId
+      const body = {
+        uid: auth().currentUser.uid,
+        email: user?.email,
+        name: user?.FirstName + ' ' + user?.LastName,
+        token: tokenId
+      }
+      const res = await saveCard(body)
+      console.log("RES: ", res)
+      if (res.success) {
+        dispatch(login({
+          ...user,
+          card: [...user?.card, res?.card]
+        }))
+        props.navigation.goBack()
+      } else {
+        alert(res.message)
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log(error.message)
+      setLoading(false)
+    }
   }
   return (
     <ScreenWrapper
@@ -90,7 +128,10 @@ export default function AddPaymentMethod(props) {
         </View>
 
         <HorizontalLine lineColor={{ marginVertical: height(2) }} />
-        <Button title={'Add payment method'} onPress={onAddPress} />
+        <Button
+          isLoading={isLoading}
+          title={'Add payment method'}
+          onPress={onAddPress} />
       </View>
     </ScreenWrapper>
   );
