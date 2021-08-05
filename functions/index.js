@@ -22,10 +22,25 @@ exports.saveCard = functions.https.onRequest(async (req, res) => {
             { source: req.body.token }
         );
         await admin.firestore().collection('Users').doc(req.body.uid).update({ card: admin.firestore.FieldValue.arrayUnion(card) })
-        res.status(200).send({ success: true, message: 'Card has been saved', card: card })
+        res.status(200).send({ success: true, message: 'Card has been saved', card: card, stripeCustomer: customer })
         // console.log(JSON.stringify(card))
     } catch (error) {
         res.send({ success: false, message: "Error: " + JSON.stringify(error) })
         console.log(JSON.stringify(error))
     }
+});
+exports.payWithStripeCard = functions.https.onRequest((request, response) => {
+    stripe.charges.create({
+        amount: Number(request.body.amount).toFixed(0),
+        currency: request.body.currency,
+        source: request.body.token,
+        customer: request.body.customer
+    }).then((charge) => {
+        // asynchronously called
+        console.log(JSON.stringify(charge))
+        response.send(charge);
+    })
+        .catch(err => {
+            console.log("ERROR: ", JSON.stringify(err));
+        });
 });

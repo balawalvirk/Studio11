@@ -19,16 +19,16 @@ const customModal = ({ iconName, description, isVisible, onClose, navigateTo, bu
         {buttonLine ?
           <View style={styles.btnContainer}>
             <Button
-              isLoading={cancelLoading}
-              containerStyle={{ width: width(25) }}
-              title={firstButtonTitle}
-              onPress={onpressFirstButton} />
-            <Button
               planButton
               textStyle={{ color: AppColors.white }}
               containerStyle={styles.cancelBtn}
               title={secondButtonTitle}
               onPress={onpressSecondButton} />
+            <Button
+              isLoading={cancelLoading}
+              containerStyle={{ width: width(25) }}
+              title={firstButtonTitle}
+              onPress={onpressFirstButton} />
           </View> : null}
 
       </View>

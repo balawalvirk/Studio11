@@ -24,6 +24,7 @@ export default function AddPaymentMethod(props) {
   const [cardNumber, setCardNumber] = useState('')
   const [expDate, setExpDate] = useState('')
   const [cvc, setCvc] = useState('')
+  const [cardName, setCardName] = useState('')
   const [isLoading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const onChangeExpiry = (cardExpiry) => {
@@ -39,6 +40,10 @@ export default function AddPaymentMethod(props) {
     const month = Number(expDate.substr(0, 2))
     const year = Number(expDate.substr(3, 4))
     const currentYear = moment().format('YY')
+    if (cardName == '' || cardName.length < 4) {
+      alert('Please enter valid name')
+      return
+    }
     if (cardNumber.split(' ').join('').length < 16) {
       alert('Enter valid card number.')
       return
@@ -68,15 +73,15 @@ export default function AddPaymentMethod(props) {
       const body = {
         uid: auth().currentUser.uid,
         email: user?.email,
-        name: user?.FirstName + ' ' + user?.LastName,
-        token: tokenId
+        name: cardName,
+        token: tokenId,
       }
       const res = await saveCard(body)
       console.log("RES: ", res)
       if (res.success) {
         dispatch(login({
           ...user,
-          card: [...user?.card, res?.card]
+          card: user?.card ? [...user?.card, res?.card] : [res?.card]
         }))
         props.navigation.goBack()
       } else {
@@ -102,6 +107,11 @@ export default function AddPaymentMethod(props) {
       <View style={styles.mainViewContainer}>
         <Image style={styles.addPaymentImage} source={require('../../assets/images/addpayment.png')} />
         <HorizontalLine lineColor={{ marginBottom: height(2) }} />
+        <InputField
+          label={'Card Holder Name'}
+          onChangeText={(val) => setCardName(val)}
+          value={cardName}
+          placeholder={'John Doe'} />
         <InputField
           label={'Card Number'}
           keyboardType={'numeric'}

@@ -163,6 +163,7 @@ export default function ShoppingCart(props) {
         obj[item] = cart.cartItems.filter(element => element.userId == item)
       })
       // Object.keys(obj).map(async (item, index) => {
+      let orders = []
       for (let key in obj) {
         const orderId = firestore().collection('rnd').doc().id
         const orderObj = {
@@ -179,21 +180,14 @@ export default function ShoppingCart(props) {
         })
         orderObj.total = total
         try {
-          await checkout(orderObj)
-          await clearCart()
-          dispatch(setCart({
-            cartItems: [],
-            itemCount: 0,
-            total: 0
-          }))
-          setCheckoutLoading(false)
-          props.navigation.goBack()
+          orders.push(orderObj)
         } catch (error) {
           console.log(error.message)
           setCheckoutLoading(false)
         }
       }
-      // })
+      setCheckoutLoading(false)
+      props.navigation.navigate('SelectPaymentMethod', { total: cart?.total, orders: orders, orderType: 'CART' })
     }
   }
   return (

@@ -220,7 +220,6 @@ export default function ProductDetails(props) {
       return
     }
     try {
-      setBuyNowLoading(true)
       const orderId = firestore().collection('rnd').doc().id
       const orderObj = {
         id: orderId,
@@ -231,14 +230,13 @@ export default function ProductDetails(props) {
         status: OrderStatus.PLACED,
         total: Number(product?.price) * Number(quantity)
       }
-      await saveData('Orders', orderId, orderObj)
-      setBuyNowLoading(false)
-      props.navigation.navigate('TrackOrder')
+      props.navigation.navigate('SelectPaymentMethod', { total: Number(product?.price) * Number(quantity), orders: orderObj, orderType: 'DIRECT' })
     } catch (error) {
       console.log(error.message)
       setBuyNowLoading(false)
     }
   }
+
   const renderFooter = () => (
     <View style={styles.footerStyle}>
       <View style={styles.footerTopSection}>

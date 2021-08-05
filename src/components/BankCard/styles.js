@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import AppColors from '../../utills/AppColors';
-import {width, height} from 'react-native-dimension'
+import { width, height } from 'react-native-dimension'
 
 const styles = StyleSheet.create({
 
@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.cardColor,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     alignSelf: 'center',
     width: width(80),
     borderRadius: width(4),
@@ -34,5 +33,10 @@ const styles = StyleSheet.create({
     fontSize: width(4),
     margin: width(4)
   },
+  radioBtn: {
+    // backgroundColor: 'red',
+    width: width(15),
+    alignItems: 'center'
+  }
 });
 export default styles;

@@ -77,7 +77,6 @@ export default function Register(props) {
         if (checkEmail(email)) {
           if (checkPassword(password)) {
             if (!checkIcon) {
-              console.log('sddddffddd');
               setTermsError('Please accept terms & conditions');
               return;
             }
@@ -219,21 +218,7 @@ export default function Register(props) {
           </TouchableOpacity>
           <Text style={styles.errText}>{termsError}</Text>
         </View>
-        <Text style={styles.whiteText}>Select User Type</Text>
-        {/* <View style={styles.buttonRow}>
-          <Button
-            planButton={userType != 'Customer'}
-            containerStyle={styles.btn}
-            title="Customer"
-            onPress={() => setuserType('Customer')}
-          />
-          <Button
-            planButton={userType != 'Barber'}
-            containerStyle={styles.btn}
-            title="Barber"
-            onPress={() => setuserType('Barber')}
-          />
-        </View> */}
+
         <Button
           title="Signup"
           onPress={() => signUpUser()}
