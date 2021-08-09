@@ -13,24 +13,63 @@ import { height, width } from 'react-native-dimension';
 import Appointments from '../Appointments';
 import AppColors from '../../utills/AppColors';
 import { manageCuttingImages, stylersData } from '../../dummyData';
-import { getAllOfCollection, getBarbers, getPopularCuts } from '../../firebaseConfig';
-import { useSelector } from 'react-redux';
+import { getAllOfCollection, getBarbers, getPopularCuts, saveData } from '../../firebaseConfig';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import messaging from '@react-native-firebase/messaging';
+import { login } from '../../Redux/Actions/Auth';
+import { NotificationTypes } from '../../utills/Enums';
+
 export default function HomeScreen(props) {
+  const user = useSelector(state => state.Auth.user)
+  const dispatch = useDispatch()
   const [barbers, setBarbers] = useState([]);
   const [popularStyles, setPopularStyles] = useState([]);
   const appointments = useSelector((state) => state.Customer.appointments);
   const lastIndex = appointments.length - 1
   useEffect(() => {
+    saveToken()
     loadData();
     console.log(appointments)
   }, []);
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      processNotificationFront(remoteMessage)
+    });
+    messaging().onNotificationOpenedApp(processNotification);
+
+    return unsubscribe;
+  }, []);
+  const processNotification = (remoteMessage) => {
+    const messageType = remoteMessage?.data?.type
+    if (messageType == NotificationTypes.MESSAGE) {
+      const roomId = remoteMessage?.data?.roomId
+      console.log(roomId)
+      props.navigation.navigate('Chat', { roomId })
+    }
+  }
+  const processNotificationFront = (remoteMessage) => {
+    const messageType = remoteMessage?.data?.type
+    if (messageType == NotificationTypes.MESSAGE) {
+      // const roomId = remoteMessage?.data?.roomId
+      // console.log(roomId)
+      // props.navigation.navigate('Chat', { roomId })
+    }
+  }
   const loadData = async () => {
     const barberList = await getBarbers();
     const hairStyles = await getPopularCuts()
     setPopularStyles(hairStyles)
     setBarbers(barberList);
   };
+  const saveToken = async () => {
+    const fcm = await messaging().getToken();
+    await saveData('Users', user?.id, { fcm })
+    dispatch(login({
+      ...user,
+      fcm
+    }))
+  }
   const renderStylers = ({ item }) =>
     <StylerCard
       onPress={() => props.navigation.navigate('BarberProfile', {

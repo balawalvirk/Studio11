@@ -9,10 +9,10 @@ import { notifications } from '../../dummyData';
 import { getNotifications } from '../../firebaseConfig';
 import auth from '@react-native-firebase/auth'
 import moment from 'moment';
-export default function Notifications() {
+export default function Notifications(props) {
   const [notifications, setNotifications] = useState([])
   useEffect(() => {
-    loadData()
+    props.navigation.addListener('focus', () => loadData())
   }, [])
   const loadData = async () => {
     try {
@@ -25,8 +25,8 @@ export default function Notifications() {
   const renderNotifications = ({ item }) =>
     <View style={{ alignItems: 'center' }}>
       <View style={styles.notifications}>
-        <Text style={styles.notificationText}>{item.title}</Text>
-        <Text style={styles.notificationTime}>{moment(item.timestamp).format('h:mm a')}</Text>
+        <Text style={styles.notificationText}>{item.body}</Text>
+        <Text style={styles.notificationTime}>{moment(item.timestamp.toDate()).format('h:mm a')}</Text>
       </View>
       <HorizontalLine lineWidth={styles.HorizontalLine100} />
     </View>

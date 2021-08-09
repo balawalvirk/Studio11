@@ -14,6 +14,7 @@ import Input from '../../components/InputField';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import ShareModal from '../../components/ShareModal';
 import { getChatRoomById, getRoomChatList, sendMessage } from '../../firebaseConfig';
+import { sendMessageNotificaiton } from '../../utills/Api';
 import AppColors from '../../utills/AppColors';
 import { UserTypes } from '../../utills/Enums';
 import styles from './styles';
@@ -71,39 +72,44 @@ export default function Chat(props) {
       alert('Cant send empty message')
       return
     }
-    const messageId = firestore().collection('rnd').doc().id
-    let messageObj = {}
-    if (!userType) {
-      messageObj = {
-        id: messageId,
-        senderId: user.id,
-        receiverId: roomObj?.barberDetails?.id,
-        message: messageText,
-        avatarImg: '',
-        timestamp: moment().toISOString()
+    try {
+      const messageId = firestore().collection('rnd').doc().id
+      let messageObj = {}
+      if (!userType) {
+        messageObj = {
+          id: messageId,
+          senderId: user.id,
+          receiverId: roomObj?.barberDetails?.id,
+          message: messageText,
+          avatarImg: '',
+          timestamp: moment().toISOString()
+        }
+      } else {
+        messageObj = {
+          id: messageId,
+          senderId: user.id,
+          receiverId: roomObj?.customerDetails?.id,
+          message: messageText,
+          avatarImg: roomObj?.barberDetails?.Image?.imageUrl ?? '',
+          timestamp: moment().toISOString()
+        }
       }
-    } else {
-      messageObj = {
-        id: messageId,
-        senderId: user.id,
-        receiverId: roomObj?.customerDetails?.id,
-        message: messageText,
-        avatarImg: roomObj?.barberDetails?.Image?.imageUrl ?? '',
-        timestamp: moment().toISOString()
-      }
+      setMessages(prev => [...prev, messageObj])
+      await sendMessage(messageObj, roomId)
+      setMessageText('')
+      const title = `${user?.FirstName} sent you a message`
+      const body = messageText
+      console.log('===>', messageObj?.receiverId, title, body)
+      sendMessageNotificaiton(messageObj?.receiverId, title, body, roomId)
+      setTimeout(() => listRef.current.scrollToEnd(), 600)
+    } catch (error) {
+      console.log(error.message, 'SEND NOTIF')
     }
-    sendMessage(messageObj, roomId)
-    setMessages(prev => [...prev, messageObj])
-    setMessageText('')
-    setTimeout(() => listRef.current.scrollToEnd(), 600)
   }
   const renderFooter = () =>
     <>
       {picture && <Image source={{ uri: picture }} style={styles.previewImg} />}
       <View style={styles.footerContainer}>
-        {/* <TouchableOpacity onPress={() => setShareModal(true)} style={styles.iconContainer}>
-          <Ionicons name={'add-circle'} size={height(3.5)} color={AppColors.primaryGold} />
-        </TouchableOpacity> */}
         <Input
           onFocus={() => setTimeout(() => listRef.current.scrollToEnd(), 600)}
           containerStyles={styles.searchInput}

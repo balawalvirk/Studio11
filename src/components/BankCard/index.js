@@ -7,17 +7,17 @@ import AppColors from '../../utills/AppColors';
 import { height } from 'react-native-dimension';
 
 const BankCard = ({
-  cardImage, cardOnPress, cardTitle, onPressDelete, onCheckPress, selectable = false, selectedIndex = -1, index
+  cardImage, cardOnPress, cardTitle, onPressDelete, onCheckPress, selectable = false, selectedIndex = -1, index, containerStyle = {}
 }) => {
   return (
-    <View style={styles.cardButton}>
-      <TouchableOpacity style={styles.radioBtn} onPress={onCheckPress}>
+    <View style={[styles.cardButton, containerStyle]}>
+      {selectable && <TouchableOpacity style={styles.radioBtn} onPress={onCheckPress}>
         <Fontisto
           name={selectedIndex == index ? 'radio-btn-active' : 'radio-btn-passive'}
           color={AppColors.primaryGold}
           size={height(2.5)}
         />
-      </TouchableOpacity>
+      </TouchableOpacity>}
       <TouchableOpacity onPress={cardOnPress} style={styles.cardLeftSection}>
         <Image style={styles.cardImage} source={cardImage} />
         <Text style={styles.cardTitle}>{cardTitle}</Text>

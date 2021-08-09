@@ -19,39 +19,12 @@ import WelcomeBarberText from '../../components/WelcomeBarberText';
 import { endBreak, getAppointments, saveData, setChatRoom } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import AppColors from '../../utills/AppColors';
-import { UserTypes } from '../../utills/Enums';
+import { NotificationTypes, UserTypes } from '../../utills/Enums';
 import styles from './styles';
+import messaging from '@react-native-firebase/messaging';
+
 export default function BarberHomeScreen(props) {
-  const scheduledAppointments = [
-    {
-      id: '1',
-      barberName: 'Michael Fox',
-      cuttingName: 'Crew Cut',
-      scheduledTime: 'Sunday, 07 March, 06:16 AM',
-      Notes:
-        'Delectus voluptas qui est delectus recusandae eveniet assumenda fuga earum.',
-      appointmentImage: require('../../assets/images/appointments/a1.png'),
-      timeLeft: '3 days left',
-    },
-    {
-      id: '2',
-      barberName: 'Tomas Ernser',
-      cuttingName: 'Crew Cut',
-      scheduledTime: 'Saturday, 09 January, 10:42 AM',
-      Notes: 'Iste eos dolores.',
-      appointmentImage: require('../../assets/images/appointments/a2.png'),
-      timeLeft: '3 days left',
-    },
-    {
-      id: '3',
-      barberName: 'Carole Quigley',
-      cuttingName: 'Crew Cut',
-      scheduledTime: 'Sunday, 28 March, 09:59 PM',
-      Notes: 'Consequatur assumenda earum fuga et quos aperiam quos.',
-      appointmentImage: require('../../assets/images/appointments/a3.png'),
-      timeLeft: '3 days left',
-    },
-  ];
+
   const user = useSelector((state) => state.Auth.user);
   const userRef = useRef(user)
   const dispatch = useDispatch();
@@ -73,6 +46,32 @@ export default function BarberHomeScreen(props) {
   const [pickerMode, setPickerMode] = useState(0); //0 => from   1=> To
   useEffect(() => { userRef.current = user }, [user])
   useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('Notification caught in app front')
+      processNotificationFront(remoteMessage)
+    });
+    messaging().onNotificationOpenedApp(processNotification);
+
+    return unsubscribe;
+  }, []);
+  const processNotification = (remoteMessage) => {
+    const messageType = remoteMessage?.data?.type
+    if (messageType == NotificationTypes.MESSAGE) {
+      const roomId = remoteMessage?.data?.roomId
+      console.log(roomId)
+      props.navigation.navigate('Chat', { roomId })
+    }
+  }
+  const processNotificationFront = (remoteMessage) => {
+    const messageType = remoteMessage?.data?.type
+    if (messageType == NotificationTypes.MESSAGE) {
+      // const roomId = remoteMessage?.data?.roomId
+      // console.log(roomId)
+      // props.navigation.navigate('Chat', { roomId })
+    }
+  }
+  useEffect(() => {
+    saveToken()
     const sub = props.navigation.addListener('focus', () => {
       getTodaysAppointments()
     })
@@ -83,6 +82,14 @@ export default function BarberHomeScreen(props) {
       clearInterval(window.checkStatus)
     }
   }, []);
+  const saveToken = async () => {
+    const fcm = await messaging().getToken();
+    await saveData('Users', user?.id, { fcm })
+    dispatch(login({
+      ...user,
+      fcm
+    }))
+  }
   const getTodaysAppointments = async () => {
     try {
       let todaysAppointments = []

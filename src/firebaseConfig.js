@@ -537,7 +537,7 @@ export async function getNotifications(userId) {
     snapshot.forEach((doc) => {
       notifs.push(doc.data());
     });
-    return notifs;
+    return notifs.reverse();
   } catch (error) {
     console.log(error.message);
   }
@@ -755,7 +755,7 @@ export async function sendMessage(message, roomId) {
       })
 
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message, "xyz");
   }
 }
 export async function getRoomChatList(roomId) {

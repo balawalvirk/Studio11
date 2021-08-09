@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     width: width(80),
+    justifyContent: 'space-between',
     borderRadius: width(4),
     height: height(10),
     marginVertical: height(2)

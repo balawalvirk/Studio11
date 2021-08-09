@@ -28,3 +28,6 @@ export const AppointmentStatus = {
   PLACED: 'PLACED',
   CANCELLED: 'CANCELLED'
 };
+export const NotificationTypes = {
+  MESSAGE: 'MESSAGE'
+}

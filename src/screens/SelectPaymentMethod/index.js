@@ -133,6 +133,9 @@ export default function SelectPaymentMethod(props) {
   const renderBankCard = ({ item, index }) =>
     <BankCard
       selectable
+      containerStyle={{
+        justifyContent: 'space-evenly',
+      }}
       selectedIndex={selectedIndex}
       onCheckPress={() => setSelectedIndex(index)}
       index={index}

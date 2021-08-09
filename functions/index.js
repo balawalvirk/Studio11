@@ -44,3 +44,63 @@ exports.payWithStripeCard = functions.https.onRequest((request, response) => {
             console.log("ERROR: ", JSON.stringify(err));
         });
 });
+exports.sendNotificationToSingle = functions.https.onRequest(async (request, response) => {
+    const toUid = request.body.uid
+    const type = request.body.type
+    const title = request.body.title
+    const body = request.body.body
+    let fcm
+    let roomId
+    try {
+        console.log(JSON.stringify({ type, title, body, toUid }))
+        const userDoc = await admin.firestore().collection('Users').doc(toUid).get()
+        fcm = userDoc.data().fcm
+        console.log(JSON.stringify({ fcm }))
+
+        if (type == 'MESSAGE') {
+            roomId = request.body.roomId
+            const notifId = admin.firestore().collection('Rnd').doc().id
+            console.log(JSON.stringify({
+                notifId, toUid, data: {
+                    id: notifId,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    type: type,
+                    title: title,
+                    body: body
+                }
+            }))
+            admin.firestore()
+                .collection('Users')
+                .doc(toUid)
+                .collection('Notifications')
+                .doc(notifId)
+                .set({
+                    id: notifId,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    type: type,
+                    title: title,
+                    body: body
+                }, { merge: true })
+            await admin.messaging().send({
+                notification: {
+                    title: title,
+                    body: body,
+                },
+                data: {
+                    type: type,
+                    roomId: roomId
+                },
+                token: fcm,
+            })
+            return response.status(200).send({ success: true, message: 'Notification sent!' })
+        } else {
+
+        }
+
+
+    } catch (error) {
+        console.log(JSON.stringify(error))
+        return response.status(500).send({ success: false, message: 'Something went wrong!' })
+    }
+
+});

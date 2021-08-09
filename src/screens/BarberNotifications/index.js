@@ -14,7 +14,7 @@ export default function BarberNotifications(props) {
   const dispatch = useDispatch();
   const [notifications, setNotifications] = useState([])
   useEffect(() => {
-    loadData()
+    props.navigation.addListener('focus', () => loadData())
   }, [])
   const loadData = async () => {
     try {
@@ -28,7 +28,7 @@ export default function BarberNotifications(props) {
     <View style={{ alignItems: 'center' }}>
       <View style={styles.notifications}>
         <Text style={styles.notificationText}>{item.title}</Text>
-        <Text style={styles.notificationTime}>{moment(item.timestamp).format('h:mm a')}</Text>
+        <Text style={styles.notificationTime}>{moment(item?.timestamp?.toDate()).format('h:mm a')}</Text>
       </View>
       <HorizontalLine lineColor={styles.HorizontalLine100} />
     </View>
