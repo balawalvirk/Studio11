@@ -15,9 +15,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import BankCard from '../../components/BankCard';
 import Visa from '../../assets/images/visa.png'
 import Master from '../../assets/images/master.png'
-import { charge } from '../../utills/Api';
+import { charge, sendOrderPlacementNotification } from '../../utills/Api';
 import { checkout, clearCart, saveData } from '../../firebaseConfig';
 import { setCart } from '../../Redux/Actions/Customer';
+import messaging from '@react-native-firebase/messaging'
 export default function SelectPaymentMethod(props) {
   const { orderType, total, orders } = props.route.params
   const user = useSelector(state => state.Auth.user)
@@ -119,6 +120,9 @@ export default function SelectPaymentMethod(props) {
       for (let i = 0; i < orders.length; i++) {
         console.log(orders[i])
         await checkout(orders[i])
+        const title = `An order has been placed.`
+        const body = `id: ${orders[i]?.id}`
+        await sendOrderPlacementNotification(orders[i]?.barberId, title, body)
       }
       await clearCart()
       dispatch(setCart({

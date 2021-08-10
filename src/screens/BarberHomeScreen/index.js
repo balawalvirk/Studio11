@@ -56,10 +56,15 @@ export default function BarberHomeScreen(props) {
   }, []);
   const processNotification = (remoteMessage) => {
     const messageType = remoteMessage?.data?.type
+    console.log('=======>', messageType)
     if (messageType == NotificationTypes.MESSAGE) {
       const roomId = remoteMessage?.data?.roomId
       console.log(roomId)
       props.navigation.navigate('Chat', { roomId })
+    } else if (messageType == NotificationTypes.APPOINTMENT) {
+      // const appointmentId = remoteMessage?.data?.appointmentId
+      // console.log(appointmentId, '============>')
+      props.navigation.navigate('Appointments')
     }
   }
   const processNotificationFront = (remoteMessage) => {

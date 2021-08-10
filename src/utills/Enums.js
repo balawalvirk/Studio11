@@ -29,5 +29,7 @@ export const AppointmentStatus = {
   CANCELLED: 'CANCELLED'
 };
 export const NotificationTypes = {
-  MESSAGE: 'MESSAGE'
+  MESSAGE: 'MESSAGE',
+  ORDER: 'ORDER',
+  APPOINTMENT: 'APPOINTMENT'
 }

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Image} from 'react-native';
+import React, { useState } from 'react';
+import { View, Image } from 'react-native';
 import styles from './styles';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import HighlightedText from '../../components/HighlightedText';
@@ -8,13 +8,13 @@ import HorizontalLine from '../../components/HorizontalLine';
 import Button from '../../components/Button';
 import InputField from '../../components/InputField';
 import AppColors from '../../utills/AppColors';
-import {useDispatch, useSelector} from 'react-redux';
-import {height, width} from 'react-native-dimension';
+import { useDispatch, useSelector } from 'react-redux';
+import { height, width } from 'react-native-dimension';
 import ImagePicker from 'react-native-image-crop-picker';
 import CameraModel from '../../components/CameraModal';
 import auth from '@react-native-firebase/auth';
-import {saveData, uploadImage} from '../../firebaseConfig';
-import {login} from '../../Redux/Actions/Auth';
+import { saveData, uploadImage } from '../../firebaseConfig';
+import { login } from '../../Redux/Actions/Auth';
 
 export default function EditProfileBarber(props) {
   const user = useSelector((state) => state.Auth.user);
@@ -79,7 +79,6 @@ export default function EditProfileBarber(props) {
         LastName: lname,
       };
     }
-    console.log(userObj);
     try {
       await saveData('Users', auth().currentUser.uid, userObj);
       dispatch(
@@ -113,7 +112,7 @@ export default function EditProfileBarber(props) {
             style={styles.profileImage}
             source={
               imageUri
-                ? {uri: imageUri}
+                ? { uri: imageUri }
                 : require('../../assets/images/cuttings/1.png')
             }
             resizeMode={'cover'}
@@ -130,7 +129,7 @@ export default function EditProfileBarber(props) {
             label={'First Name'}
             fielderror={fnameError}
             placeholder={'Micheal'}
-            containerStyles={{width: '45%'}}
+            containerStyles={{ width: '45%' }}
             value={fname}
             onChangeText={(text) => setFname(text)}
           />
@@ -138,7 +137,7 @@ export default function EditProfileBarber(props) {
             label={'Last Name'}
             fielderror={lnameError}
             placeholder={'Fox'}
-            containerStyles={{width: '45%'}}
+            containerStyles={{ width: '45%' }}
             value={lname}
             onChangeText={(text) => setLname(text)}
           />

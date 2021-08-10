@@ -20,6 +20,7 @@ import styles from './styles';
 import CustomModal from '../../components/customModal'
 import { Agenda } from 'react-native-calendars';
 import { FlatList } from 'react-native-gesture-handler';
+import { sendAppointmentNotification } from '../../utills/Api';
 
 export default function GetAppointment(props) {
   const { hairStyles, barberDetails } = props.route.params
@@ -109,6 +110,11 @@ export default function GetAppointment(props) {
 
         }
         await setAppointment(appointment)
+        sendAppointmentNotification(appointment?.barberId,
+          `${user?.FirstName} has requested an appointment`,
+          `at: ${date}`,
+          appointId
+        )
         const updatedAppointment = await getAppointments()
         dispatch(setAppointments(updatedAppointment))
         setModalVisible(true)

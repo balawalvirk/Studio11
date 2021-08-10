@@ -42,10 +42,14 @@ export default function HomeScreen(props) {
   }, []);
   const processNotification = (remoteMessage) => {
     const messageType = remoteMessage?.data?.type
+    console.log('Type', remoteMessage)
     if (messageType == NotificationTypes.MESSAGE) {
       const roomId = remoteMessage?.data?.roomId
       console.log(roomId)
       props.navigation.navigate('Chat', { roomId })
+    } else if (messageType == NotificationTypes.APPOINTMENT) {
+      // const appointmentId = remoteMessage?.data?.appointmentId
+      // console.log(appointmentId, '============>')
     }
   }
   const processNotificationFront = (remoteMessage) => {

@@ -72,3 +72,51 @@ export const sendMessageNotificaiton = async (toUid, title, body, roomId) => {
         return false
     }
 }
+export const sendOrderPlacementNotification = async (toUid, title, body) => {
+    try {
+        const response = await fetch(urls.sendNotification, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                uid: toUid,
+                title: title,
+                body: body,
+                type: NotificationTypes.ORDER,
+            }),
+        })
+        console.log(await response.text())
+        const resultObject = await response.json()
+        return resultObject
+    } catch (error) {
+        console.log(error.message)
+        return false
+    }
+}
+export const sendAppointmentNotification = async (toUid, title, body, appointmentId) => {
+    try {
+        const response = await fetch(urls.sendNotification, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                uid: toUid,
+                title: title,
+                body: body,
+                type: NotificationTypes.APPOINTMENT,
+                appointmentId: appointmentId
+            }),
+        })
+        console.log(await response.text())
+        const resultObject = await response.json()
+        return resultObject
+    } catch (error) {
+        console.log(error.message)
+        return false
+    }
+}
+

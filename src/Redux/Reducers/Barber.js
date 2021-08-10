@@ -1,4 +1,4 @@
-import {ITEMS, VIDEOS, CUTTINGS} from '../Types';
+import { ITEMS, VIDEOS, CUTTINGS } from '../Types';
 const intialState = {
   barberItems: [],
   cuttings: [],

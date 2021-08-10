@@ -60,15 +60,6 @@ exports.sendNotificationToSingle = functions.https.onRequest(async (request, res
         if (type == 'MESSAGE') {
             roomId = request.body.roomId
             const notifId = admin.firestore().collection('Rnd').doc().id
-            console.log(JSON.stringify({
-                notifId, toUid, data: {
-                    id: notifId,
-                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                    type: type,
-                    title: title,
-                    body: body
-                }
-            }))
             admin.firestore()
                 .collection('Users')
                 .doc(toUid)
@@ -93,11 +84,57 @@ exports.sendNotificationToSingle = functions.https.onRequest(async (request, res
                 token: fcm,
             })
             return response.status(200).send({ success: true, message: 'Notification sent!' })
-        } else {
-
+        } else if (type == 'ORDER') {
+            const notifId = admin.firestore().collection('Rnd').doc().id
+            admin.firestore()
+                .collection('Users')
+                .doc(toUid)
+                .collection('Notifications')
+                .doc(notifId)
+                .set({
+                    id: notifId,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    type: type,
+                    title: title,
+                    body: body
+                }, { merge: true })
+            await admin.messaging().send({
+                notification: {
+                    title: title,
+                    body: body,
+                },
+                token: fcm,
+            })
+            return response.status(200).send({ success: true, message: 'Notification sent!' })
+        } else if (type == 'APPOINTMENT') {
+            const appointmentId = request.body.appointmentId
+            const notifId = admin.firestore().collection('Rnd').doc().id
+            admin.firestore()
+                .collection('Users')
+                .doc(toUid)
+                .collection('Notifications')
+                .doc(notifId)
+                .set({
+                    id: notifId,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    type: type,
+                    title: title,
+                    body: body,
+                    appointmentId: appointmentId
+                }, { merge: true })
+            await admin.messaging().send({
+                notification: {
+                    title: title,
+                    body: body,
+                },
+                data: {
+                    appointmentId: appointmentId,
+                    type: type
+                },
+                token: fcm,
+            })
+            return response.status(200).send({ success: true, message: 'Notification sent!' })
         }
-
-
     } catch (error) {
         console.log(JSON.stringify(error))
         return response.status(500).send({ success: false, message: 'Something went wrong!' })
