@@ -14,7 +14,7 @@ import HorizontalLine from '../../components/HorizontalLine';
 import InputField from '../../components/InputField';
 import ProductCard from '../../components/ProductCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
-import { getAllOfCollection } from '../../firebaseConfig';
+import { getAllOfCollection, getShopItems } from '../../firebaseConfig';
 import AppColors from '../../utills/AppColors';
 import { AlphaSortTypes, SortTypes } from '../../utills/Enums';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -38,7 +38,7 @@ export default function Shop(props) {
   }, []);
   const loadData = async () => {
     try {
-      const items = await getAllOfCollection('ShopItems');
+      const items = await getShopItems();
       setShopItems(items);
     } catch (error) {
       console.log(error.message);

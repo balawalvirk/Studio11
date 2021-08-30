@@ -56,5 +56,20 @@ const styles = StyleSheet.create({
   btn: {
     marginVertical: height(2),
   },
+  // createStripe: {
+  //   backgroundColor: AppColors.primaryGold,
+  //   paddingHorizontal: width(2),
+  //   paddingVertical: height(0.5),
+  //   borderRadius: width(3),
+  //   flexDirection: "row",
+  //   alignItems: 'center',
+  //   alignSelf: 'flex-start',
+  // },
+  // stripeText: {
+  //   fontSize: width(3),
+  //   color: AppColors.black,
+  //   marginRight: width(1),
+  //   fontWeight: 'bold'
+  // }
 });
 export default styles;

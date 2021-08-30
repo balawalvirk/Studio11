@@ -227,6 +227,20 @@ export async function getAllOfCollection(collection) {
   });
   return data;
 }
+export async function getShopItems() {
+  let data = [];
+  try {
+    const snapshot = await firestore()
+      .collection('ShopItems')
+      .get()
+    snapshot.forEach(doc => {
+      data.push(doc.data())
+    })
+  } catch (error) {
+    console.log(error.message)
+  }
+  return data;
+}
 export async function saveData(collection, doc, jsonObject) {
   await firestore()
     .collection(collection)

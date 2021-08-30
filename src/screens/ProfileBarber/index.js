@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, View, Image, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, Image, FlatList, Linking } from 'react-native';
 import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import auth from '@react-native-firebase/auth';
@@ -15,11 +15,35 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Button from '../../components/Button';
 import Thumbnail from '../../components/Thumbnail';
 import Feather from 'react-native-vector-icons/Feather'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { createStripeExpressAccount } from '../../utills/Api';
+import { login } from '../../Redux/Actions/Auth'
 export default function ProfileBarber(props) {
   const user = useSelector((state) => state.Auth.user);
   const videos = useSelector((state) => state.Barber.videos);
   const cuttings = useSelector((state) => state.Barber.cuttings);
+  const dispatch = useDispatch()
+  const [stripeLoading, setStripeLoading] = useState(false)
+  const onCreateStripeAccount = async () => {
+    try {
+      setStripeLoading(true)
+      const response = await createStripeExpressAccount(user?.id)
+      console.log(response)
+      if (response?.success) {
+        dispatch(login({
+          ...user,
+          expressAccount: response?.expressAccount
+        }))
+        Linking.openURL(`${response?.link?.url}`)
+      } else {
+        console.log(response.message + 'asd')
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+    setStripeLoading(false)
+  }
   const renderVideoThumbnail = ({ item }) =>
     <Thumbnail
       thumbnailImage={{ uri: item.videoThumb }}
@@ -101,6 +125,13 @@ export default function ProfileBarber(props) {
             }
           />
         </View>
+
+        <Button
+          isLoading={stripeLoading}
+          containerStyle={styles.btn}
+          title="Create Stripe Account"
+          onPress={onCreateStripeAccount}
+        />
         <HorizontalLine />
         <Button
           containerStyle={styles.btn}

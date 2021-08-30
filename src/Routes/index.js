@@ -9,7 +9,7 @@ import AuthStack from './Stacks/AuthStack';
 import CustomerStack from './Stacks/CustomerStack';
 import BarberStack from './Stacks/BarberStack';
 import messaging from '@react-native-firebase/messaging';
-
+// import dynamicLinks from '@react-native-firebase/dynamic-links'
 import { login } from '../Redux/Actions/Auth';
 import { NotificationTypes } from '../utills/Enums';
 console.disableYellowBox = true;
@@ -22,6 +22,18 @@ export default function Routes() {
   const loginScreenType = useSelector((state) => state.Auth.loginScreenType);
   const user = useSelector((state) => state.Auth.user);
   const isLogin = useSelector((state) => state.Auth.isLogin);
+  // useEffect(() => {
+  //   dynamicLinks()
+  //     .getInitialLink()
+  //     .then(handleDynamicLink);
+  // }, [])
+  // const handleDynamicLink = data => {
+  //   console.log('DATA: ', data)
+  // };
+  // useEffect(() => {
+  //   const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+  //   return () => unsubscribe();
+  // }, []);
 
   return (
     <NavigationContainer>

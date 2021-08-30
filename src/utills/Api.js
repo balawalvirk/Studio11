@@ -3,7 +3,8 @@ import { NotificationTypes } from "./Enums"
 const urls = {
     saveCard: 'https://us-central1-studio11-14067.cloudfunctions.net/saveCard',
     charge: 'https://us-central1-studio11-14067.cloudfunctions.net/payWithStripeCard',
-    sendNotification: 'https://us-central1-studio11-14067.cloudfunctions.net/sendNotificationToSingle'
+    sendNotification: 'https://us-central1-studio11-14067.cloudfunctions.net/sendNotificationToSingle',
+    createExpressAccount: 'https://us-central1-studio11-14067.cloudfunctions.net/createExpressAccount'
 }
 export const saveCard = async (body) => {
     try {
@@ -112,6 +113,25 @@ export const sendAppointmentNotification = async (toUid, title, body, appointmen
             }),
         })
         console.log(await response.text())
+        const resultObject = await response.json()
+        return resultObject
+    } catch (error) {
+        console.log(error.message)
+        return false
+    }
+}
+export const createStripeExpressAccount = async (userId) => {
+    try {
+        const response = await fetch(urls.createExpressAccount, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: userId
+            }),
+        })
         const resultObject = await response.json()
         return resultObject
     } catch (error) {

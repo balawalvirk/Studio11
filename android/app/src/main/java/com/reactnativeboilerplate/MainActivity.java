@@ -1,4 +1,4 @@
-package com.reactnativeboilerplate;
+package com.studio11;
 
 import com.facebook.react.ReactActivity;
 
