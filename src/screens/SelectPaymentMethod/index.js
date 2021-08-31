@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import BankCard from '../../components/BankCard';
 import Visa from '../../assets/images/visa.png'
 import Master from '../../assets/images/master.png'
-import { charge, sendOrderPlacementNotification } from '../../utills/Api';
-import { checkout, clearCart, saveData } from '../../firebaseConfig';
+import { charge, sendOrderPlacementNotification, transfer } from '../../utills/Api';
+import { checkout, clearCart, getData, saveData } from '../../firebaseConfig';
 import { setCart } from '../../Redux/Actions/Customer';
 import messaging from '@react-native-firebase/messaging'
 export default function SelectPaymentMethod(props) {
@@ -70,14 +70,13 @@ export default function SelectPaymentMethod(props) {
             customer: user?.card[selectedIndex]?.customer
           }
           const res = await charge(body?.amount, body?.token, body?.customer)
-          console.log("CHARGE RES: ", res)
           if (res) {
             await makeOrders()
+            props.navigation.navigate('TrackOrder')
           } else {
             alert('Something went wrong.')
           }
           setLoading(false)
-          props.navigation.navigate('TrackOrder')
         } else {
           console.log("DIRECT")
           try {
@@ -88,7 +87,7 @@ export default function SelectPaymentMethod(props) {
               customer: user?.card[selectedIndex]?.customer
             }
             const res = await charge(body?.amount, body?.token, body?.customer)
-            console.log("CHARGE RES: ", res)
+
             if (res) {
               await makeOrder(orders)
             } else {
@@ -110,29 +109,49 @@ export default function SelectPaymentMethod(props) {
   }
   const makeOrder = async (orderObj) => {
     try {
-      await saveData('Orders', orderObj?.id, orderObj)
+      const barber = await getData('Users', orderObj.barberId)
+      let transferRes = await transfer(
+        Number(orderObj.total).toFixed(2),
+        barber?.expressAccount,
+        orderObj.barberId)
+      if (transferRes) {
+        await saveData('Orders', orderObj?.id, orderObj)
+      } else {
+        return false
+      }
     } catch (error) {
       console.log(error)
     }
   }
   const makeOrders = async () => {
-    try {
-      for (let i = 0; i < orders.length; i++) {
-        console.log(orders[i])
-        await checkout(orders[i])
+    for (let i = 0; i < orders.length; i++) {
+      let transferRes
+      const barber = await getData('Users', orders[i].barberId)
+      try {
+        transferRes = await transfer(
+          Number(orders[i].total).toFixed(2),
+          barber?.expressAccount,
+          orders[i].barberId)
+      } catch (error) {
+        console.log(error.message, "===>")
+      }
+      if (transferRes) {
         const title = `An order has been placed.`
         const body = `id: ${orders[i]?.id}`
         await sendOrderPlacementNotification(orders[i]?.barberId, title, body)
+        await checkout(orders[i])
+        return true
+      } else {
+        return false
       }
-      await clearCart()
-      dispatch(setCart({
-        cartItems: [],
-        itemCount: 0,
-        total: 0
-      }))
-    } catch (error) {
-      console.log(error.message)
     }
+    await clearCart()
+    dispatch(setCart({
+      cartItems: [],
+      itemCount: 0,
+      total: 0
+    }))
+
   }
   const renderBankCard = ({ item, index }) =>
     <BankCard

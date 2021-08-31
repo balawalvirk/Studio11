@@ -16,12 +16,13 @@ import InputModal from '../../components/inputModal';
 import ScheduleCard from '../../components/ScheduleCard';
 import ScreenWrapper from '../../components/ScreenWrapper';
 import WelcomeBarberText from '../../components/WelcomeBarberText';
-import { endBreak, getAppointments, saveData, setChatRoom } from '../../firebaseConfig';
+import { endBreak, getAppointments, getData, saveData, setChatRoom } from '../../firebaseConfig';
 import { login } from '../../Redux/Actions/Auth';
 import AppColors from '../../utills/AppColors';
 import { NotificationTypes, UserTypes } from '../../utills/Enums';
 import styles from './styles';
 import messaging from '@react-native-firebase/messaging';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 export default function BarberHomeScreen(props) {
 
@@ -53,6 +54,22 @@ export default function BarberHomeScreen(props) {
     messaging().onNotificationOpenedApp(processNotification);
 
     return unsubscribe;
+  }, []);
+  useEffect(() => {
+    dynamicLinks()
+      .getInitialLink()
+      .then(handleDynamicLink);
+  }, [])
+  const handleDynamicLink = async data => {
+    if (data) {
+      console.log('DYNAMIC LINK CAUGHT: ', data)
+      const userObj = await getData('Users', user?.id)
+      dispatch(login(userObj))
+    }
+  };
+  useEffect(() => {
+    const unsubscribe = dynamicLinks().onLink(handleDynamicLink);
+    return () => unsubscribe();
   }, []);
   const processNotification = (remoteMessage) => {
     const messageType = remoteMessage?.data?.type

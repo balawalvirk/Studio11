@@ -146,34 +146,43 @@ exports.createExpressAccount = functions.https.onRequest(async (request, respons
     let expressAccount = null
     let link = null
     try {
-        const account = await stripe.accounts.create({
-            country: 'US',
-            type: 'express',
-            capabilities: {
-                card_payments: {
-                    requested: true,
-                },
-                transfers: {
-                    requested: true,
-                },
-            },
-        });
-        await admin.firestore()
+        const userDoc = await admin
+            .firestore()
             .collection('Users')
             .doc(userId)
-            .set({ expressAccount: account }, { merge: true })
-            .catch(error => console.log(JSON.stringify('FIRESTORE: ', error)))
-        expressAccount = account
+            .get()
+        if (!userDoc.data().expressAccount) {
+            const account = await stripe.accounts.create({
+                country: 'US',
+                type: 'express',
+                capabilities: {
+                    card_payments: {
+                        requested: true,
+                    },
+                    transfers: {
+                        requested: true,
+                    },
+                },
+            });
+            await admin.firestore()
+                .collection('Users')
+                .doc(userId)
+                .set({ expressAccount: account.id }, { merge: true })
+                .catch(error => console.log(JSON.stringify('FIRESTORE: ', error)))
+            expressAccount = account.id
+        } else {
+            expressAccount = userDoc.data().expressAccount
+        }
+
     } catch (error) {
         console.log(JSON.stringify(error))
         return response.status(500).send({ success: false, message: 'Error creating account: ' + error.message })
     }
     try {
-        console.log(expressAccount.id)
         accountLinks = await stripe.accountLinks.create({
-            account: expressAccount.id,
-            refresh_url: 'https://teststudio11.page.link/Home',
-            return_url: 'https://teststudio11.page.link/Home',
+            account: expressAccount,
+            refresh_url: 'https://teststudio11.page.link/nYJz',
+            return_url: 'https://teststudio11.page.link/nYJz',
             type: 'account_onboarding',
         });
         link = accountLinks
@@ -198,20 +207,58 @@ exports.createExpressAccount = functions.https.onRequest(async (request, respons
 exports.verifyInformation = functions.https.onRequest(async (request, response) => {
     try {
         const sig = request.headers['stripe-signature'];
+        console.log("SIGNATURE: ", JSON.stringify(sig))
         console.log("BODY: ", JSON.stringify(request.body))
         let event
 
         try {
-            event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+            event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
         } catch (err) {
             console.log("ERROR: ", JSON.stringify(err))
-            return response.status(400).send(`Webhook Error: ${err.message}`);
+            return response.status(400).send(`Webhook Error: ${JSON.stringify(err.message)}`);
         }
         console.log("EVENT TYPE: ", JSON.stringify(event.type))
+        if (event.type == 'account.external_account.created') {
+            const snapshot = await admin.
+                firestore()
+                .collection('Users')
+                .where('expressAccount', '==', req.body.account)
+                .get()
+            snapshot.forEach(async doc => {
+                await admin.firestore().collection('Users').doc(doc.data().id).set({ stripeIntegrated: true }, { merge: true })
+            })
+        }
         return response.status(200).send({ success: true, message: 'Done', event: event });
     } catch (error) {
         console.log(JSON.stringify(error))
     }
 });
+exports.transfer = functions.https.onRequest(async (request, response) => {
+    const amount = request.body.amount
+    const destinationAccountId = request.body.account
+    console.log("BODY: ", request.body)
+    try {
+        const transfer = await stripe.transfers.create({
+            amount: amount,
+            currency: 'usd',
+            destination: destinationAccountId,
+        });
+        return response.status(200).send({ success: true, message: 'Done', transfer: transfer });
+    } catch (error) {
+        console.log(JSON.stringify(error), 'Function errors')
+        return response.status(400).send({ success: false, message: 'Error making transfer' });
+    }
+});
+exports.retrieveAccount = functions.https.onRequest(async (request, response) => {
+    const accountId = request.body.account
+    try {
+        const account = await stripe.accounts.retrieve(
+            accountId
+        );
+        return response.status(200).send({ success: true, account: account });
+    } catch (error) {
+        console.log(JSON.stringify(error), 'retrieveAccount errors')
+        return response.status(400).send({ success: false, message: 'Could not retrieve account' });
+    }
+});
 
-// {"type":"StripeSignatureVerificationError","raw":{"message":"No signatures found matching the expected signature for payload. Are you passing the raw request body you received from Stripe? https://github.com/stripe/stripe-node#webhook-signing","detail":{"header":"t=1630329793,v1=7d0d80aaf6a967b5348b0c32d44d007fda732fdf4a33aa1010c794004c2b2f89,v0=2958414aa6d8f7e70a0b69e0e01dd2678db4e9a8541a42fc76d29a650b774f33","payload":{"id":"evt_1JUASC4EJryzmMPyIxdQ2phA","object":"event","account":"acct_1JUAQP4EJryzmMPy","api_version":"2020-08-27","created":1630329792,"data":{"object":{"id":"acct_1JUAQP4EJryzmMPy","object":"account","business_profile":{"mcc":null,"name":null,"support_address":null,"support_email":null,"support_phone":null,"support_url":null,"url":null},"capabilities":{"card_payments":"inactive","transfers":"inactive"},"charges_enabled":false,"country":"US","default_currency":"usd","details_submitted":false,"email":null,"payouts_enabled":false,"settings":{"bacs_debit_payments":{},"branding":{"icon":null,"logo":null,"primary_color":null,"secondary_color":null},"card_issuing":{"tos_acceptance":{"date":null,"ip":null}},"card_payments":{"statement_descriptor_prefix":null,"decline_on":{"avs_failure":false,"cvc_failure":false}},"dashboard":{"display_name":null,"timezone":"Etc/UTC"},"payments":{"statement_descriptor":null,"statement_descriptor_kana":null,"statement_descriptor_kanji":null},"sepa_debit_payments":{},"payouts":{"debit_negative_balances":true,"schedule":{"delay_days":2,"interval":"daily"},"statement_descriptor":null}},"type":"express","created":1630329682,"external_accounts":{"object":"list","data":[],"has_more":false,"total_count":0,"url":"/v1/accounts/acct_1JUAQP4EJryzmMPy/external_accounts"},"login_links":{"object":"list","total_count":0,"has_more":false,"url":"/v1/accounts/acct_1JUAQP4EJryzmMPy/login_links","data":[]},"metadata":{},"requirements":{"current_deadline":null,"currently_due":["business_profile.mcc","business_profile.url","external_account","individual.verification.document","tos_acceptance.date","tos_acceptance.ip"],"disabled_reason":"requirements.past_due","errors":[{"code":"verification_failed_keyed_identity","reason":"The identity information you entered cannot be verified. Please correct any errors or upload a document that matches the identity fields (e.g., name and date of birth) that you entered.","requirement":"individual.verification.document"}],"eventually_due":["business_profile.mcc","business_profile.url","external_account","individual.verification.document","tos_acceptance.date","tos_acceptance.ip"],"past_due":["business_profile.mcc","business_profile.url","external_account","individual.verification.document","tos_acceptance.date","tos_acceptance.ip"],"pending_verification":["individual.address.city","individual.address.line1","individual.address.postal_code","individual.address.state","individual.id_number"]},"tos_acceptance":{"date":null}},"previous_attributes":{"requirements":{"currently_due":["business_profile.mcc","business_profile.url","external_account","tos_acceptance.date","tos_acceptance.ip"],"errors":[],"eventually_due":["business_profile.mcc","business_profile.url","external_account","tos_acceptance.date","tos_acceptance.ip"],"past_due":["business_profile.mcc","business_profile.url","external_account","tos_acceptance.date","tos_acceptance.ip"],"pending_verification":["individual.address.city","individual.address.line1","individual.address.postal_code","individual.address.state","individual.id_number","individual.verification.document"]}}},"livemode":false,"pending_webhooks":1,"request":{"id":null,"idempotency_key":null},"type":"account.updated"}}},"detail":{"header":"t=1630329793,v1=7d0d80aaf6a967b5348b0c32d44d007fda732fdf4a33aa1010c794004c2b2f89,v0=2958414aa6d8f7e70a0b69e0e01dd2678db4e9a8541a42fc76d29a650b774f33","payload":{"id":"evt_1JUASC4EJryzmMPyIxdQ2phA","object":"event","account":"acct_1JUAQP4EJryzmMPy","api_version":"2020-08-27","created":1630329792,"data":{"object":{"id":"acct_1JUAQP4EJryzmMPy","object":"account","business_profile":{"mcc":null,"name":null,"support_address":null,"support_email":null,"support_phone":null,"support_url":null,"url":null},"capabilities":{"card_payments":"inactive","transfers":"inactive"},"charges_enabled":false,"country":"US","default_currency":"usd","details_submitted":false,"email":null,"payouts_enabled":false,"settings":{"bacs_debit_payments":{},"branding":{"icon":null,"logo":null,"primary_color":null,"secondary_color":null},"card_issuing":{"tos_acceptance":{"date":null,"ip":null}},"card_payments":{"statement_descriptor_prefix":null,"decline_on":{"avs_failure":false,"cvc_failure":false}},"dashboard":{"display_name":null,"timezone":"Etc/UTC"},"payments":{"statement_descriptor":null,"statement_descriptor_kana":null,"statement_descriptor_kanji":null},"sepa_debit_payments":{},"payouts":{"debit_negative_balances":true,"schedule":{"delay_days":2,"interval":"daily"},"statement_descriptor":null}},"type":"express","created":1630329682,"external_accounts":{"object":"list","data":[],"has_more":false,"total_count":0,"url":"/v1/accounts/acct_1JUAQP4EJryzmMPy/external_accounts"},"login_links":{"object":"list","total_count":0,"has_more":false,"url":"/v1/accounts/acct_1JUAQP4EJryzmMPy/login_links","data":[]},"metadata":{},"requirements":{"current_deadline":null,"currently_due":["business_profile.mcc","business_profile.url","external_account","individual.verification.document","tos_acceptance.date","tos_acceptance.ip"],"disabled_reason":"requirements.past_due","errors":[{"code":"verification_failed_keyed_identity","reason":"The identity information you entered cannot be verified. Please correct any errors or upload a document that matches the identity fields (e.g., name and date of birth) that you entered.","requirement":"individual.verification.document"}],"eventually_due":["business_profile.mcc","business_profile.url","external_account","individual.verification.document","tos_acceptance.date","tos_acceptance.ip"],"past_due":["business_profile.mcc","business_profile.url","external_account","individual.verification.document","tos_acceptance.date","tos_acceptance.ip"],"pending_verification":["individual.address.city","individual.address.line1","individual.address.postal_code","individual.address.state","individual.id_number"]},"tos_acceptance":{"date":null}},"previous_attributes":{"requirements":{"currently_due":["business_profile.mcc","business_profile.url","external_account","tos_acceptance.date","tos_acceptance.ip"],"errors":[],"eventually_due":["business_profile.mcc","business_profile.url","external_account","tos_acceptance.date","tos_acceptance.ip"],"past_due":["business_profile.mcc","business_profile.url","external_account","tos_acceptance.date","tos_acceptance.ip"],"pending_verification":["individual.address.city","individual.address.line1","individual.address.postal_code","individual.address.state","individual.id_number","individual.verification.document"]}}},"livemode":false,"pending_webhooks":1,"request":{"id":null,"idempotency_key":null},"type":"account.updated"}}} 

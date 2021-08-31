@@ -129,7 +129,7 @@ export default function ProfileBarber(props) {
         <Button
           isLoading={stripeLoading}
           containerStyle={styles.btn}
-          title="Create Stripe Account"
+          title={user?.expressAccount ? "Update Stripe Account" : "Create Stripe Account"}
           onPress={onCreateStripeAccount}
         />
         <HorizontalLine />

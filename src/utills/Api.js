@@ -4,7 +4,9 @@ const urls = {
     saveCard: 'https://us-central1-studio11-14067.cloudfunctions.net/saveCard',
     charge: 'https://us-central1-studio11-14067.cloudfunctions.net/payWithStripeCard',
     sendNotification: 'https://us-central1-studio11-14067.cloudfunctions.net/sendNotificationToSingle',
-    createExpressAccount: 'https://us-central1-studio11-14067.cloudfunctions.net/createExpressAccount'
+    createExpressAccount: 'https://us-central1-studio11-14067.cloudfunctions.net/createExpressAccount',
+    transferTest: 'https://us-central1-studio11-14067.cloudfunctions.net/transfer',
+    retrieveAccount: 'https://us-central1-studio11-14067.cloudfunctions.net/retrieveAccount'
 }
 export const saveCard = async (body) => {
     try {
@@ -130,6 +132,46 @@ export const createStripeExpressAccount = async (userId) => {
             },
             body: JSON.stringify({
                 id: userId
+            }),
+        })
+        const resultObject = await response.json()
+        return resultObject
+    } catch (error) {
+        console.log(error.message)
+        return false
+    }
+}
+export const transfer = async (amount, account, barberId) => {
+    try {
+        const response = await fetch(urls.transferTest, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                barberId: barberId,
+                amount: Number(amount * 100).toFixed(0),
+                account
+            }),
+        })
+        const resultObject = await response.json()
+        return resultObject
+    } catch (error) {
+        console.log(error.message)
+        return false
+    }
+}
+export const getAccount = async (account) => {
+    try {
+        const response = await fetch(urls.retrieveAccount, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                account: account
             }),
         })
         const resultObject = await response.json()

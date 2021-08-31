@@ -17,6 +17,7 @@ import AppColors from '../../utills/AppColors';
 import { AlphaSortTypes, SortTypes } from '../../utills/Enums';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styles from './styles';
+import { getAccount } from '../../utills/Api';
 export default function ManageShopItems(props) {
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
@@ -92,6 +93,15 @@ export default function ManageShopItems(props) {
     setModalVisible(false)
     search(searchText)
   }
+  const onAddPress = async () => {
+    if (user?.expressAccount) {
+      const response = await getAccount(user?.expressAccount)
+      console.log(response)
+      props.navigation.navigate('PublishNewItem')
+    } else {
+      alert('Please create a stripe account before adding items.')
+    }
+  }
   const renderItem = ({ item, index }) => {
     return <ProductCard
       editable
@@ -128,7 +138,7 @@ export default function ManageShopItems(props) {
       <View style={styles.mainViewContainer}>
         <Button
           title="Add an item in shop"
-          onPress={() => props.navigation.navigate('PublishNewItem')}
+          onPress={onAddPress}
           containerStyle={styles.btn}
         />
         <View style={styles.dash} />
