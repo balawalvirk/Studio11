@@ -1,7 +1,7 @@
 const functions = require("firebase-functions");
-const stripe = require('stripe')('sk_test_51JKKvPKlzfvLSqIKNE65LAtxeZVVvIHxyIeeWjigncqFM7FdEcW315fMbHdHUhiuNKiW94ypk0SvFVKOyYaXT4pP00XzzAsrmD');
+const stripe = require('stripe')('');
 const admin = require('firebase-admin')
-const endpointSecret = 'whsec_DDPYH0ceaK1KqtkVv5XsSHTfJsq7LU30';
+const endpointSecret = '';
 admin.initializeApp()
 exports.saveCard = functions.https.onRequest(async (req, res) => {
     try {
